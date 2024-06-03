@@ -1,0 +1,23 @@
+{
+  "name": "cs731projectgroup2",
+  "version": "1.0.0",
+  "description": "CS 731 Group2 Course Management Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend"
+  },
+  "author": "Nu Nu Lwin/Swe Zin Oo",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "mogoose": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}
