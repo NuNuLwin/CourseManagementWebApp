@@ -9,23 +9,28 @@ const courseSchema = new Schema({
         type: String,
         required: [true, 'Please add a course name.']
     },
-    /*user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User',
-    },*/
-    userId: {
-        type: String,
-        required: true
+    instructor: {
+        id: {
+          type: String,
+          required: true,
+        },
     },
-    classId: {
-        type: [String],
-        required: true
-    },
-    activityId: {
-        type: [String],
-        required: true
-    },
+    class: [{
+        id: {
+          type: String,
+          required: true,
+        },
+    }],
+    activity: [{
+        id: {
+            type: String,
+            required: true,
+        },
+        activity_name: {
+            type: String,
+            required: true,
+        },
+    }],
     startDate: {
         type: Date,
         required: [true, 'Please add a start date.']

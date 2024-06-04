@@ -6,8 +6,7 @@ const Course = require('../models/courseModel')
 // @route   Get /api/course
 // @access  Private
 const getCourses = asyncHandler(async (req, res) => {
-    //const courses = await Course.find({ user: req.user.id })
-    const courses = await Course.find()
+    const courses = await Course.find({ 'instructor.id': req.query.id })
     res.status(200).json(courses)
 })
 
@@ -32,13 +31,19 @@ const setCourse = asyncHandler(async (req, res) => {
         throw new Error('courseExists already exists')
     }
 
-
     //Create a course
     const course = await Course.create({
         courseName: req.body.courseName,
-        userId: req.body.userId,
-        classId: req.body.classId,
-        activityId: req.body.activityId,
+        instructor: {
+            id: req.query.id,
+        },
+        //classId: req.body.classId,
+        class: req.body.class.map(c => ({ id: c.id })),
+        activity: req.body.activity.map(a => ({
+            id: a.id,
+            activity_name: a.activity_name
+        })),
+        //activityId: req.body.activityId,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         startTime: req.body.startTime,
