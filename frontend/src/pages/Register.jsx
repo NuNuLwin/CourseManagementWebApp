@@ -1,17 +1,40 @@
 import {useState, useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import {toast} from 'react-toastify'
 import {FaUser} from 'react-icons/fa'
+import {register, reset} from '../features/auth/authSlice'
+import Spinner from '../components/Spinner'
 
 function Register() {
     const [formData, setFormData] = useState({
-        name: '',
+        firstname: '',
+        lastname: '',
         email: '',
         password: '',
         password2: '',
         role: ''
     })
 
-const {name, email, password, password2, role} = formData
+const {firstname, lastname, email, password, password2, role} = formData
+const navigate = useNavigate()
+const dispatch = useDispatch()
+
+const {user, isloading, isError, isSuccess, message} = useSelector(
+    (state) => state.auth
+)
+
+useEffect(()=>{
+    if (isError){
+        toast.error(message)
+    }
+    if(isSuccess || user){
+        navigate('/')
+    }
+
+    dispatch(reset())
+},[user, isError, isSuccess, message, navigate, dispatch])
+
 const onChange = (e) =>{
   setFormData((prevState)=> ({
     ...prevState,
@@ -22,6 +45,23 @@ const onChange = (e) =>{
 }
 const onSubmit = (e) =>{
     e.preventDefault()
+
+    if (password != password2){
+        toast.error('Passwords do not match')
+    }else{ 
+        const userData = {
+            firstname,
+            lastname,
+            email,
+            password,
+            role
+        }
+        dispatch(register(userData))
+    }
+}
+
+if(isloading){
+    return <Spinner/>
 }
   return <>
     <section>
@@ -34,8 +74,12 @@ const onSubmit = (e) =>{
     <section className="form">
         <form onSubmit={onSubmit}>
             <div className="form-group">
-                <input type='text' className='form-control' id='name' name='name' value={name}
-                placeholder='Enter your name' onChange={onChange}/>
+                <input type='text' className='form-control' id='firstname' name='firstname' value={firstname}
+                placeholder='Enter your first name' onChange={onChange}/>
+            </div>
+            <div className="form-group">
+                <input type='text' className='form-control' id='lastname' name='lastname' value={lastname}
+                placeholder='Enter your last name' onChange={onChange}/>
             </div>
             <div className="form-group">
                 <input type='email' className='form-control' id='email' name='email' value={email}
