@@ -14,7 +14,8 @@ app.use(express.urlencoded({extended: false}))
 
 app.use('/api/course', require('./routes/courseRoutes'))
 app.use('/api/users', require('./routes/userRoutes'))
-
+app.use('/api/activity', require('./routes/activityRoutes'))
+app.use('/api/class', require('./routes/classRoutes'))
 
 app.use(errorHandler)
 
