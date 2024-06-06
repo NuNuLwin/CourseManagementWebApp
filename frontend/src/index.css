@@ -111,6 +111,18 @@ h3 {
 
 .form,
 .content {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.loginform,
+.content {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.cardform,
+.content {
   width: 70%;
   margin: 0 auto;
 }
@@ -213,4 +225,12 @@ h3 {
   .heading p {
     font-size: 1.5rem;
   }
-} */
+}
+
+.buttoncolor{
+  color: "#D8E2EF"
+}
+
+.darkbluecolor{
+  color: "#1E56A0"
+}
