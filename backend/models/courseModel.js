@@ -10,26 +10,19 @@ const courseSchema = new Schema({
         required: [true, 'Please add a course name.']
     },
     instructor: {
-        id: {
-          type: String,
-          required: true,
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User',
     },
     class: [{
-        id: {
-          type: String,
-          required: true,
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Class',
     }],
     activity: [{
-        id: {
-            type: String,
-            required: true,
-        },
-        activity_name: {
-            type: String,
-            required: true,
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Activity',
     }],
     startDate: {
         type: Date,

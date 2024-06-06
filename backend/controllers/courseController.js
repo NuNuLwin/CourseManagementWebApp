@@ -25,7 +25,6 @@ const setCourse = asyncHandler(async (req, res) => {
         courseName: courseName, startDate: startDate
     })
   
-    console.log(courseExists)
     if (courseExists) {
         res.status(400)
         throw new Error('courseExists already exists')
@@ -34,16 +33,9 @@ const setCourse = asyncHandler(async (req, res) => {
     //Create a course
     const course = await Course.create({
         courseName: req.body.courseName,
-        instructor: {
-            id: req.query.id,
-        },
-        //classId: req.body.classId,
-        class: req.body.class.map(c => ({ id: c.id })),
-        activity: req.body.activity.map(a => ({
-            id: a.id,
-            activity_name: a.activity_name
-        })),
-        //activityId: req.body.activityId,
+        instructor: req.query.id,
+        class: req.body.class.map(c => c.id),
+        activity: req.body.activity.map(a => a.id),
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         startTime: req.body.startTime,
