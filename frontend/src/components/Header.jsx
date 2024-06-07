@@ -27,6 +27,10 @@ function Header({ children }) {
     navigate("/createCourse");
   };
 
+  const onMyCourses = () => {
+    navigate("/Dashboard");
+  };
+
   return (
     <>
       <CssBaseline />
@@ -70,7 +74,7 @@ function Header({ children }) {
           >
             {user && (
               <>
-                <Button onClick={onCreateCourse} className="buttoncolor">
+                <Button onClick={onMyCourses} className="buttoncolor">
                   My Courses
                 </Button>
                 <Button onClick={onCreateCourse} className="buttoncolor">

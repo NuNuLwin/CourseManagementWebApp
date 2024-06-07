@@ -109,6 +109,12 @@ function CreateCourseForm() {
     }
   }, [user, navigate, isError, isSuccess, message, dispatch]);
 
+  useEffect(() => {
+    // Calculate the new end date based on the start date
+    const newEndDate = dayjs(startDate).add(2, "month");
+    setEndDate(newEndDate);
+  }, [startDate]);
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -153,144 +159,155 @@ function CreateCourseForm() {
     }
   };
 
+  const paperStyle = {
+    padding: 30,
+    borderRadius: 10,
+    margin: "3vh auto",
+  };
+
   return (
     <>
       <CssBaseline />
       <Container maxWidth="md">
         <Box sx={{ flexGrow: 1, mt: 4 }}>
           <form onSubmit={onSubmit}>
-            <center>
-              <h1> Create Course</h1>
-            </center>
+            <Paper elevation={10} style={paperStyle}>
+              <center>
+                <h1> Create Course</h1>
+              </center>
 
-            {showAlert ? (
-              <Alert
-                severity={alertType}
-                style={{
-                  marginBottom: "10px",
-                }}
-              >
-                {alertMsg}
-              </Alert>
-            ) : null}
+              {showAlert ? (
+                <Alert
+                  severity={alertType}
+                  style={{
+                    marginBottom: "10px",
+                  }}
+                >
+                  {alertMsg}
+                </Alert>
+              ) : null}
 
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="courseName"
-                  label="Course Name"
-                  variant="outlined"
-                  autoComplete="off"
-                  value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel id="class-multiple-select-label">
-                    Select Class
-                  </InputLabel>
-                  <Select
-                    labelId="class-multiple-select-label"
-                    name="class"
-                    id="demo-simple-select-required"
-                    multiple
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
                     required
-                    value={selectedClass}
-                    input={<OutlinedInput label="Name" />}
-                    MenuProps={MenuProps}
-                    onChange={(e) => {
-                      console.log("select class value:", e.target.value);
-                      setSelectedClass(e.target.value);
-                    }}
-                  >
-                    {classes &&
-                      classes.map((cls) => (
-                        <MenuItem key={cls._id} value={cls._id}>
-                          {cls.className}
+                    fullWidth
+                    id="courseName"
+                    label="Course Name"
+                    variant="outlined"
+                    autoComplete="off"
+                    value={courseName}
+                    onChange={(e) => setCourseName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="class-multiple-select-label">
+                      Class
+                    </InputLabel>
+                    <Select
+                      labelId="class-multiple-select-label"
+                      name="class"
+                      id="demo-simple-select-required"
+                      multiple
+                      required
+                      value={selectedClass}
+                      input={<OutlinedInput label="Name" />}
+                      MenuProps={MenuProps}
+                      onChange={(e) => {
+                        console.log("select class value:", e.target.value);
+                        setSelectedClass(e.target.value);
+                      }}
+                    >
+                      {classes &&
+                        classes.map((cls) => (
+                          <MenuItem key={cls._id} value={cls._id}>
+                            {cls.className}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="day-multiple-select-label">
+                      Day/s
+                    </InputLabel>
+                    <Select
+                      labelId="day-multiple-select-label"
+                      name="days"
+                      id="demo-simple-select-required"
+                      multiple
+                      required
+                      value={selectedDay}
+                      input={<OutlinedInput label="Day/s" />}
+                      MenuProps={MenuProps}
+                      onChange={(e) => {
+                        setSelectedDay(e.target.value);
+                      }}
+                    >
+                      {days.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          {name}
                         </MenuItem>
                       ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Box sx={{ display: "flex" }}>
-                    <DemoContainer components={["DatePicker", "DatePicker"]}>
-                      <DatePicker
-                        label="Start Date"
-                        name="startDate"
-                        value={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        disablePast
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Box sx={{ display: "flex" }}>
+                      <DemoContainer components={["DatePicker", "DatePicker"]}>
+                        <DatePicker
+                          label="Start Date"
+                          name="startDate"
+                          value={startDate}
+                          onChange={(date) => setStartDate(date)}
+                          disablePast
+                        />
+                        <DatePicker
+                          label="End Date"
+                          name="endDate"
+                          value={endDate}
+                          onChange={(date) => setEndDate(date)}
+                          disablePast
+                        />
+                      </DemoContainer>
+                    </Box>
+                  </LocalizationProvider>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["TimePicker", "TimePicker"]}>
+                      <TimePicker
+                        label="Class Start Time"
+                        value={startTime}
+                        onChange={(date) => setStartTime(date)}
                       />
-                      <DatePicker
-                        label="End Date"
-                        name="endDate"
-                        value={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        disablePast
+
+                      <TimePicker
+                        label="Class End Time"
+                        value={endTime}
+                        onChange={(date) => setEndTime(date)}
                       />
                     </DemoContainer>
-                  </Box>
-                </LocalizationProvider>
-              </Grid>
+                  </LocalizationProvider>
+                </Grid>
 
-              <Grid item xs={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["TimePicker", "TimePicker"]}>
-                    <TimePicker
-                      label="Class Start Time"
-                      value={startTime}
-                      onChange={(date) => setStartTime(date)}
-                    />
-
-                    <TimePicker
-                      label="Class End Time"
-                      value={endTime}
-                      onChange={(date) => setEndTime(date)}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel id="day-multiple-select-label">
-                    Select Day/s
-                  </InputLabel>
-                  <Select
-                    labelId="day-multiple-select-label"
-                    name="days"
-                    id="demo-simple-select-required"
-                    multiple
-                    required
-                    value={selectedDay}
-                    input={<OutlinedInput label="Day/s" />}
-                    MenuProps={MenuProps}
-                    onChange={(e) => {
-                      setSelectedDay(e.target.value);
-                    }}
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    alignItems="center"
                   >
-                    {days.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    <Button type="submit" variant="contained" color="primary">
+                      Create Course
+                    </Button>
+                  </Box>
+                </Grid>
               </Grid>
-
-              <Grid item xs={12}>
-                <Box display="flex" justifyContent="center" alignItems="center">
-                  <Button type="submit" variant="contained" color="primary">
-                    Create Course
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
+            </Paper>
           </form>
         </Box>
       </Container>
