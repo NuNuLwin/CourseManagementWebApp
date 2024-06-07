@@ -46,7 +46,7 @@ function Login() {
       toast.error(message);
     }
     if (isSuccess && user) {
-      navigate("/Dashboard");
+      navigate("/courseList");
     }
 
     dispatch(reset());

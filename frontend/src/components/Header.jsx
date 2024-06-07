@@ -1,13 +1,9 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
-import Avatar from "@mui/material/Avatar";
-import School from "@mui/icons-material/School";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container, Grid, Divider } from "@mui/material";
-import Box from "@mui/material/Box";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Typography } from "@mui/material";
 
@@ -28,7 +24,7 @@ function Header({ children }) {
   };
 
   const onMyCourses = () => {
-    navigate("/Dashboard");
+    navigate("/courseList");
   };
 
   return (
@@ -55,10 +51,14 @@ function Header({ children }) {
               variant="h6"
               style={{
                 display: "inline-flex",
-                marginLeft: "1em",
+                marginLeft: "0.5em",
                 marginBottom: "0.5em",
                 height: "100%",
                 verticalAlign: "middle",
+                color: "#0D3675",
+                fontFamily: "Inter",
+                fontStyle: "normal",
+                fontWeight: "300",
               }}
             >
               EDU LINK

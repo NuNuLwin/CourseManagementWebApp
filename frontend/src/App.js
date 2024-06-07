@@ -11,6 +11,7 @@ import CreateCourse from "./pages/CreateCourse";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import CourseList from "./pages/CourseList";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -24,13 +25,13 @@ function App() {
     <>
       <Router>
         <div className="container">
-          {/* <Header/> */}
           {user ? (
             <Header>
               <Routes>
                 <Route path="/Dashboard" element={<Dashboard />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/createCourse" element={<CreateCourse />} />
+                <Route path="/courseList" element={<CourseList />} />
                 <Route path="/" element={<Login />} />
               </Routes>
             </Header>

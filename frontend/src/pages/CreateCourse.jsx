@@ -103,7 +103,7 @@ function CreateCourseForm() {
       setAlertType("success");
       setShowAlert(true);
 
-      setTimeout(() => navigate("/Dashboard"), 3000);
+      setTimeout(() => navigate("/courseList"), 3000);
 
       dispatch(reset());
     }
