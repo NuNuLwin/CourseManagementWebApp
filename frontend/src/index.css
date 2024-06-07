@@ -283,5 +283,4 @@ p {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
-  gap: 8px; /* Add space between buttons */
 }

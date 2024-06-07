@@ -7,9 +7,9 @@ const Course = require("../models/courseModel");
 // @access  Private
 const getCourses = asyncHandler(async (req, res) => {
   const instructorId = req.query.instructorId;
-  const courses = await Course.find({ instructor: instructorId }).populate(
-    "class"
-  );
+  const courses = await Course.find({ instructor: instructorId })
+    .sort({ createdAt: -1 })
+    .populate("class");
   res.status(200).json(courses);
 });
 
@@ -40,6 +40,10 @@ const setCourse = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please add all fields");
   }
+
+  // convert date to ISO format
+  const startDateUTC = new Date(startDate).toISOString();
+  const endDateUTC = new Date(endDate).toISOString();
 
   //Determine semester
   const startDateObj = new Date(startDate);
@@ -76,8 +80,8 @@ const setCourse = asyncHandler(async (req, res) => {
     //class: req.body.class.map(c => c.id),
     class: classId,
     //activity: req.body.activity.map(a => a.id),
-    startDate: startDate,
-    endDate: endDate,
+    startDate: startDateUTC,
+    endDate: endDateUTC,
     startTime: startTime,
     endTime: endTime,
     days: days,
