@@ -12,20 +12,12 @@ import {
   Container,
   CssBaseline,
   Grid,
-  InputAdornment,
-  Paper,
-  TextField,
-  Link,
   MenuItem,
-  OutlinedInput,
   Select,
-  InputLabel,
-  FormControl,
 } from "@mui/material";
 
 // redux
 import {
-  createCourse,
   getCoursesByInstructorId,
   reset,
 } from "../features/courses/courseSlice";
@@ -41,6 +33,17 @@ const dayMap = {
   Sunday: "Sun",
 };
 
+// order of days
+const dayOrder = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
 function CourseList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,6 +53,9 @@ function CourseList() {
     (state) => state.course
   );
 
+  const [selectedCourseStatus, setSelectedCourseStatus] =
+    useState("inprogress");
+
   useEffect(() => {
     if (isError) {
       console.log("error in course list");
@@ -58,25 +64,63 @@ function CourseList() {
     if (!user) {
       navigate("login");
     } else {
-      dispatch(getCoursesByInstructorId(user._id));
+      dispatch(
+        getCoursesByInstructorId({
+          instructorId: user._id,
+          courseStatus: selectedCourseStatus,
+        })
+      );
     }
 
     return () => {
       dispatch(reset());
     };
-  }, [user, navigate, isError, message, dispatch]);
+  }, [user, navigate, isError, message, dispatch, selectedCourseStatus]);
 
   if (isLoading) {
     return <Spinner />;
   }
+
+  const sortDays = (days) => {
+    //return days.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
+    //days.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
+    //console.log(days);
+  };
 
   return (
     <>
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ flexGrow: 1, mt: 4 }}>
-          <h1> Courses</h1>
+          <h1>Courses</h1>
           <div>
+            <div>
+              <Select
+                value={selectedCourseStatus}
+                onChange={(e) => {
+                  setSelectedCourseStatus(e.target.value);
+                }}
+                sx={{ mb: 2, bgcolor: "background.paper", marginLeft: "15px" }}
+              >
+                <MenuItem key="all" value="all">
+                  All Courses
+                </MenuItem>
+                <MenuItem key="inprogress" value="inprogress">
+                  In Progress
+                </MenuItem>
+                <MenuItem key="end" value="end">
+                  Ended
+                </MenuItem>
+                <MenuItem key="future" value="future">
+                  Future
+                </MenuItem>
+              </Select>
+
+              <p style={{ display: "inline-flex", marginLeft: "10px" }}>
+                Total: {courses.length}
+              </p>
+            </div>
+
             {courses.map((course) => {
               const formattedStartDate = moment(course.startDate).format(
                 "DD MMM YYYY"
@@ -89,6 +133,8 @@ function CourseList() {
                 "DD MMM YYYY"
               );
 
+              const sortedDays = sortDays(course.days);
+
               return (
                 <div className="course-box" key={course._id}>
                   <h4 className="course-title">{course.courseName}</h4>
@@ -99,6 +145,7 @@ function CourseList() {
                           <div className="date-row">
                             <p>
                               Day(s):
+                              {/* {sortedDays.map((day) => dayMap[day]).join(", ")} */}
                               {course.days.map((day) => dayMap[day]).join(", ")}
                             </p>
                           </div>

@@ -7,7 +7,29 @@ const Course = require("../models/courseModel");
 // @access  Private
 const getCourses = asyncHandler(async (req, res) => {
   const instructorId = req.query.instructorId;
-  const courses = await Course.find({ instructor: instructorId })
+  const courseStatus = req.query.courseStatus || "inprogress"; // Default is inprogress course
+  const currentDate = new Date();
+
+  let query = { instructor: instructorId };
+
+  if (courseStatus === "inprogress") {
+    query = {
+      ...query,
+      startDate: { $lte: currentDate },
+      endDate: { $gte: currentDate },
+    };
+  } else if (courseStatus === "end") {
+    query = {
+      ...query,
+      endDate: { $lt: currentDate },
+    };
+  } else if (courseStatus === "future") {
+    query = {
+      ...query,
+      startDate: { $gte: currentDate },
+    };
+  }
+  const courses = await Course.find(query)
     .sort({ createdAt: -1 })
     .populate("class");
   res.status(200).json(courses);

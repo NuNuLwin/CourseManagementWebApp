@@ -25,9 +25,12 @@ export const createCourse = createAsyncThunk(
 // Get getCoursesByInstructorId
 export const getCoursesByInstructorId = createAsyncThunk(
   "courses/getCoursesByInstructorId",
-  async (instructorId, thunkAPI) => {
+  async ({ instructorId, courseStatus }, thunkAPI) => {
     try {
-      return await courseService.getCoursesByInstructorId(instructorId);
+      return await courseService.getCoursesByInstructorId(
+        instructorId,
+        courseStatus
+      );
     } catch (error) {
       const message = error?.response?.data?.message || "";
       return thunkAPI.rejectWithValue(message);

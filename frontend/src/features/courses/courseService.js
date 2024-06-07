@@ -8,8 +8,10 @@ const createCourse = async (courseData) => {
   return response.data;
 };
 
-const getCoursesByInstructorId = async (instructorId) => {
-  const response = await axios.get(`${API_URL}?instructorId=${instructorId}`);
+const getCoursesByInstructorId = async (instructorId, courseStatus) => {
+  const response = await axios.get(
+    `${API_URL}?instructorId=${instructorId}&courseStatus=${courseStatus}`
+  );
   return response.data;
 };
 
