@@ -51,6 +51,7 @@ function CreateCourseForm() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
   const [alertType, setAlertType] = useState("");
+  const [firstLoad, setFirstLoad] = useState(true);
 
   // material ui multi select
   const ITEM_HEIGHT = 48;
@@ -98,7 +99,7 @@ function CreateCourseForm() {
       setAlertType("error");
       setShowAlert(true);
     }
-    if (isSuccess && courses && !isLoading) {
+    if (isSuccess && courses.length > 0 && !isLoading & !firstLoad) {
       setAlertMsg("A new course is successfully created.");
       setAlertType("success");
       setShowAlert(true);
@@ -114,6 +115,13 @@ function CreateCourseForm() {
     const newEndDate = dayjs(startDate).add(2, "month");
     setEndDate(newEndDate);
   }, [startDate]);
+
+  useEffect(() => {
+    // clean up alert
+    setShowAlert(false);
+    setAlertMsg("");
+    setAlertType("");
+  }, []);
 
   if (isLoading) {
     return <Spinner />;
@@ -133,6 +141,8 @@ function CreateCourseForm() {
       const endDateObj = dayjs(endDate).toDate();
       const startTimeStr = startTime.format("HH:mm"); // Format time as string
       const endTimeStr = endTime.format("HH:mm"); // Format time as string
+
+      setFirstLoad(false);
 
       await dispatch(
         createCourse({
@@ -215,7 +225,6 @@ function CreateCourseForm() {
                       input={<OutlinedInput label="Name" />}
                       MenuProps={MenuProps}
                       onChange={(e) => {
-                        console.log("select class value:", e.target.value);
                         setSelectedClass(e.target.value);
                       }}
                     >

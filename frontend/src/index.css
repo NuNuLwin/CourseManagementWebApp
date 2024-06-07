@@ -240,3 +240,48 @@ body {
   background-color: #f6f6f6 !important;
   margin: 0px !important;
 }
+
+.course-box {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #b6babf;
+  background: #d6e4f0;
+}
+
+h4 {
+  color: #0d3675;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.course-title {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+p {
+  color: #000;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.date-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn_container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  gap: 8px; /* Add space between buttons */
+}

@@ -67,7 +67,7 @@ function Header({ children }) {
 
           <Grid
             item
-            xs={8}
+            xs={6}
             style={{
               paddingTop: "0.5em",
             }}
@@ -102,12 +102,13 @@ function Header({ children }) {
 
           <Grid
             item
-            xs={2}
+            xs={4}
             style={{
               textAlign: "right",
               paddingTop: "0.5em",
             }}
           >
+            {/* <h3>Welcome {user && user.firstname}</h3> */}
             {user && (
               <Button
                 onClick={onLogout}

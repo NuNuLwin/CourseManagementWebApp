@@ -6,7 +6,10 @@ const Course = require("../models/courseModel");
 // @route   Get /api/course
 // @access  Private
 const getCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.find({ "instructor.id": req.query.id });
+  const instructorId = req.query.instructorId;
+  const courses = await Course.find({ instructor: instructorId }).populate(
+    "class"
+  );
   res.status(200).json(courses);
 });
 
@@ -14,7 +17,6 @@ const getCourses = asyncHandler(async (req, res) => {
 // @route   POST /api/course
 // @access  Private
 const setCourse = asyncHandler(async (req, res) => {
-  console.log("inside set course");
   const {
     courseName,
     startDate,
@@ -80,7 +82,6 @@ const setCourse = asyncHandler(async (req, res) => {
     endTime: endTime,
     days: days,
   });
-  console.log(req.body.courseName);
   res.status(200).json(course);
 });
 
