@@ -16,12 +16,7 @@ export const createCourse = createAsyncThunk(
     try {
       return await courseService.createCourse(courseData);
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+      const message = error?.response?.data?.message || "";
       return thunkAPI.rejectWithValue(message);
     }
   }

@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import CssBaseline from "@mui/material/CssBaseline";
+import { Container, TextField, InputAdornment } from "@mui/material";
 
 function Dashboard() {
   return (
-    <div>Home</div>
-  )
+    <>
+      <CssBaseline />
+      <Container maxWidth="md"></Container>
+    </>
+  );
 }
 
-export default Dashboard
+export default Dashboard;

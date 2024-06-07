@@ -1,23 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { createCourse } from "../features/courses/courseSlice";
+
+// redux
+import { createCourse, reset } from "../features/courses/courseSlice";
+
+//class api
 import classService from "../features/courses/classService";
+
+// components
 import Spinner from "../components/Spinner";
 
-// material ui
-import Grid from "@mui/material/Grid";
-import { useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
+// material components
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  InputAdornment,
+  Paper,
+  TextField,
+  Link,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+
+// material ui date time picker
 import dayjs from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -35,6 +48,9 @@ function CreateCourseForm() {
   const [endTime, setEndTime] = useState(dayjs().hour(11).minute(30));
   const [selectedDay, setSelectedDay] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertType, setAlertType] = useState("");
 
   // material ui multi select
   const ITEM_HEIGHT = 48;
@@ -55,7 +71,7 @@ function CreateCourseForm() {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  const { courses, isLoading, isError, message } = useSelector(
+  const { courses, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.course
   );
 
@@ -76,7 +92,22 @@ function CreateCourseForm() {
     } else {
       setUserId(user._id);
     }
-  }, [user, navigate, isError, message, dispatch]);
+
+    if (isError) {
+      setAlertMsg(message);
+      setAlertType("error");
+      setShowAlert(true);
+    }
+    if (isSuccess && courses && !isLoading) {
+      setAlertMsg("A new course is successfully created.");
+      setAlertType("success");
+      setShowAlert(true);
+
+      setTimeout(() => navigate("/Dashboard"), 3000);
+
+      dispatch(reset());
+    }
+  }, [user, navigate, isError, isSuccess, message, dispatch]);
 
   if (isLoading) {
     return <Spinner />;
@@ -84,6 +115,11 @@ function CreateCourseForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    // clean up alert
+    setShowAlert(false);
+    setAlertMsg("");
+    setAlertType("");
 
     try {
       // Convert start date and end date to Date objects
@@ -123,8 +159,21 @@ function CreateCourseForm() {
       <Container maxWidth="md">
         <Box sx={{ flexGrow: 1, mt: 4 }}>
           <form onSubmit={onSubmit}>
-            <h1> Create Course</h1>
-            {user && user._id}
+            <center>
+              <h1> Create Course</h1>
+            </center>
+
+            {showAlert ? (
+              <Alert
+                severity={alertType}
+                style={{
+                  marginBottom: "10px",
+                }}
+              >
+                {alertMsg}
+              </Alert>
+            ) : null}
+
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -133,6 +182,7 @@ function CreateCourseForm() {
                   id="courseName"
                   label="Course Name"
                   variant="outlined"
+                  autoComplete="off"
                   value={courseName}
                   onChange={(e) => setCourseName(e.target.value)}
                 />
@@ -233,15 +283,12 @@ function CreateCourseForm() {
                 </FormControl>
               </Grid>
 
-              <Grid item xs={3}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  Create Course
-                </Button>
+              <Grid item xs={12}>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <Button type="submit" variant="contained" color="primary">
+                    Create Course
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </form>

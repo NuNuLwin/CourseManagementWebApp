@@ -235,3 +235,8 @@ h3 {
   color: "#1E56A0"
 }
 */
+
+body {
+  background-color: #f6f6f6 !important;
+  margin: 0px !important;
+}
