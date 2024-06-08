@@ -10,6 +10,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  hasLoginIn: user ? true : false,
 };
 
 // Register user
@@ -55,36 +56,43 @@ export const authSlice = createSlice({
     builder
       .addCase(register.pending, (state) => {
         state.isLoading = true;
+        state.hasLoginIn = false;
       })
       .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
+        state.hasLoginIn = false;
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         state.user = null;
+        state.hasLoginIn = false;
       })
       .addCase(login.pending, (state) => {
         state.isLoading = true;
+        state.hasLoginIn = false;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
+        state.hasLoginIn = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         state.user = null;
+        state.hasLoginIn = false;
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+        state.hasLoginIn = false;
       });
   },
 });
-export const { reset } = authSlice.actions;
+export const { reset, setLoginUser } = authSlice.actions;
 export default authSlice.reducer;

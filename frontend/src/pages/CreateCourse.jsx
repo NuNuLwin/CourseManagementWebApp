@@ -88,9 +88,7 @@ function CreateCourseForm() {
     };
     fetchClasses();
 
-    if (!user) {
-      navigate("/login");
-    } else {
+    if (user) {
       setUserId(user._id);
     }
 

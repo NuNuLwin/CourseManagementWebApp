@@ -8,35 +8,34 @@ import Header from "./components/Header";
 
 // pages
 import CreateCourse from "./pages/CreateCourse";
-import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CourseList from "./pages/CourseList";
 
+// css
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 function App() {
-  const { user } = useSelector((state) => state.auth);
+  const { user, hasLoginIn } = useSelector((state) => state.auth);
 
   return (
     <>
       <Router>
         <div className="container">
-          {user ? (
+          {user?._id && hasLoginIn ? (
             <Header>
               <Routes>
-                <Route path="/Dashboard" element={<Dashboard />} />
-                <Route path="/register" element={<Register />} />
                 <Route path="/createCourse" element={<CreateCourse />} />
                 <Route path="/courseList" element={<CourseList />} />
-                <Route path="/" element={<Login />} />
+                <Route path="/" element={<CourseList />} />
               </Routes>
             </Header>
           ) : (
             <Routes>
+              <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/" element={<Login />} />
             </Routes>
