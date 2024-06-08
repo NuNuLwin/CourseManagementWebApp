@@ -66,7 +66,7 @@ function Login() {
       email,
       password,
     };
-    dispatch(login(userData)); //call authslice file
+    dispatch(login(userData));
   };
 
   const onLinkSingup = () => {

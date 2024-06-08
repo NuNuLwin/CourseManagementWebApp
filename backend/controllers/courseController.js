@@ -120,7 +120,22 @@ const setCourse = asyncHandler(async (req, res) => {
   res.status(200).json(course);
 });
 
+// @desc    Get Course List by course id
+// @route   Get /api/course
+// @access  Private
+const getCourseByCourseId = asyncHandler(async (req, res) => {
+  const course = await Course.findById(req.params.id)
+    .populate("class")
+    .populate("instructor", "firstname lastname");
+  if (!course) {
+    res.status(400);
+    throw new Error("Course not found");
+  }
+  res.status(200).json(course);
+});
+
 module.exports = {
   getCourses,
   setCourse,
+  getCourseByCourseId,
 };
