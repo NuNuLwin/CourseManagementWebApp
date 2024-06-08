@@ -270,11 +270,6 @@ p {
   line-height: normal;
 }
 
-.date-row {
-  display: flex;
-  justify-content: space-between;
-}
-
 .btn_container {
   display: flex;
   flex-direction: column;
@@ -287,4 +282,13 @@ p {
   font-style: normal;
   font-weight: 300;
   line-height: normal;
+}
+
+.category_box {
+  border: 1px solid #b6babf;
+  background: #1e56a0;
+  padding: 20px;
+  margin: 30px 20px 0 0;
+  color: white;
+  text-align: center;
 }

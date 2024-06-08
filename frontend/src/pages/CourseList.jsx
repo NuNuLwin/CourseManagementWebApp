@@ -121,62 +121,45 @@ function CourseList() {
                     <Grid item md={10} xs={12}>
                       <Grid container>
                         <Grid item md={12} xs={12}>
-                          <div className="date-row">
-                            <h4 className="course-title">
-                              {course.courseName}
-                            </h4>
-                          </div>
+                          <h4 className="course-title">{course.courseName}</h4>
                         </Grid>
                         <Grid item md={3} xs={12}>
-                          <div className="date-row">
-                            <p>
-                              Day(s):
-                              {course.days.map((day) => dayMap[day]).join(", ")}
-                            </p>
-                          </div>
+                          <p>
+                            Day(s):
+                            {course.days.map((day) => dayMap[day]).join(", ")}
+                          </p>
                         </Grid>
                         <Grid item md={3} xs={12}>
-                          <div className="date-row">
-                            <p>
-                              Time: {course.startTime} - {course.endTime}
-                            </p>
-                          </div>
+                          <p>
+                            Time: {course.startTime} - {course.endTime}
+                          </p>
                         </Grid>
                         <Grid item md={6} xs={12}>
-                          <div className="date-row">
-                            <p>
-                              Class(es):
-                              {course.class
-                                .map((cls) => cls.className)
-                                .join(", ")}
-                            </p>
-                          </div>
+                          <p>
+                            Class(es):
+                            {course.class
+                              .map((cls) => cls.className)
+                              .join(", ")}
+                          </p>
                         </Grid>
                         <Grid item md={3} xs={12}>
-                          <div className="date-row">
-                            <p>Start Date: {formattedStartDate}</p>
-                          </div>
+                          <p>Start Date: {formattedStartDate}</p>
                         </Grid>
                         <Grid item md={3} xs={12}>
-                          <div className="date-row">
-                            <p>End Date: {formattedEndDate}</p>
-                          </div>
+                          <p>End Date: {formattedEndDate}</p>
                         </Grid>
 
                         <Grid item md={6} xs={12}>
-                          <div className="date-row">
-                            <p>Created Date:{formattedCreatedDate}</p>
-                            <p></p>
-                          </div>
+                          <p>Created Date:{formattedCreatedDate}</p>
                         </Grid>
                       </Grid>
                     </Grid>
                     <Grid item md={2} xs={12}>
                       <div className="btn_container">
                         <Button
-                          type="submit"
                           variant="contained"
                           color="primary"
+                          onClick={() => navigate(`/courses/${course._id}`)}
                         >
                           View Detail
                         </Button>
