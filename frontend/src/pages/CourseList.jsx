@@ -33,17 +33,6 @@ const dayMap = {
   Sunday: "Sun",
 };
 
-// order of days
-const dayOrder = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
 function CourseList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -80,12 +69,6 @@ function CourseList() {
   if (isLoading) {
     return <Spinner />;
   }
-
-  const sortDays = (days) => {
-    //return days.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
-    //days.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
-    //console.log(days);
-  };
 
   return (
     <>
@@ -133,8 +116,6 @@ function CourseList() {
                 "DD MMM YYYY"
               );
 
-              const sortedDays = sortDays(course.days);
-
               return (
                 <div className="course-box" key={course._id}>
                   <h4 className="course-title">{course.courseName}</h4>
@@ -145,7 +126,6 @@ function CourseList() {
                           <div className="date-row">
                             <p>
                               Day(s):
-                              {/* {sortedDays.map((day) => dayMap[day]).join(", ")} */}
                               {course.days.map((day) => dayMap[day]).join(", ")}
                             </p>
                           </div>
@@ -195,15 +175,17 @@ function CourseList() {
                           View Detail
                         </Button>
                       </div>
-                      <div className="btn_container">
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          color="primary"
-                        >
-                          Registration
-                        </Button>
-                      </div>
+                      {user.role !== "student" && (
+                        <div className="btn_container">
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                          >
+                            Registration
+                          </Button>
+                        </div>
+                      )}
                     </Grid>
                   </Grid>
                 </div>

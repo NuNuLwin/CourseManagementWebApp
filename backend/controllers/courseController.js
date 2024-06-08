@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 
 const Course = require("../models/courseModel");
 
+const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
 // @desc    Get Course List by user id
 // @route   Get /api/course
 // @access  Private
@@ -32,6 +34,11 @@ const getCourses = asyncHandler(async (req, res) => {
   const courses = await Course.find(query)
     .sort({ createdAt: -1 })
     .populate("class");
+
+  courses.forEach((course) => {
+    course.days = ALL_DAYS.filter((x) => course.days.includes(x));
+  });
+
   res.status(200).json(courses);
 });
 
@@ -62,6 +69,8 @@ const setCourse = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please add all fields");
   }
+
+  newDays = ALL_DAYS.filter((x) => days.includes(x));
 
   // convert date to ISO format
   const startDateUTC = new Date(startDate).toISOString();
@@ -106,7 +115,7 @@ const setCourse = asyncHandler(async (req, res) => {
     endDate: endDateUTC,
     startTime: startTime,
     endTime: endTime,
-    days: days,
+    days: newDays,
   });
   res.status(200).json(course);
 });
