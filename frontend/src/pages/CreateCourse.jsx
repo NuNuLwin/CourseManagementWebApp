@@ -183,7 +183,7 @@ function CreateCourseForm() {
           <form onSubmit={onSubmit}>
             <Paper elevation={10} style={paperStyle}>
               <center>
-                <h1> Create Course</h1>
+                <h2> Create Course</h2>
               </center>
 
               {showAlert ? (

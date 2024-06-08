@@ -6,7 +6,6 @@ import moment from "moment";
 
 // material components
 import {
-  Alert,
   Box,
   Button,
   Container,
@@ -75,7 +74,7 @@ function CourseList() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ flexGrow: 1, mt: 4 }}>
-          <h1>Courses</h1>
+          <h2 style={{ padding: "0 20px" }}>Courses</h2>
           <div>
             <div>
               <Select
@@ -118,10 +117,16 @@ function CourseList() {
 
               return (
                 <div className="course-box" key={course._id}>
-                  <h4 className="course-title">{course.courseName}</h4>
                   <Grid container>
                     <Grid item md={10} xs={12}>
                       <Grid container>
+                        <Grid item md={12} xs={12}>
+                          <div className="date-row">
+                            <h4 className="course-title">
+                              {course.courseName}
+                            </h4>
+                          </div>
+                        </Grid>
                         <Grid item md={3} xs={12}>
                           <div className="date-row">
                             <p>
@@ -130,25 +135,14 @@ function CourseList() {
                             </p>
                           </div>
                         </Grid>
-                        <Grid item md={2} xs={12}>
+                        <Grid item md={3} xs={12}>
                           <div className="date-row">
                             <p>
                               Time: {course.startTime} - {course.endTime}
                             </p>
                           </div>
                         </Grid>
-                        <Grid item md={3} xs={12}>
-                          <div className="date-row">
-                            <p>Start Date: {formattedStartDate}</p>
-                          </div>
-                        </Grid>
-                        <Grid item md={4} xs={12}>
-                          <div className="date-row">
-                            <p>End Date: {formattedEndDate}</p>
-                          </div>
-                        </Grid>
-
-                        <Grid item md={8} xs={12}>
+                        <Grid item md={6} xs={12}>
                           <div className="date-row">
                             <p>
                               Class(es):
@@ -158,9 +152,21 @@ function CourseList() {
                             </p>
                           </div>
                         </Grid>
-                        <Grid item md={4} xs={12}>
+                        <Grid item md={3} xs={12}>
                           <div className="date-row">
-                            <p>Created Date: {formattedCreatedDate}</p>
+                            <p>Start Date: {formattedStartDate}</p>
+                          </div>
+                        </Grid>
+                        <Grid item md={3} xs={12}>
+                          <div className="date-row">
+                            <p>End Date: {formattedEndDate}</p>
+                          </div>
+                        </Grid>
+
+                        <Grid item md={6} xs={12}>
+                          <div className="date-row">
+                            <p>Created Date:{formattedCreatedDate}</p>
+                            <p></p>
                           </div>
                         </Grid>
                       </Grid>

@@ -237,7 +237,7 @@ h3 {
 */
 
 body {
-  background-color: #f6f6f6 !important;
+  background-color: #fafafa !important;
   margin: 0px !important;
 }
 
@@ -245,19 +245,16 @@ body {
   border: 1px solid #ccc;
   padding: 16px;
   margin: 16px;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #b6babf;
-  background: #d6e4f0;
+  background: #bbdefb;
+  /* background: #e0e0e0; */
 }
 
-h4 {
-  color: #0d3675;
-  font-family: Inter;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+h3 {
+  color: #767676;
+  font-weight: 400;
 }
 
 .course-title {
@@ -267,7 +264,6 @@ h4 {
 
 p {
   color: #000;
-  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -283,4 +279,12 @@ p {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
+}
+
+.menu_font {
+  color: #000 !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
 }

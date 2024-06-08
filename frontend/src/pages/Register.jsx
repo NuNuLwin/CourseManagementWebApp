@@ -20,6 +20,11 @@ import {
   Paper,
   TextField,
   Link,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
 } from "@mui/material";
 
 // material styles
@@ -87,6 +92,14 @@ function Register() {
       [e.target.name]: e.target.value,
     }));
   };
+
+  const onRoleChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      role: e.target.value,
+    }));
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -299,7 +312,7 @@ function Register() {
                 <input type='text' className='form-control' id='role' name='role' value={role}
                 placeholder='Enter role' onChange={onChange}/>
             </div> */}
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <TextField
                     margin="normal"
                     fullWidth
@@ -311,6 +324,32 @@ function Register() {
                     value={role}
                     onChange={onChange}
                   />
+                </Grid> */}
+
+                <Grid item xs={12}>
+                  <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                      Role:
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-label="role"
+                      name="role"
+                      value={role}
+                      onChange={onRoleChange}
+                    >
+                      <FormControlLabel
+                        value="instructor"
+                        control={<Radio />}
+                        label="Instructor"
+                      />
+                      <FormControlLabel
+                        value="student"
+                        control={<Radio />}
+                        label="Student"
+                      />
+                    </RadioGroup>
+                  </FormControl>
                 </Grid>
 
                 {/* <div className="form-group">

@@ -3,9 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Container, Grid, Divider } from "@mui/material";
+import { Container, Grid, Divider, Box, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Typography } from "@mui/material";
 
 function Header({ children }) {
   const navigate = useNavigate();
@@ -56,7 +55,6 @@ function Header({ children }) {
                 height: "100%",
                 verticalAlign: "middle",
                 color: "#0D3675",
-                fontFamily: "Inter",
                 fontStyle: "normal",
                 fontWeight: "300",
               }}
@@ -67,57 +65,48 @@ function Header({ children }) {
 
           <Grid
             item
-            xs={6}
+            xs={4}
             style={{
               paddingTop: "0.5em",
             }}
           >
             {user && (
               <>
-                <Button onClick={onMyCourses} className="buttoncolor">
+                <Button onClick={onMyCourses} className="buttoncolor menu_font">
                   My Courses
                 </Button>
-                <Button onClick={onCreateCourse} className="buttoncolor">
+                <Button
+                  onClick={onCreateCourse}
+                  className="buttoncolor menu_font"
+                >
                   Create Course
                 </Button>
               </>
             )}
           </Grid>
 
-          {/* <Grid item xs={2}>
-            {user && (
-              <Button onClick={onCreateCourse} className="buttoncolor">
-                My Courses
-              </Button>
-            )}
-          </Grid>
-
-          <Grid item xs={2}>
-            {user && (
-              <Button onClick={onCreateCourse} className="buttoncolor">
-                Create Courses
-              </Button>
-            )}
-          </Grid> */}
-
           <Grid
             item
-            xs={4}
+            xs={6}
             style={{
               textAlign: "right",
               paddingTop: "0.5em",
             }}
           >
-            {/* <h3>Welcome {user && user.firstname}</h3> */}
-            {user && (
-              <Button
-                onClick={onLogout}
-                className="buttoncolor"
-                startIcon={<LogoutIcon />}
-              >
-                Logout
-              </Button>
-            )}
+            <Box display="flex" alignItems="center" justifyContent="flex-end">
+              <h4 style={{ margin: 0, marginRight: "1em", fontWeight: "300" }}>
+                Welcome, {user && user.firstname} {user && user.lastname}
+              </h4>
+              {user && (
+                <Button
+                  onClick={onLogout}
+                  className="menu_font"
+                  startIcon={<LogoutIcon />}
+                >
+                  Logout
+                </Button>
+              )}
+            </Box>
           </Grid>
         </Grid>
       </Container>
