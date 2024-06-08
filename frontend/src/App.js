@@ -1,35 +1,48 @@
-import {BrowserRouter as Router, Routes,Route} from 
-'react-router-dom'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
-import Header from './components/Header';
-import Dashboard from  './pages/Dashboard';
-import Login from './pages/Login'
-import Register from './pages/Register'
-import CreateCourse from './pages/CreateCourse';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
+import "react-toastify/dist/ReactToastify.css";
 
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+// components
+import Header from "./components/Header";
 
+// pages
+import CreateCourse from "./pages/CreateCourse";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import CourseList from "./pages/CourseList";
+
+// css
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 function App() {
+  const { user, hasLoginIn } = useSelector((state) => state.auth);
+
   return (
     <>
-    <Router>
-    <div className='container'>
-      <Header/>
-      <Routes>
-        <Route path='/Dashboard' element={<Dashboard/>} />
-        <Route path='/' element={<Login/>} />
-        <Route path='/register' element={<Register/>} />
-        <Route path='/createCourse' element={<CreateCourse/>} />
-
-      </Routes>
-    </div> 
-    </Router>
-    <ToastContainer/>
+      <Router>
+        <div className="container">
+          {user?._id && hasLoginIn ? (
+            <Header>
+              <Routes>
+                <Route path="/createCourse" element={<CreateCourse />} />
+                <Route path="/courseList" element={<CourseList />} />
+                <Route path="/" element={<CourseList />} />
+              </Routes>
+            </Header>
+          ) : (
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<Login />} />
+            </Routes>
+          )}
+        </div>
+      </Router>
+      <ToastContainer />
     </>
   );
 }

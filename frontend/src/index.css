@@ -234,3 +234,57 @@ h3 {
 .darkbluecolor{
   color: "#1E56A0"
 }
+*/
+
+body {
+  background-color: #fafafa !important;
+  margin: 0px !important;
+}
+
+.course-box {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+  /* border-radius: 8px; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #b6babf;
+  background: #bbdefb;
+  /* background: #e0e0e0; */
+}
+
+h3 {
+  color: #767676;
+  font-weight: 400;
+}
+
+.course-title {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+p {
+  color: #000;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.date-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn_container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.menu_font {
+  color: #000 !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+}

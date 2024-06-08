@@ -1,53 +1,126 @@
-const asyncHandler = require('express-async-handler')
+const asyncHandler = require("express-async-handler");
 
-const Course = require('../models/courseModel')
+const Course = require("../models/courseModel");
+
+const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 // @desc    Get Course List by user id
 // @route   Get /api/course
 // @access  Private
 const getCourses = asyncHandler(async (req, res) => {
-    const courses = await Course.find({ 'instructor.id': req.query.id })
-    res.status(200).json(courses)
-})
+  const instructorId = req.query.instructorId;
+  const courseStatus = req.query.courseStatus || "inprogress"; // Default is inprogress course
+  const currentDate = new Date();
+
+  let query = { instructor: instructorId };
+
+  if (courseStatus === "inprogress") {
+    query = {
+      ...query,
+      startDate: { $lte: currentDate },
+      endDate: { $gte: currentDate },
+    };
+  } else if (courseStatus === "end") {
+    query = {
+      ...query,
+      endDate: { $lt: currentDate },
+    };
+  } else if (courseStatus === "future") {
+    query = {
+      ...query,
+      startDate: { $gte: currentDate },
+    };
+  }
+  const courses = await Course.find(query)
+    .sort({ createdAt: -1 })
+    .populate("class");
+
+  courses.forEach((course) => {
+    course.days = ALL_DAYS.filter((x) => course.days.includes(x));
+  });
+
+  res.status(200).json(courses);
+});
 
 // @desc    Create a new Course
 // @route   POST /api/course
 // @access  Private
 const setCourse = asyncHandler(async (req, res) => {
-    const { courseName, startDate, endDate, startTime, endTime, days} = req.body
+  const {
+    courseName,
+    startDate,
+    endDate,
+    startTime,
+    endTime,
+    days,
+    classId,
+    instructorId,
+  } = req.body;
 
-    if (!courseName || !startDate || !endDate || !startTime || !endTime) {
-        res.status(400)
-        throw new Error('Please add all fields')
-    }
+  if (
+    !courseName ||
+    !startDate ||
+    !endDate ||
+    !startTime ||
+    !endTime ||
+    !days ||
+    !classId
+  ) {
+    res.status(400);
+    throw new Error("Please add all fields");
+  }
 
-    const courseExists = await Course.findOne({
-        courseName: courseName, startDate: startDate
-    })
-  
-    if (courseExists) {
-        res.status(400)
-        throw new Error('courseExists already exists')
-    }
+  newDays = ALL_DAYS.filter((x) => days.includes(x));
 
-    //Create a course
-    const course = await Course.create({
-        courseName: req.body.courseName,
-        instructor: req.query.id,
-        class: req.body.class.map(c => c.id),
-        activity: req.body.activity.map(a => a.id),
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-        days: req.body.days
+  // convert date to ISO format
+  const startDateUTC = new Date(startDate).toISOString();
+  const endDateUTC = new Date(endDate).toISOString();
 
-    })
-    console.log(req.body.courseName)
-    res.status(200).json(course)
-})
+  //Determine semester
+  const startDateObj = new Date(startDate);
+  const courseStartMonth = startDateObj.getMonth() + 1;
+  const courseStartYear = startDateObj.getFullYear();
+
+  let semester;
+
+  if (courseStartMonth >= 1 && courseStartMonth <= 4) {
+    semester = "Winter";
+  } else if (courseStartMonth >= 5 && courseStartMonth <= 8) {
+    semester = "Spring/Summer";
+  } else {
+    semester = "Fall";
+  }
+
+  semester = `${semester} ${courseStartYear}`;
+
+  const courseNameWithSemester = `${courseName} - ${semester}`;
+
+  const courseExists = await Course.findOne({
+    courseName: courseNameWithSemester,
+  });
+
+  if (courseExists) {
+    res.status(400);
+    throw new Error(`${courseNameWithSemester} course already exists`);
+  }
+
+  //Create a course
+  const course = await Course.create({
+    courseName: courseNameWithSemester,
+    instructor: instructorId,
+    //class: req.body.class.map(c => c.id),
+    class: classId,
+    //activity: req.body.activity.map(a => a.id),
+    startDate: startDateUTC,
+    endDate: endDateUTC,
+    startTime: startTime,
+    endTime: endTime,
+    days: newDays,
+  });
+  res.status(200).json(course);
+});
 
 module.exports = {
-    getCourses,
-    setCourse,
-}
+  getCourses,
+  setCourse,
+};
