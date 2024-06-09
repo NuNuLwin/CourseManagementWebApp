@@ -32,8 +32,7 @@ const getCourses = asyncHandler(async (req, res) => {
       startDate: { $gte: currentDate },
     };
   }
-  //
-  // []
+
   let courses = [];
   if (studentId) {
     const studentRegistrations = await StudentRegistration.find({
@@ -129,9 +128,7 @@ const setCourse = asyncHandler(async (req, res) => {
   const course = await Course.create({
     courseName: courseNameWithSemester,
     instructor: instructorId,
-    //class: req.body.class.map(c => c.id),
     class: classId,
-    //activity: req.body.activity.map(a => a.id),
     startDate: startDateUTC,
     endDate: endDateUTC,
     startTime: startTime,
@@ -155,21 +152,8 @@ const getCourseByCourseId = asyncHandler(async (req, res) => {
   res.status(200).json(course);
 });
 
-// @desc    Get Course Detail by course id and category id
-// @route   Get /api/course
-// @access  Private
-const getCourseDetail = asyncHandler(async (req, res) => {
-  console.log("inside getCourseDetail");
-  console.log(req.params.id);
-  console.log(req.params.categoryId);
-
-  // const course = await courseModel.find;
-  res.status(200).json("inside getCourseDetailByCategoryId");
-});
-
 module.exports = {
   getCourses,
   setCourse,
   getCourseByCourseId,
-  getCourseDetail,
 };
