@@ -218,9 +218,7 @@ function CourseList() {
                             variant="contained"
                             color="primary"
                             onClick={() =>
-                              navigate(
-                                `/studentList/${course._id}/${course.courseName}`
-                              )
+                              navigate(`/studentList/${course._id}`)
                             }
                           >
                             Registration

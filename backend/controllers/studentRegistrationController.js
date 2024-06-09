@@ -20,23 +20,21 @@ const registeration = asyncHandler(async (req, res) => {
 });
 
 const getRegistrationStudent = asyncHandler(async (req, res) => {
-  console.log("call getRegistrationStudent of controller");
+  const resultStudent = [];
   const courseid = req.params.id;
   const Course = await course.findById(courseid); //   66612c67e68eaae1d01648ab   66612267e68eaae1d01648a7   66613072e68eaae1d01648b7
   const startDate = Course.startDate;
   const endDate = Course.endDate;
   const classlist = Course.class;
-  console.log("classlist " + classlist);
 
   // retrieve registered student based on course
   const checkStudents = await studentRegistration
     .where("class")
     .equals(classlist);
-  console.log("student list=>" + checkStudents);
   if (checkStudents.length === 0) {
-    console.log("student list is 0");
-    res.status(400);
-    throw new Error("There is no student registered in this course.");
+    // res.status(400)
+    // throw new Error('There is no student registered in this course.')
+    res.status(200).json(resultStudent);
   }
 
   const studentlist = await studentRegistration
@@ -45,14 +43,8 @@ const getRegistrationStudent = asyncHandler(async (req, res) => {
     .populate("class")
     .populate("user");
 
-  // if(studentlist.length === 0){
-  //     console.log('student list is 0')
-  //     res.status(400)
-  //     throw new Error('There is no student registered in this course.')
-  // }
   console.log("after student list is 0");
-  // create a new response 'resultStudent' which include student info, class info and course info whic are only necessary
-  const resultStudent = [];
+
   for (let i = 0; i < studentlist.length; i++) {
     const id = studentlist[i]._id;
     const studentname =
@@ -78,7 +70,7 @@ const getRegistrationStudent = asyncHandler(async (req, res) => {
 const registerStudents = asyncHandler(async (req, res) => {
   const classes = [];
   const courseid = req.params.id;
-  const Course = await course.findById(courseid); //   66612c67e68eaae1d01648ab   66612267e68eaae1d01648a7   66613072e68eaae1d01648b7
+  const Course = await course.findById(courseid);
   const classlist = Course.class;
 
   //retrieve class id array and create id arrary which are to put as filter in update query
@@ -139,32 +131,6 @@ const registerStudents = asyncHandler(async (req, res) => {
       endDate: endDate,
     });
   }
-
-  // bookingDetails.updateMany({
-  //     "$or": [
-  //       {
-  //         "book_status": "ACCEPTED"
-  //       },
-  //       {
-  //         "book_status": "BOOKED"
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     "$set": {
-  //       "book_status": "DONE"
-  //     }
-  //   })
-
-  // retrieve registered student based on course
-  // const idlist = await studentRegistration.where("class").equals(classlist).select("_id")
-  // console.log("idlist "+idlist)
-
-  // const updateRegisteredStatus = await studentRegistration.findOneAndUpdate(classlist, update,
-  //     {
-  //     new: true,
-  //     });
-
   res.status(200).json(resultStudent);
 });
 
