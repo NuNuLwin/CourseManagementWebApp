@@ -252,6 +252,17 @@ body {
   /* background: #e0e0e0; */
 }
 
+.content_box {
+  border: 1px solid hsl(0, 0%, 80%);
+  padding: 5px 10px;
+  margin: 5px;
+  /* border-radius: 8px; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #b6babf;
+  background: #bbdefb;
+  /* background: #e0e0e0; */
+}
+
 h3 {
   color: #767676;
   font-weight: 400;
@@ -297,4 +308,8 @@ p {
 .category_box:hover {
   background-color: #d6e4f0;
   color: #000;
+}
+
+.cur_pointer {
+  cursor: "pointer";
 }

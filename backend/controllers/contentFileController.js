@@ -8,7 +8,7 @@ const Course = require("../models/courseModel");
 const ContentFile = require("../models/contentFileModel");
 
 // @desc    Upload content File
-// @route   /api/content/files/
+// @route   Post /api/content/files/
 // @access  Private
 
 const uploadContentFile = asyncHandler(async (req, res) => {
