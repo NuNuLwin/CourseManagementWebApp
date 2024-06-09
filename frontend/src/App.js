@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CourseList from "./pages/CourseList";
 import CourseDetail from "./pages/CourseDetail";
+import StudentList from "./pages/StudentList";
 
 // css
 import "@fontsource/roboto/300.css";
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/courseList" element={<CourseList />} />
                 <Route path="/courseList" element={<CourseList />} />
                 <Route path="/courses/:courseId" element={<CourseDetail />} />
+                <Route path="/studentList/:courseId/:courseName" element={<StudentList />} />
                 <Route path="/" element={<CourseList />} />
               </Routes>
             </Header>
