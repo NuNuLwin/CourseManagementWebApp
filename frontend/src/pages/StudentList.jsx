@@ -122,7 +122,7 @@ function StudentList() {
                             </Button>
                             </Grid>
                             <Grid item xs={2} >
-                                <Button  sx={{ mt: 3, mb: 2 }} variant="contained" style={ {backgroundColor: "#1E56A0"}}> 
+                                <Button  sx={{ mt: 3, mb: 2 }} variant="contained" style={ {backgroundColor: "#1E56A0"}} onClick={()=>navigate("/courseList")}> 
                                     Cancel
                                 </Button>
                             </Grid>
