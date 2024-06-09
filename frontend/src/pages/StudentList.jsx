@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner"
 import { getStudents,registerStudents, reset } from '../features/students/studentslice'
+import { getCourseByCourseId } from "../features/courses/courseSlice";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid';
@@ -23,17 +24,23 @@ function StudentList() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { courseId,courseName } = useParams();
+  const { courseId } = useParams();
 
   const {user} = useSelector((state) => state.auth)
   const { students, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.students
   )
+  const { courses, isLoadingCourse, isErrorCourse, isSuccessCourse, messageCourse } = useSelector(
+    (state) => state.course
+  );
 
+  const course = courses[0];
   useEffect(()=> {
     if(isError){
       console.log(message);
     }
+
+    dispatch(getCourseByCourseId(courseId));
 
     dispatch(getStudents(courseId))
 
@@ -82,7 +89,7 @@ function StudentList() {
                   {breadcrumbs}
                 </Breadcrumbs>
               </Stack>
-              <h2 > {courseName}</h2>
+              <h2 > {course.courseName}</h2>
               <h3 >Student Registration</h3>
               <h5 style={{textAlign:'right'}}>Total: {students.length}</h5>
               <Grid container>

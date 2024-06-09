@@ -170,7 +170,7 @@ function CourseList() {
                             type="submit"
                             variant="contained"
                             color="primary"
-                            onClick={()=> navigate(`/studentList/${course._id}/${course.courseName}`)}
+                            onClick={()=> navigate(`/studentList/${course._id}`)}
                              >
                             Registration
                           </Button>
