@@ -22,7 +22,7 @@ export const createCourse = createAsyncThunk(
   }
 );
 
-// Get getCoursesByInstructorId
+// Get courses by instructor id
 export const getCoursesByInstructorId = createAsyncThunk(
   "courses/getCoursesByInstructorId",
   async ({ instructorId, courseStatus }, thunkAPI) => {
@@ -38,7 +38,7 @@ export const getCoursesByInstructorId = createAsyncThunk(
   }
 );
 
-// Get getCourseByCourseId
+// Get course by course id
 export const getCourseByCourseId = createAsyncThunk(
   "courses/getCourseByCourseId",
   async (courseId, thunkAPI) => {

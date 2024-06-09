@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 
 const Course = require("../models/courseModel");
+const courseModel = require("../models/courseModel");
 
 const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -134,8 +135,21 @@ const getCourseByCourseId = asyncHandler(async (req, res) => {
   res.status(200).json(course);
 });
 
+// @desc    Get Course Detail by course id and category id
+// @route   Get /api/course
+// @access  Private
+const getCourseDetail = asyncHandler(async (req, res) => {
+  console.log("inside getCourseDetail");
+  console.log(req.params.id);
+  console.log(req.params.categoryId);
+
+  // const course = await courseModel.find;
+  res.status(200).json("inside getCourseDetailByCategoryId");
+});
+
 module.exports = {
   getCourses,
   setCourse,
   getCourseByCourseId,
+  getCourseDetail,
 };

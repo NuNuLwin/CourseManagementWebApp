@@ -5,8 +5,6 @@ import Spinner from "../components/Spinner";
 import { getCourseByCourseId } from "../features/courses/courseSlice";
 import moment from "moment";
 
-// activity api
-
 // material components
 import {
   Box,
@@ -19,6 +17,8 @@ import {
   Link,
   Stack,
 } from "@mui/material";
+
+// activity api
 import activityService from "../features/courses/activityService";
 
 // change day name to short form
@@ -32,12 +32,6 @@ const dayMap = {
   Sunday: "Sun",
 };
 
-// breadcrumb handleclick
-function handleClick(event) {
-  event.preventDefault();
-  console.info("You clicked a breadcrumb.");
-}
-
 function CourseDetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,8 +44,12 @@ function CourseDetail() {
 
   const [activities, setActivities] = useState([]);
   const course = courses[0];
-  //   const formattedStartDate = moment(course.startDate).format("DD MMM YYYY");
-  //   const formattedEndDate = moment(course.endDate).format("DD MMM YYYY");
+  const formattedStartDate = course
+    ? moment(course.startDate).format("DD MMM YYYY")
+    : "";
+  const formattedEndDate = course
+    ? moment(course.endDate).format("DD MMM YYYY")
+    : "";
 
   useEffect(() => {
     if (isError) {
@@ -117,16 +115,16 @@ function CourseDetail() {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <p>
-                    Class(es):{" "}
+                    Class(es):
                     {course.class.map((cls) => cls.className).join(", ")}
                   </p>
                 </Grid>
                 <Grid item md={3} xs={12}>
-                  {/* <p>Start Date: {formattedStartDate}</p> */}
+                  <p>Start Date: {formattedStartDate}</p>
                 </Grid>
 
                 <Grid item md={3} xs={12}>
-                  {/* <p>End Date: {formattedEndDate}</p> */}
+                  <p>End Date: {formattedEndDate}</p>
                 </Grid>
 
                 <Grid item md={6} xs={12}>
@@ -137,7 +135,22 @@ function CourseDetail() {
                 </Grid>
                 {activities.map((activity) => (
                   <Grid item md={3} xs={12} key={activity.id}>
-                    <Box className="category_box">{activity.activityName}</Box>
+                    <Link
+                      // to={`/courseId/${courseId}/categoryId/${activity._id}`}
+                      underline="hover"
+                      onClick={() =>
+                        navigate(
+                          `/courseId/${courseId}/categoryId/${activity._id}`
+                        )
+                      }
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Box className="category_box">
+                        {activity.activityName}
+                      </Box>
+                    </Link>
                   </Grid>
                 ))}
               </Grid>

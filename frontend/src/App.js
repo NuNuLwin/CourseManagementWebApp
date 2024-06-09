@@ -19,6 +19,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import CategoryDetail from "./pages/CategoryDetail";
 
 function App() {
   const { user, hasLoginIn } = useSelector((state) => state.auth);
@@ -32,9 +33,15 @@ function App() {
               <Routes>
                 <Route path="/createCourse" element={<CreateCourse />} />
                 <Route path="/courseList" element={<CourseList />} />
-                <Route path="/courseList" element={<CourseList />} />
-                <Route path="/courses/:courseId" element={<CourseDetail />} />
-                <Route path="/studentList/:courseId" element={<StudentList />} />
+                <Route path="/course/:courseId" element={<CourseDetail />} />
+                <Route
+                  path="/courseId/:courseId/categoryId/:categoryId"
+                  element={<CategoryDetail />}
+                />
+                <Route
+                  path="/studentList/:courseId/:courseName"
+                  element={<StudentList />}
+                />
                 <Route path="/" element={<CourseList />} />
               </Routes>
             </Header>
