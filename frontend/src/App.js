@@ -39,7 +39,7 @@ function App() {
                   element={<CategoryDetail />}
                 />
                 <Route
-                  path="/studentList/:courseId/:courseName"
+                  path="/studentList/:courseId"
                   element={<StudentList />}
                 />
                 <Route path="/" element={<CourseList />} />
