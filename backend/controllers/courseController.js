@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 
 const Course = require("../models/courseModel");
-const courseModel = require("../models/courseModel");
+const StudentRegistration = require("../models/studentRegistrationModel");
 
 const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -10,11 +10,11 @@ const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 // @access  Private
 const getCourses = asyncHandler(async (req, res) => {
   const instructorId = req.query.instructorId;
+  const studentId = req.query.studentId;
   const courseStatus = req.query.courseStatus || "inprogress"; // Default is inprogress course
   const currentDate = new Date();
 
-  let query = { instructor: instructorId };
-
+  let query = instructorId ? { instructor: instructorId } : {};
   if (courseStatus === "inprogress") {
     query = {
       ...query,
@@ -32,9 +32,26 @@ const getCourses = asyncHandler(async (req, res) => {
       startDate: { $gte: currentDate },
     };
   }
-  const courses = await Course.find(query)
-    .sort({ createdAt: -1 })
-    .populate("class");
+  //
+  // []
+  let courses = [];
+  if (studentId) {
+    const studentRegistrations = await StudentRegistration.find({
+      user: studentId,
+      registrationstatus: "registered",
+    });
+
+    const classIds = studentRegistrations.map(
+      (registration) => registration.class
+    );
+
+    query = {
+      ...query,
+      class: { $in: classIds },
+    };
+  }
+
+  courses = await Course.find(query).sort({ createdAt: -1 }).populate("class");
 
   courses.forEach((course) => {
     course.days = ALL_DAYS.filter((x) => course.days.includes(x));

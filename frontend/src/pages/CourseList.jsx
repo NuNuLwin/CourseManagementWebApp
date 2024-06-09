@@ -6,6 +6,7 @@ import moment from "moment";
 
 // material components
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -18,6 +19,7 @@ import {
 // redux
 import {
   getCoursesByInstructorId,
+  getCoursesByStudentId,
   reset,
 } from "../features/courses/courseSlice";
 
@@ -43,27 +45,61 @@ function CourseList() {
 
   const [selectedCourseStatus, setSelectedCourseStatus] =
     useState("inprogress");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("");
+  const [alertType, setAlertType] = useState("");
 
   useEffect(() => {
-    if (isError) {
-      console.log("error in course list");
-    }
-
-    if (!user) {
-      navigate("login");
-    } else {
+    if (user.role !== "student") {
       dispatch(
         getCoursesByInstructorId({
           instructorId: user._id,
           courseStatus: selectedCourseStatus,
         })
       );
+    } else {
+      dispatch(
+        getCoursesByStudentId({
+          studentId: user._id,
+          courseStatus: selectedCourseStatus,
+        })
+      );
     }
+  }, [selectedCourseStatus]);
 
-    return () => {
-      dispatch(reset());
-    };
-  }, [user, navigate, isError, message, dispatch, selectedCourseStatus]);
+  useEffect(() => {
+    if (user.role !== "student") {
+      dispatch(
+        getCoursesByInstructorId({
+          instructorId: user._id,
+          courseStatus: selectedCourseStatus,
+        })
+      );
+    } else {
+      dispatch(
+        getCoursesByStudentId({
+          studentId: user._id,
+          courseStatus: selectedCourseStatus,
+        })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (courses.length === 0 && !isLoading && isSuccess) {
+      setAlertMsg("No course Available");
+      setAlertType("info");
+      setShowAlert(true);
+    } else if (!isLoading && isError) {
+      setAlertMsg(message || "Error retrieving the courses.");
+      setAlertType("error");
+      setShowAlert(true);
+    } else {
+      setAlertMsg("");
+      setAlertType("");
+      setShowAlert(false);
+    }
+  }, [courses, isSuccess, isLoading, isError]);
 
   if (isLoading) {
     return <Spinner />;
@@ -101,6 +137,17 @@ function CourseList() {
               <p style={{ display: "inline-flex", marginLeft: "10px" }}>
                 Total: {courses.length}
               </p>
+
+              {showAlert ? (
+                <Alert
+                  severity={alertType}
+                  style={{
+                    marginBottom: "10px",
+                  }}
+                >
+                  {alertMsg}
+                </Alert>
+              ) : null}
             </div>
 
             {courses.map((course) => {
@@ -170,8 +217,12 @@ function CourseList() {
                             type="submit"
                             variant="contained"
                             color="primary"
-                            onClick={()=> navigate(`/studentList/${course._id}/${course.courseName}`)}
-                             >
+                            onClick={() =>
+                              navigate(
+                                `/studentList/${course._id}/${course.courseName}`
+                              )
+                            }
+                          >
                             Registration
                           </Button>
                         </div>

@@ -16,6 +16,14 @@ const getCoursesByInstructorId = async (instructorId, courseStatus) => {
   return response.data;
 };
 
+// Get courses by student id
+const getCoursesByStudentId = async (studentId, courseStatus) => {
+  const response = await axios.get(
+    `${API_URL}?studentId=${studentId}&courseStatus=${courseStatus}`
+  );
+  return response.data;
+};
+
 // Get course by course id
 const getCourseByCourseId = async (courseId) => {
   const response = await axios.get(`${API_URL}${courseId}`);
@@ -31,6 +39,7 @@ const getCourseDetail = async (courseId, categoryId) => {
 const courseService = {
   createCourse,
   getCoursesByInstructorId,
+  getCoursesByStudentId,
   getCourseByCourseId,
   getCourseDetail,
 };

@@ -75,12 +75,14 @@ function Header({ children }) {
                 <Button onClick={onMyCourses} className="buttoncolor menu_font">
                   My Courses
                 </Button>
-                <Button
-                  onClick={onCreateCourse}
-                  className="buttoncolor menu_font"
-                >
-                  Create Course
-                </Button>
+                {user.role !== "student" && (
+                  <Button
+                    onClick={onCreateCourse}
+                    className="buttoncolor menu_font"
+                  >
+                    Create Course
+                  </Button>
+                )}
               </>
             )}
           </Grid>
