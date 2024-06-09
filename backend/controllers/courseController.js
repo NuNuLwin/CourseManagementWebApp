@@ -51,7 +51,10 @@ const getCourses = asyncHandler(async (req, res) => {
     };
   }
 
-  courses = await Course.find(query).sort({ createdAt: -1 }).populate("class");
+  courses = await Course.find(query)
+    .sort({ createdAt: -1 })
+    .populate("class")
+    .populate("instructor", "firstname lastname");
 
   courses.forEach((course) => {
     course.days = ALL_DAYS.filter((x) => course.days.includes(x));

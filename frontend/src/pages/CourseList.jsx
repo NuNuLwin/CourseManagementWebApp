@@ -195,8 +195,13 @@ function CourseList() {
                         <Grid item md={3} xs={12}>
                           <p>End Date: {formattedEndDate}</p>
                         </Grid>
-
-                        <Grid item md={6} xs={12}>
+                        <Grid item md={3} xs={12}>
+                          <p>
+                            Instructor: {course.instructor.firstname}{" "}
+                            {course.instructor.lastname}
+                          </p>
+                        </Grid>
+                        <Grid item md={3} xs={12}>
                           <p>Created Date:{formattedCreatedDate}</p>
                         </Grid>
                       </Grid>
