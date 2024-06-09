@@ -22,7 +22,7 @@ export const createCourse = createAsyncThunk(
   }
 );
 
-// Get getCoursesByInstructorId
+// Get courses by instructor id
 export const getCoursesByInstructorId = createAsyncThunk(
   "courses/getCoursesByInstructorId",
   async ({ instructorId, courseStatus }, thunkAPI) => {
@@ -38,12 +38,25 @@ export const getCoursesByInstructorId = createAsyncThunk(
   }
 );
 
-// Get getCourseByCourseId
+// Get course by course id
 export const getCourseByCourseId = createAsyncThunk(
   "courses/getCourseByCourseId",
   async (courseId, thunkAPI) => {
     try {
       return await courseService.getCourseByCourseId(courseId);
+    } catch (error) {
+      const message = error?.response?.data?.message || "";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Get course detail by category id and course id
+export const getCourseDetail = createAsyncThunk(
+  "courses/getCourseDetailByCatId",
+  async ({ courseId, categoryId }, thunkAPI) => {
+    try {
+      return await courseService.getCourseDetail(courseId, categoryId);
     } catch (error) {
       const message = error?.response?.data?.message || "";
       return thunkAPI.rejectWithValue(message);
@@ -94,6 +107,19 @@ export const courseSlice = createSlice({
         state.courses = [action.payload];
       })
       .addCase(getCourseByCourseId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getCourseDetail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getCourseDetail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.courses = [action.payload];
+      })
+      .addCase(getCourseDetail.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

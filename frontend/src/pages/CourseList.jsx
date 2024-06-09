@@ -159,7 +159,7 @@ function CourseList() {
                         <Button
                           variant="contained"
                           color="primary"
-                          onClick={() => navigate(`/courses/${course._id}`)}
+                          onClick={() => navigate(`/course/${course._id}`)}
                         >
                           View Detail
                         </Button>

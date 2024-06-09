@@ -22,10 +22,17 @@ const getCourseByCourseId = async (courseId) => {
   return response.data;
 };
 
+// Get course detail by course id and
+const getCourseDetail = async (courseId, categoryId) => {
+  const response = await axios.get(`${API_URL}${courseId}/${categoryId}`);
+  return response.data;
+};
+
 const courseService = {
   createCourse,
   getCoursesByInstructorId,
   getCourseByCourseId,
+  getCourseDetail,
 };
 
 export default courseService;
