@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const courseFileSchema = new mongoose.Schema(
+const contentFileSchema = new mongoose.Schema(
   {
     length: { type: Number },
     chunkSize: { type: Number },
@@ -8,7 +8,7 @@ const courseFileSchema = new mongoose.Schema(
     filename: { type: String, trim: true, searchable: true },
     md5: { type: String, trim: true, searchable: true },
   },
-  { collection: "courses.files", id: false }
+  { collection: "content.files", id: false }
 );
 
-module.exports = mongoose.model("CourseFile", courseFileSchema);
+module.exports = mongoose.model("ContentFile", contentFileSchema);

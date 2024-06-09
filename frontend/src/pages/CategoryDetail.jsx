@@ -15,7 +15,7 @@ import {
   Link,
   Stack,
 } from "@mui/material";
-import { getCourseDetail } from "../features/courses/courseSlice";
+import { getCourseContent } from "../features/courses/contentFileSlice";
 
 function CategoryDetail() {
   const navigate = useNavigate();
@@ -27,12 +27,14 @@ function CategoryDetail() {
     (state) => state.course
   );
 
+  const course = courses[0];
+
   useEffect(() => {
     if (isError) {
       console.log(message);
     }
 
-    dispatch(getCourseDetail(courseId, categoryId));
+    dispatch(getCourseContent(courseId, categoryId));
   }, [dispatch, courseId, categoryId, isError, message]);
 
   if (isLoading) {
@@ -74,6 +76,7 @@ function CategoryDetail() {
                   {breadcrumbs}
                 </Breadcrumbs>
               </Stack>
+              <h2> {course.courseName}</h2>
             </Grid>
           </Grid>
         </Box>

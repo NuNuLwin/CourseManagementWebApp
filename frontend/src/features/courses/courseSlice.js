@@ -51,19 +51,6 @@ export const getCourseByCourseId = createAsyncThunk(
   }
 );
 
-// Get course detail by category id and course id
-export const getCourseDetail = createAsyncThunk(
-  "courses/getCourseDetailByCatId",
-  async ({ courseId, categoryId }, thunkAPI) => {
-    try {
-      return await courseService.getCourseDetail(courseId, categoryId);
-    } catch (error) {
-      const message = error?.response?.data?.message || "";
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
 export const courseSlice = createSlice({
   name: "course",
   initialState,
@@ -107,19 +94,6 @@ export const courseSlice = createSlice({
         state.courses = [action.payload];
       })
       .addCase(getCourseByCourseId.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-      .addCase(getCourseDetail.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getCourseDetail.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.courses = [action.payload];
-      })
-      .addCase(getCourseDetail.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
