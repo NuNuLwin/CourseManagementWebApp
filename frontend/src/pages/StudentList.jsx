@@ -70,10 +70,9 @@ function StudentList() {
   ];
 
   const columns = [
-    { field: 'studentname', headerName: 'Name', width: 200,headerAlign: 'left', align: 'left'},
-    { field: 'email', headerName: 'Email', width: 200 ,headerAlign: 'left', align: 'left'},
-    { field: 'classname', headerName: 'Class', width: 200 ,headerAlign: 'left', align: 'left'},
-    { field: 'semester', headerName: 'Semester', width: 200 ,headerAlign: 'left', align: 'left'},
+    { field: 'studentname', headerName: 'Name', width: 250,headerAlign: 'left', align: 'left'},
+    { field: 'email', headerName: 'Email', width: 250 ,headerAlign: 'left', align: 'left'},
+    { field: 'classname', headerName: 'Class', width: 250 ,headerAlign: 'left', align: 'left'},
     { field: 'registrationstatus', headerName: 'Registration Status', width: 200,headerAlign: 'left', align: 'left'},
   ];
 
