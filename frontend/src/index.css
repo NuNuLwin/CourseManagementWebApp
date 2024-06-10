@@ -298,3 +298,14 @@ p {
   background-color: #d6e4f0;
   color: #000;
 }
+
+/* 1876d2 */
+.super-app-theme--header {
+  background-color: #1876d2;
+  font-weight: bold;
+  color: #fafafa;
+}
+.row-theme {
+  background-color: #1876d2;
+  text-align: center;
+}
