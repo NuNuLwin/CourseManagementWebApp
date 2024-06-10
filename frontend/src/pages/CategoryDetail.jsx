@@ -35,7 +35,7 @@ function CategoryDetail() {
   const [file, setFile] = useState("");
   const [course, setCourse] = useState({});
   const [categoryFiles, setCategoryFiles] = useState([]);
-  const [activityName, setActivities] = useState("");
+  const [activityName, setActivityName] = useState("");
   const fileUploadForm = useRef(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -55,9 +55,18 @@ function CategoryDetail() {
           return false;
         }) || [];
       files.sort((a, b) => moment(b.uploadDate) - moment(a.uploadDate));
-      console.log("FILES:", files);
+      //console.log("FILES:", files);
       setCourse(courses[0]);
       setCategoryFiles(files);
+
+      const activities = courses[0]?.activities?.filter((activity) => {
+        //console.log("activity", activity);
+        if (activity && activity._id) {
+          if (activity._id === categoryId) {
+            setActivityName(activity.activityName);
+          }
+        }
+      });
     }
   }, [courses, isLoading]);
 
@@ -89,7 +98,8 @@ function CategoryDetail() {
       Detail
     </Link>,
     <Typography key="3" color="text.primary">
-      {categoryFiles.length > 0 ? categoryFiles[0].activity.activityName : ""}
+      {/* {categoryFiles.length > 0 ? categoryFiles[0].activity.activityName : ""} */}
+      {activityName}
     </Typography>,
   ];
 
@@ -117,8 +127,8 @@ function CategoryDetail() {
   }
 
   function handleFileSubmit(event) {
+    setSuccessMessage("");
     event.preventDefault();
-    console.log("file", file);
     if (!file) {
       setErrorMessage("Please select a file to upload.");
       return;
