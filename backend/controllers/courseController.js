@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 
 const Course = require("../models/courseModel");
 const StudentRegistration = require("../models/studentRegistrationModel");
+const Activity = require("../models/activityModel");
 
 const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -124,6 +125,10 @@ const setCourse = asyncHandler(async (req, res) => {
     throw new Error(`${courseNameWithSemester} course already exists`);
   }
 
+  const activities = await Activity.find();
+  const activityIds = activities.map((activity) => activity._id);
+  console.log(activityIds);
+
   //Create a course
   const course = await Course.create({
     courseName: courseNameWithSemester,
@@ -134,6 +139,7 @@ const setCourse = asyncHandler(async (req, res) => {
     startTime: startTime,
     endTime: endTime,
     days: newDays,
+    activities: activityIds,
   });
   res.status(200).json(course);
 });
@@ -145,13 +151,18 @@ const getCourseByCourseId = asyncHandler(async (req, res) => {
   const course = await Course.findById(req.params.id)
     .populate("class")
     .populate("instructor", "firstname lastname")
-    .populate({
-      path: "files.file",
-    })
+    // .populate({
+    //   path: "files.file",
+    // })
     .populate({
       path: "files.activity",
       select: "activityName",
+    })
+    .populate({
+      path: "activities",
+      select: "activityName",
     });
+
   if (!course) {
     res.status(400);
     throw new Error("Course not found");

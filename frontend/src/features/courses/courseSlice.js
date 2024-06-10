@@ -84,6 +84,7 @@ export const courseSlice = createSlice({
       .addCase(createCourse.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.isSuccess = false;
         state.message = action.payload;
       })
       .addCase(getCoursesByInstructorId.pending, (state) => {
@@ -98,6 +99,7 @@ export const courseSlice = createSlice({
       .addCase(getCoursesByInstructorId.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.isSuccess = false;
         state.message = action.payload;
       })
       .addCase(getCoursesByStudentId.pending, (state) => {
@@ -112,6 +114,7 @@ export const courseSlice = createSlice({
       .addCase(getCoursesByStudentId.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.isSuccess = false;
         state.message = action.payload;
       })
       .addCase(getCourseByCourseId.pending, (state) => {
@@ -126,6 +129,7 @@ export const courseSlice = createSlice({
       .addCase(getCourseByCourseId.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.isSuccess = false;
         state.message = action.payload;
       });
   },

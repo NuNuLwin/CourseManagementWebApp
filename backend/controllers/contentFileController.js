@@ -13,6 +13,7 @@ const ContentFile = require("../models/contentFileModel");
 
 const uploadContentFile = asyncHandler(async (req, res) => {
   // check if request has course id
+  console.log("controller content file");
   if (!req.body.course_id || !req.body.activity_id) {
     res.status(400);
     res.json("no course id and activity id");
@@ -64,6 +65,8 @@ const uploadContentFile = asyncHandler(async (req, res) => {
   let newFile = {
     file: uploadStream.id,
     activity: activity_id,
+    filename: originalname,
+    uploadDate: new Date(),
   };
 
   allContentFiles.push(newFile);
@@ -72,12 +75,13 @@ const uploadContentFile = asyncHandler(async (req, res) => {
     { files: allContentFiles }
   );
 
-  const course = await Course.findById(course_id).populate([
-    "class",
-    "activity",
-    "files.file",
-    "files.activity",
-  ]);
+  const course = await Course.findById(course_id);
+  // .populate([
+  //   "class",
+  //   "activity",
+  //   "files.file",
+  //   "files.activity",
+  // ]);
   res.status(200).json(course);
   //return resp.send({ results: course });
 });
