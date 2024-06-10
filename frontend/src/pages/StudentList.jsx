@@ -8,7 +8,7 @@ import { getCourseByCourseId } from "../features/courses/courseSlice";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid';
-
+import Paper from "@mui/material/Paper";
 
 import {
     Box,
@@ -70,11 +70,11 @@ function StudentList() {
   ];
 
   const columns = [
-    { field: 'studentname', headerName: 'Name', width: 130 },
-    { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'classname', headerName: 'Class', width: 100 },
-    { field: 'semester', headerName: 'Semester', width: 100 },
-    { field: 'registrationstatus', headerName: 'Registration Status', width: 200 },
+    { field: 'studentname', headerName: 'Name', width: 200,headerAlign: 'left', align: 'left'},
+    { field: 'email', headerName: 'Email', width: 200 ,headerAlign: 'left', align: 'left'},
+    { field: 'classname', headerName: 'Class', width: 200 ,headerAlign: 'left', align: 'left'},
+    { field: 'semester', headerName: 'Semester', width: 200 ,headerAlign: 'left', align: 'left'},
+    { field: 'registrationstatus', headerName: 'Registration Status', width: 200,headerAlign: 'left', align: 'left'},
   ];
 
   return (
@@ -89,21 +89,27 @@ function StudentList() {
                   {breadcrumbs}
                 </Breadcrumbs>
               </Stack>
-              <h2 > {course.courseName}</h2>
-              <h3 >Student Registration</h3>
-              <h5 style={{textAlign:'right'}}>Total: {students.length}</h5>
+              <Grid container>
+              <Grid item md={12} xs={12}><h2 > {course.courseName}</h2></Grid>
+              <Grid item md={6} xs={12}><h3 style={{fontWeight: 'bold',color: '#000000'}}>Student Registration</h3></Grid>
+              <Grid item md={6} xs={12}><h3 style={{textAlign:'right',color: '#000000',fontWeight: 'bold'}}>Total: {students.length}</h3></Grid>
+              </Grid>
               <Grid container>
               {students.length > 0 ? (
-                    <DataGrid
-                    rows={students}
-                    columns={columns}
-                    initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 5 },
-                    },
-                    }}
-                    pageSizeOptions={[5, 10]}
-                />
+                  <Paper elevation={2} sx={{ width: '100%', }}>
+                    <div style={{width: '100%' }}>
+                      <DataGrid
+                      rows={students}
+                      columns={columns}
+                      initialState={{
+                      pagination: {
+                          paginationModel: { page: 0, pageSize: 5 },
+                      },
+                      }}
+                      pageSizeOptions={[5, 10]}
+                    />
+                    </div>
+                  </Paper>
 
                 ) :
                 (
@@ -117,12 +123,12 @@ function StudentList() {
                         (
                         <Grid container spacing={0.5}  justifyContent="flex-end">
                             <Grid item xs={2}  >
-                            <Button  sx={{ mt: 3, mb: 2 }} variant="contained" style={ {backgroundColor: "#1E56A0"}} onClick={() => dispatch(registerStudents(courseId))}> 
+                            <Button  sx={{ mt: 3, mb: 2 }} variant="contained" style={ {backgroundColor: "#1876d2"}} onClick={() => dispatch(registerStudents(courseId))}> 
                                 Register
                             </Button>
                             </Grid>
                             <Grid item xs={2} >
-                                <Button  sx={{ mt: 3, mb: 2 }} variant="contained" style={ {backgroundColor: "#1E56A0"}} onClick={()=>navigate("/courseList")}> 
+                                <Button  sx={{ mt: 3, mb: 2 }} variant="contained" style={ {backgroundColor: "#1876d2"}} onClick={()=>navigate("/courseList")}> 
                                     Cancel
                                 </Button>
                             </Grid>
