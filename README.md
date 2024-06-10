@@ -34,15 +34,19 @@ Please follow the below steps to run the project:
 3. Use the terminal to navigate to the project's 'frontend' folder by entering the command below.
 ![go to frontend folder](./frontend/screenshots_guide/Screenshot1.png)
 </br>
+
 4. Install dependencies used for the frontend side by entering the command below.
 ![install frontend dependencies](./frontend/screenshots_guide/Screenshot2.png)
 </br>
+
 5. Navigate to the project's 'backend' folder by entering the command below in the terminal.
 ![go to backend folder](./frontend/screenshots_guide/Screenshot3.png)
 </br>
+
 6. Install dependencies used for the backend side by entering the command below.
 ![install backend dependencies](./frontend/screenshots_guide/Screenshot4.png)
 </br>
+
 7. Finally, launch the project by running 'npm run dev' in the terminal. You will see the Course Management Platform running on the browser that you have installed.
 ![launch the project](./frontend/screenshots_guide/Screenshot5.png)
 
