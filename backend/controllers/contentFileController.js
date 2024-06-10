@@ -13,7 +13,6 @@ const ContentFile = require("../models/contentFileModel");
 
 const uploadContentFile = asyncHandler(async (req, res) => {
   // check if request has course id
-  console.log("controller content file");
   if (!req.body.course_id || !req.body.activity_id) {
     res.status(400);
     res.json("no course id and activity id");
