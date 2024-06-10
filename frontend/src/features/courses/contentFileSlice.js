@@ -9,12 +9,12 @@ const initialState = {
   message: "",
 };
 
-// Get course content by category id and course id
-export const getCourseContent = createAsyncThunk(
-  "contents/getCourseContent",
-  async ({ courseId, categoryId }, thunkAPI) => {
+// View Content file
+export const viewContentFile = createAsyncThunk(
+  "contents/viewContentFile",
+  async (fileId, thunkAPI) => {
     try {
-      return await contentFileService.getCourseContent(courseId, categoryId);
+      return await contentFileService.viewContentFile(fileId);
     } catch (error) {
       const message = error?.response?.data?.message || "";
       return thunkAPI.rejectWithValue(message);
@@ -30,15 +30,15 @@ export const contentSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getCourseContent.pending, (state) => {
+      .addCase(viewContentFile.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getCourseContent.fulfilled, (state, action) => {
+      .addCase(viewContentFile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.courses = [action.payload];
       })
-      .addCase(getCourseContent.rejected, (state, action) => {
+      .addCase(viewContentFile.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

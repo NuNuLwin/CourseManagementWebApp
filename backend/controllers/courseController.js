@@ -142,7 +142,6 @@ const setCourse = asyncHandler(async (req, res) => {
 // @route   Get /api/course
 // @access  Private
 const getCourseByCourseId = asyncHandler(async (req, res) => {
-  console.log("getCourseByCourseId");
   const course = await Course.findById(req.params.id)
     .populate("class")
     .populate("instructor", "firstname lastname")

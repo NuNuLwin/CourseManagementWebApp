@@ -5,6 +5,7 @@ import Spinner from "../components/Spinner";
 import { getCourseByCourseId } from "../features/courses/courseSlice";
 import moment from "moment";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import Tooltip from "@mui/material/Tooltip";
 
 // material components
 import {
@@ -18,6 +19,7 @@ import {
   Link,
   Stack,
 } from "@mui/material";
+import { viewContentFile } from "../features/courses/contentFileSlice";
 
 function CategoryDetail() {
   const navigate = useNavigate();
@@ -43,9 +45,7 @@ function CategoryDetail() {
   const course = courses[0];
 
   const categoryFiles = course?.files?.filter((file) => {
-    console.log("File: ", file);
     if (file.activity && file.activity._id) {
-      console.log("Activity categoryId: ", file.activity._id);
       return file.activity._id === categoryId;
     }
     return false;
@@ -57,7 +57,7 @@ function CategoryDetail() {
       key="1"
       color="inherit"
       onClick={() => navigate("/courseList")}
-      style={{
+      sx={{
         cursor: "pointer",
       }}
     >
@@ -68,7 +68,7 @@ function CategoryDetail() {
       key="2"
       color="inherit"
       onClick={() => navigate(`/course/${course._id}`)}
-      style={{
+      sx={{
         cursor: "pointer",
       }}
     >
@@ -78,6 +78,20 @@ function CategoryDetail() {
       {categoryFiles[0]?.activity.activityName}
     </Typography>,
   ];
+
+  const contentDownload = async (fileId, fileName) => {
+    dispatch(viewContentFile(fileId)).then((res) => {
+      const url = window.URL.createObjectURL(new Blob([res.payload]));
+      const anchorElement = document.createElement("a");
+      anchorElement.href = url;
+      anchorElement.setAttribute("download", fileName);
+      anchorElement.target = "_blank";
+      document.body.appendChild(anchorElement);
+
+      anchorElement.click();
+      anchorElement?.parentNode?.removeChild(anchorElement);
+    });
+  };
 
   return (
     <>
@@ -96,44 +110,48 @@ function CategoryDetail() {
                 {categoryFiles[0]?.activity.activityName}
               </Typography>
               <Grid container>
-                <Grid item md={4} xs={12}>
+                <Grid item md={5} xs={12}>
                   <h4>File Name</h4>
                 </Grid>
-                <Grid item md={4} xs={12}>
+                <Grid item md={3} xs={12}>
                   <h4>Uploaded Date</h4>
                 </Grid>
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
                   <Grid container>
-                    <Grid item md={4} xs={12}>
+                    <Grid item md={5} xs={12}>
                       <p>{file.file.filename}</p>
                     </Grid>
-                    <Grid item md={2} xs={12}>
+                    <Grid item md={3} xs={12}>
                       <p>
                         {moment(file.file.uploadDate).format("DD MMM YYYY")}
                       </p>
                     </Grid>
 
-                    <Grid item md={6} xs={12}>
+                    <Tooltip title={file.file.filename} arrow>
                       <Button
                         variant="contained"
                         startIcon={<CloudDownloadIcon />}
-                        // onClick={() => handleDownload(file.file.filename)}
+                        onClick={() =>
+                          contentDownload(file.file._id, file.file.filename)
+                        }
+                        style={{ margin: "10px" }}
                       >
                         Download
                       </Button>
-                    </Grid>
-                    {/* <Grid item md={12} xs={12}>
-                      <Grid item md={7} xs={12}>
-                        <p>{file.file.filename}</p>
-                      </Grid>
-                      <Grid item md={5} xs={12}>
-                        <p>
-                          Uploaded Date:{" "}
-                          {moment(file.file.uploadDate).format("DD MMM YYYY")}
-                        </p>
-                      </Grid>
+                    </Tooltip>
+
+                    {/* <Grid item md={6} xs={12}>
+                      <Button
+                        variant="contained"
+                        startIcon={<CloudDownloadIcon />}
+                        onClick={() =>
+                          contentDownload(file.file._id, file.file.filename)
+                        }
+                      >
+                        Download
+                      </Button>
                     </Grid> */}
                   </Grid>
                 ))
