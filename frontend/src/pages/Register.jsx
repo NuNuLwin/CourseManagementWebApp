@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+
 
 // redux
 import { register, reset } from "../features/auth/authSlice";
@@ -25,6 +28,7 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
+  IconButton
 } from "@mui/material";
 
 // material styles
@@ -48,6 +52,7 @@ const themeLight = createTheme({
 });
 
 function Register() {
+  const [visible, setVisible] = useState(false)
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -137,6 +142,14 @@ function Register() {
     borderRadius: 20,
     margin: "3vh auto",
   };
+
+  const EndAdorment =  ({visible,setVisible}) => {
+    return <InputAdornment position="end">
+      <IconButton onClick={() => setVisible(!visible)}>
+        {visible ? <VisibilityOffIcon/> : <RemoveRedEyeIcon/>} 
+      </IconButton>
+    </InputAdornment>
+  }
 
   return (
     <>
@@ -287,7 +300,7 @@ function Register() {
                     margin="normal"
                     fullWidth
                     variant="outlined"
-                    type="password"
+                    type= {!visible ? "password" : "text" } 
                     label="Password*"
                     id="password"
                     name="password"
@@ -299,6 +312,9 @@ function Register() {
                           <LockIcon />
                         </InputAdornment>
                       ),
+                      endAdornment:(  
+                        <EndAdorment visible={visible} setVisible={setVisible}/>
+                      )
                     }}
                   />
                 </Grid>

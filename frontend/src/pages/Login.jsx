@@ -6,7 +6,7 @@ import { login, register, reset } from "../features/auth/authSlice";
 import Spinner from "../components/Spinner";
 import * as React from "react";
 import Button from "@mui/material/Button";
-import { Avatar, Container, TextField, InputAdornment } from "@mui/material";
+import { Avatar, Container, TextField, InputAdornment, IconButton } from "@mui/material";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -16,6 +16,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 
 const themeLight = createTheme({
   palette: {
@@ -26,6 +28,7 @@ const themeLight = createTheme({
 });
 
 function Login() {
+  const [visible, setVisible] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -88,6 +91,13 @@ function Login() {
   };
   const color = { backgroundColor: "#D8E2EF" };
   const darkcolor = { backgroundColor: "#1E56A0" };
+  const EndAdorment =  ({visible,setVisible}) => {
+    return <InputAdornment position="end">
+      <IconButton onClick={() => setVisible(!visible)}>
+        {visible ? <VisibilityOffIcon/> : <RemoveRedEyeIcon/>} 
+      </IconButton>
+    </InputAdornment>
+  }
   return (
     <>
       <CssBaseline />
@@ -176,7 +186,7 @@ function Login() {
                   fullWidth
                   variant="outlined"
                   label="Password*"
-                  type="password"
+                  type= {!visible ? "password" : "text" }
                   id="password"
                   name="password"
                   value={password}
@@ -187,6 +197,9 @@ function Login() {
                         <LockIcon />
                       </InputAdornment>
                     ),
+                    endAdornment:(  
+                      <EndAdorment visible={visible} setVisible={setVisible}/>
+                    )
                   }}
                 />
                 <Button
