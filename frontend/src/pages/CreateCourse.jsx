@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // redux
+import { useSelector, useDispatch } from "react-redux";
 import { createCourse, reset } from "../features/courses/courseSlice";
 
 //class api
@@ -95,16 +95,18 @@ function CreateCourseForm() {
       setAlertType("error");
       setShowAlert(true);
     }
+
     if (isSuccess && courses.length > 0 && !isLoading & !firstLoad) {
       setAlertMsg("A new course is successfully created.");
       setAlertType("success");
       setShowAlert(true);
 
-      setTimeout(() => navigate("/courseList"), 3000);
-
-      dispatch(reset());
+      setTimeout(() => {
+        dispatch(reset());
+        navigate("/courseList");
+      }, 3000);
     }
-  }, [user, navigate, isError, isSuccess, message, dispatch]);
+  }, [courses, isError, isSuccess]);
 
   useEffect(() => {
     // Calculate the new end date based on the start date
@@ -209,7 +211,7 @@ function CreateCourseForm() {
                 <Grid item xs={12}>
                   <FormControl fullWidth variant="outlined">
                     <InputLabel id="class-multiple-select-label">
-                      Class
+                      Class/es
                     </InputLabel>
                     <Select
                       labelId="class-multiple-select-label"

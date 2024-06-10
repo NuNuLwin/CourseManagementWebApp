@@ -42,7 +42,7 @@ const courseSchema = new Schema(
       required: true,
       ref: "User",
     },
-    activity: [
+    activities: [
       {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -58,6 +58,12 @@ const courseSchema = new Schema(
         activity: {
           type: Schema.Types.ObjectId,
           ref: "Activity",
+        },
+        filename: {
+          type: String,
+        },
+        uploadDate: {
+          type: String,
         },
       },
     ],

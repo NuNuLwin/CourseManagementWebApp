@@ -22,6 +22,20 @@ export const viewContentFile = createAsyncThunk(
   }
 );
 
+// View Content file
+export const uploadContentFile = createAsyncThunk(
+  "contents/uploadContentFile",
+  async ({ formData, config }, thunkAPI) => {
+    try {
+      console.log("inside uploade slice");
+      return await contentFileService.uploadContentFile(formData, config);
+    } catch (error) {
+      const message = error?.response?.data?.message || "";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const contentSlice = createSlice({
   name: "content",
   initialState,
@@ -39,6 +53,19 @@ export const contentSlice = createSlice({
         state.courses = [action.payload];
       })
       .addCase(viewContentFile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(uploadContentFile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadContentFile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.courses = [action.payload];
+      })
+      .addCase(uploadContentFile.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
