@@ -88,7 +88,7 @@ const setCourse = asyncHandler(async (req, res) => {
     !classId
   ) {
     res.status(400);
-    throw new Error("Please add all fields");
+    throw new Error("Please provide all required information.");
   }
 
   newDays = ALL_DAYS.filter((x) => days.includes(x));
