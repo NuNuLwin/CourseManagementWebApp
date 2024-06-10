@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 
 const Course = require("../models/courseModel");
-const courseModel = require("../models/courseModel");
+const StudentRegistration = require("../models/studentRegistrationModel");
 
 const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -10,11 +10,11 @@ const ALL_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 // @access  Private
 const getCourses = asyncHandler(async (req, res) => {
   const instructorId = req.query.instructorId;
+  const studentId = req.query.studentId;
   const courseStatus = req.query.courseStatus || "inprogress"; // Default is inprogress course
   const currentDate = new Date();
 
-  let query = { instructor: instructorId };
-
+  let query = instructorId ? { instructor: instructorId } : {};
   if (courseStatus === "inprogress") {
     query = {
       ...query,
@@ -32,9 +32,28 @@ const getCourses = asyncHandler(async (req, res) => {
       startDate: { $gte: currentDate },
     };
   }
-  const courses = await Course.find(query)
+
+  let courses = [];
+  if (studentId) {
+    const studentRegistrations = await StudentRegistration.find({
+      user: studentId,
+      registrationstatus: "registered",
+    });
+
+    const classIds = studentRegistrations.map(
+      (registration) => registration.class
+    );
+
+    query = {
+      ...query,
+      class: { $in: classIds },
+    };
+  }
+
+  courses = await Course.find(query)
     .sort({ createdAt: -1 })
-    .populate("class");
+    .populate("class")
+    .populate("instructor", "firstname lastname");
 
   courses.forEach((course) => {
     course.days = ALL_DAYS.filter((x) => course.days.includes(x));
@@ -109,9 +128,7 @@ const setCourse = asyncHandler(async (req, res) => {
   const course = await Course.create({
     courseName: courseNameWithSemester,
     instructor: instructorId,
-    //class: req.body.class.map(c => c.id),
     class: classId,
-    //activity: req.body.activity.map(a => a.id),
     startDate: startDateUTC,
     endDate: endDateUTC,
     startTime: startTime,
@@ -127,7 +144,14 @@ const setCourse = asyncHandler(async (req, res) => {
 const getCourseByCourseId = asyncHandler(async (req, res) => {
   const course = await Course.findById(req.params.id)
     .populate("class")
-    .populate("instructor", "firstname lastname");
+    .populate("instructor", "firstname lastname")
+    .populate({
+      path: "files.file",
+    })
+    .populate({
+      path: "files.activity",
+      select: "activityName",
+    });
   if (!course) {
     res.status(400);
     throw new Error("Course not found");
@@ -135,21 +159,8 @@ const getCourseByCourseId = asyncHandler(async (req, res) => {
   res.status(200).json(course);
 });
 
-// @desc    Get Course Detail by course id and category id
-// @route   Get /api/course
-// @access  Private
-const getCourseDetail = asyncHandler(async (req, res) => {
-  console.log("inside getCourseDetail");
-  console.log(req.params.id);
-  console.log(req.params.categoryId);
-
-  // const course = await courseModel.find;
-  res.status(200).json("inside getCourseDetailByCategoryId");
-});
-
 module.exports = {
   getCourses,
   setCourse,
   getCourseByCourseId,
-  getCourseDetail,
 };

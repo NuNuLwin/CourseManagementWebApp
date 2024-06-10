@@ -38,6 +38,19 @@ export const getCoursesByInstructorId = createAsyncThunk(
   }
 );
 
+// Get courses by student id
+export const getCoursesByStudentId = createAsyncThunk(
+  "courses/getCoursesByStudentId",
+  async ({ studentId, courseStatus }, thunkAPI) => {
+    try {
+      return await courseService.getCoursesByStudentId(studentId, courseStatus);
+    } catch (error) {
+      const message = error?.response?.data?.message || "";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Get course by course id
 export const getCourseByCourseId = createAsyncThunk(
   "courses/getCourseByCourseId",
@@ -65,6 +78,7 @@ export const courseSlice = createSlice({
       .addCase(createCourse.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.isError = false;
         state.courses.push(action.payload);
       })
       .addCase(createCourse.rejected, (state, action) => {
@@ -78,9 +92,24 @@ export const courseSlice = createSlice({
       .addCase(getCoursesByInstructorId.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.isError = false;
         state.courses = action.payload;
       })
       .addCase(getCoursesByInstructorId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getCoursesByStudentId.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getCoursesByStudentId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.courses = action.payload;
+      })
+      .addCase(getCoursesByStudentId.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -91,6 +120,7 @@ export const courseSlice = createSlice({
       .addCase(getCourseByCourseId.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.isError = false;
         state.courses = [action.payload];
       })
       .addCase(getCourseByCourseId.rejected, (state, action) => {

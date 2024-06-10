@@ -8,14 +8,12 @@ const Course = require("../models/courseModel");
 const ContentFile = require("../models/contentFileModel");
 
 // @desc    Upload content File
-// @route   /api/content/files/
+// @route   Post /api/content/files/
 // @access  Private
 
 const uploadContentFile = asyncHandler(async (req, res) => {
-  console.log("inside uploadContentFile");
   // check if request has course id
   if (!req.body.course_id || !req.body.activity_id) {
-    console.log("no course id and activity id");
     res.status(400);
     res.json("no course id and activity id");
   }
@@ -84,6 +82,25 @@ const uploadContentFile = asyncHandler(async (req, res) => {
   //return resp.send({ results: course });
 });
 
+// @desc    View Course File
+// @route   Get /api/courses/files/:id
+// @access  Private
+const viewContentFile = asyncHandler(async (req, res) => {
+  const findContentFile = await ContentFile.findById(req.params.id);
+
+  if (!findContentFile) {
+    res.status(400);
+    throw new Error("The course file does not exist.");
+  }
+
+  // GridFS Bucket, Write Stream,
+  let bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: "content",
+  });
+  bucket.openDownloadStream(findContentFile._id).pipe(res);
+});
+
 module.exports = {
   uploadContentFile,
+  viewContentFile,
 };
