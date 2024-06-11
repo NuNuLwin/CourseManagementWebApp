@@ -88,7 +88,7 @@ const setCourse = asyncHandler(async (req, res) => {
     !classId
   ) {
     res.status(400);
-    throw new Error("Please add all fields");
+    throw new Error("Please provide all required information.");
   }
 
   newDays = ALL_DAYS.filter((x) => days.includes(x));
@@ -97,28 +97,28 @@ const setCourse = asyncHandler(async (req, res) => {
   const startDateUTC = new Date(startDate).toISOString();
   const endDateUTC = new Date(endDate).toISOString();
 
-  //Determine semester
   const startDateObj = new Date(startDate);
   const courseStartMonth = startDateObj.getMonth() + 1;
   const courseStartYear = startDateObj.getFullYear();
 
-  let semester;
+  const semester = getSemester(startDateObj);
 
-  if (courseStartMonth >= 1 && courseStartMonth <= 4) {
-    semester = "Winter";
-  } else if (courseStartMonth >= 5 && courseStartMonth <= 8) {
-    semester = "Spring/Summer";
-  } else {
-    semester = "Fall";
+  if (!semester) {
+    console.log("Invalid start date");
+    return false;
   }
 
-  semester = `${semester} ${courseStartYear}`;
-
-  const courseNameWithSemester = `${courseName} - ${semester}`;
-
-  const courseExists = await Course.findOne({
-    courseName: courseNameWithSemester,
+  const courses = await Course.find({
+    class: { $in: classId },
   });
+
+  const courseExists = courses.some((course) => {
+    const semesterForCourse = getSemester(course.startDate);
+    //console.log("semesterForCourse:", semesterForCourse, "semester:", semester);
+    return semesterForCourse === semester;
+  });
+  const semesterAndYear = `${semester} ${courseStartYear}`;
+  const courseNameWithSemester = `${courseName} - ${semesterAndYear}`;
 
   if (courseExists) {
     res.status(400);
@@ -127,7 +127,6 @@ const setCourse = asyncHandler(async (req, res) => {
 
   const activities = await Activity.find();
   const activityIds = activities.map((activity) => activity._id);
-  console.log(activityIds);
 
   //Create a course
   const course = await Course.create({
@@ -170,6 +169,18 @@ const getCourseByCourseId = asyncHandler(async (req, res) => {
   res.status(200).json(course);
 });
 
+//Determine semester
+function getSemester(startDate) {
+  const month = startDate.getMonth() + 1; // getMonth() returns 0-11, so we add 1
+  if (month >= 1 && month <= 4) {
+    return "Winter";
+  } else if (month >= 5 && month <= 8) {
+    return "Spring/Summer";
+  } else if (month >= 9 && month <= 12) {
+    return "Fall";
+  }
+  return null;
+}
 module.exports = {
   getCourses,
   setCourse,

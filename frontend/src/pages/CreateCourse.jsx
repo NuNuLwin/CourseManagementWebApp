@@ -94,6 +94,8 @@ function CreateCourseForm() {
       setAlertMsg(message);
       setAlertType("error");
       setShowAlert(true);
+
+      dispatch(reset());
     }
 
     if (isSuccess && courses.length > 0 && !isLoading & !firstLoad) {
