@@ -47,36 +47,40 @@ function Header({ children }) {
           columnGap={0}
           sx={{ margin: "20px 0 0 0" }}
         >
-          <Grid item xs={2}>
+          <Grid
+            item
+            md={3}
+            xs={12}
+            style={{ display: "flex", alignItems: "center" }}
+          >
             <img
               src={process.env.PUBLIC_URL + "/higher-education.png"}
               alt="Logo"
               style={{
                 width: "50px",
                 height: "50px",
-                // marginBottom: "16px",
+                marginRight: "0.5em",
               }}
             />
-            <Typography
-              variant="h6"
-              style={{
-                display: "inline-flex",
-                marginLeft: "0.5em",
-                marginBottom: "0.5em",
-                height: "100%",
-                verticalAlign: "middle",
-                color: "#0D3675",
-                fontStyle: "normal",
-                fontWeight: "300",
-              }}
-            >
-              EDU LINK
-            </Typography>
+            <div>
+              <Typography
+                variant="h6"
+                style={{
+                  //marginBottom: "0.5em",
+                  color: "#0D3675",
+                  fontSize: "18px",
+                }}
+              >
+                EDU LINK
+              </Typography>
+              <h4 className="uni_title">University of Regina</h4>
+            </div>
           </Grid>
 
           <Grid
             item
-            xs={4}
+            md={3}
+            xs={12}
             style={{
               paddingTop: "0.5em",
             }}
@@ -107,7 +111,8 @@ function Header({ children }) {
 
           <Grid
             item
-            xs={6}
+            md={6}
+            xs={12}
             style={{
               textAlign: "right",
               paddingTop: "0.5em",

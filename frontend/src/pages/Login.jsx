@@ -100,7 +100,7 @@ function Login() {
     return (
       <InputAdornment position="end">
         <IconButton onClick={() => setVisible(!visible)}>
-          {visible ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+          {visible ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
         </IconButton>
       </InputAdornment>
     );
@@ -130,9 +130,10 @@ function Login() {
                 style={{
                   width: "100px",
                   height: "100px",
-                  marginBottom: "16px",
+                  marginBottom: "10px",
                 }}
               />
+              <h2 className="uni_title">University of Regina</h2>
               <h1>Welcome From EDU LINK</h1>
               Don't have an account?&nbsp;
               <Link href="#" variant="body2" onClick={onLinkSingup}>

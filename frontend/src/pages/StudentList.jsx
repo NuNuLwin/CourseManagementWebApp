@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -42,19 +42,40 @@ function StudentList() {
   } = useSelector((state) => state.course);
 
   const course = courses[0];
+  const [isRegistered,setRegistrationStatus] = useState(true);
+
   useEffect(() => {
+    console.log('use effects student list '+students.length)
     if (isError) {
       console.log(message);
     }
 
+
     dispatch(getCourseByCourseId(courseId));
 
     dispatch(getStudents(courseId));
-
     return () => {
       dispatch(reset());
     };
   }, [isError, message, dispatch]);
+
+  useEffect(() => {
+    console.log('use effects after dispatch student list '+students.length)
+    if (students.length > 0 && isSuccess && !isLoading) {
+        students?.filter((student) => {
+          console.log('each student student.registrationstatus  '+ student.registrationstatus );
+          if (student.registrationstatus === "unregistered") {
+            setRegistrationStatus(false);
+          }
+      })
+    }
+
+  }, [students, isSuccess, isLoading]);
+
+  const onRegisterStudent = () => {
+    setRegistrationStatus(true)
+    dispatch(registerStudents(courseId))
+  }
 
   if (isLoading) {
     return <Spinner />;
@@ -156,18 +177,20 @@ function StudentList() {
                     </div>
                   </Paper>
                 ) : (
-                  <h3>There is no student</h3>
+                  <Grid item md={12} xs={12}>
+                  <h3 style={{textAlign: "center"}}>There is no students registered in this course.</h3>
+                  </Grid>
                 )}
 
                 {students.length > 0 ? (
-                  students[0].registrationstatus === "unregistered" ? (
+                    !isRegistered ? ( //students[0].registrationstatus === "unregistered" ? (
                     <Grid container spacing={2} justifyContent="flex-end">
                       <Grid item>
                         <Button
                           sx={{ mt: 3, mb: 2 }}
                           variant="contained"
                           style={{ backgroundColor: "#1876d2" }}
-                          onClick={() => dispatch(registerStudents(courseId))}
+                          onClick={onRegisterStudent}
                         >
                           Register
                         </Button>
@@ -183,11 +206,13 @@ function StudentList() {
                         </Button>
                       </Grid>
                     </Grid>
-                  ) : (
+                  ) 
+                  : (
                     console.log(
-                      "hide buttons if students are already registered"
+                      "hide buttons if all students are registered"
                     )
                   )
+                  
                 ) : (
                   console.log("hide buttons if there are no students")
                 )}

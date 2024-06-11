@@ -97,3 +97,15 @@ button.active:hover {
   background-color: #1976d2;
   color: #fff !important; /* Example active color */
 }
+
+h2.uni_title {
+  color: #0d3675;
+  font-weight: 300;
+  margin: 0;
+}
+
+h4.uni_title {
+  color: #0d3675;
+  font-weight: 300;
+  margin: 0;
+}

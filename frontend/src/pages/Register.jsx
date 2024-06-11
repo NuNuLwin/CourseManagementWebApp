@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 // redux
 import { register, reset } from "../features/auth/authSlice";
@@ -28,7 +27,7 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
-  IconButton
+  IconButton,
 } from "@mui/material";
 
 // material styles
@@ -52,7 +51,7 @@ const themeLight = createTheme({
 });
 
 function Register() {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -143,13 +142,15 @@ function Register() {
     margin: "3vh auto",
   };
 
-  const EndAdorment =  ({visible,setVisible}) => {
-    return <InputAdornment position="end">
-      <IconButton onClick={() => setVisible(!visible)}>
-        {visible ? <VisibilityOffIcon/> : <RemoveRedEyeIcon/>} 
-      </IconButton>
-    </InputAdornment>
-  }
+  const EndAdorment = ({ visible, setVisible }) => {
+    return (
+      <InputAdornment position="end">
+        <IconButton onClick={() => setVisible(!visible)}>
+          {visible ? <RemoveRedEyeIcon /> : <VisibilityOffIcon />}
+        </IconButton>
+      </InputAdornment>
+    );
+  };
 
   return (
     <>
@@ -179,6 +180,7 @@ function Register() {
                   marginBottom: "16px",
                 }}
               />
+              <h2 className="uni_title">University of Regina</h2>
               <h1>Welcome From EDU LINK</h1>
               Already have an account?&nbsp;
               <Link href="#" variant="body2" onClick={onLinkSingin}>
@@ -300,7 +302,7 @@ function Register() {
                     margin="normal"
                     fullWidth
                     variant="outlined"
-                    type= {!visible ? "password" : "text" } 
+                    type={!visible ? "password" : "text"}
                     label="Password*"
                     id="password"
                     name="password"
@@ -312,9 +314,12 @@ function Register() {
                           <LockIcon />
                         </InputAdornment>
                       ),
-                      endAdornment:(  
-                        <EndAdorment visible={visible} setVisible={setVisible}/>
-                      )
+                      endAdornment: (
+                        <EndAdorment
+                          visible={visible}
+                          setVisible={setVisible}
+                        />
+                      ),
                     }}
                   />
                 </Grid>
