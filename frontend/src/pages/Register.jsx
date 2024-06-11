@@ -146,7 +146,7 @@ function Register() {
   const EndAdorment =  ({visible,setVisible}) => {
     return <InputAdornment position="end">
       <IconButton onClick={() => setVisible(!visible)}>
-        {visible ? <VisibilityOffIcon/> : <RemoveRedEyeIcon/>} 
+        {visible ? <RemoveRedEyeIcon/> : <VisibilityOffIcon/>} 
       </IconButton>
     </InputAdornment>
   }
