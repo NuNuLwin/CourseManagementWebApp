@@ -3,7 +3,7 @@ const studentRegistration = require("../models/studentRegistrationModel");
 const course = require("../models/courseModel");
 
 const registeration = asyncHandler(async (req, res) => {
-  console.log("setStudentRegistration body " + req.body);
+  //console.log("setStudentRegistration body " + req.body);
   const { user_id, class_id, registration_status } = req.body;
 
   if (!user_id || !class_id || !registration_status) {
@@ -43,8 +43,6 @@ const getRegistrationStudent = asyncHandler(async (req, res) => {
     .populate("class")
     .populate("user");
 
-  console.log("after student list is 0");
-
   for (let i = 0; i < studentlist.length; i++) {
     const id = studentlist[i]._id;
     const studentname =
@@ -52,7 +50,7 @@ const getRegistrationStudent = asyncHandler(async (req, res) => {
     const email = studentlist[i].user.email;
     const classname = studentlist[i].class.className;
     const registrationstatus = studentlist[i].registrationstatus;
-    console.log("each student studentname =>" + studentname);
+    //console.log("each student studentname =>" + studentname);
     resultStudent.push({
       id: id,
       studentname: studentname,
@@ -94,7 +92,7 @@ const registerStudents = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Encounter error in registration students");
   }
-  console.log("updateRegisteredStatus " + updateRegisteredStatus);
+  //console.log("updateRegisteredStatus " + updateRegisteredStatus);
 
   // return response
   const checkStudents = await studentRegistration

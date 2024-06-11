@@ -124,8 +124,8 @@ function CategoryDetail() {
   function handleChange(event) {
     const file_size = event.target.files[0].size / (1000 * 1000);
     const file_type = event.target.files[0].type;
-    console.log("FILE SIZE:", file_size);
-    console.log("FILE TYPE:", file_type);
+    //console.log("FILE SIZE:", file_size);
+    //console.log("FILE TYPE:", file_type);
     if (file_size > FILE_SIZE_IN_MB) {
       setErrorMessage("File size must be below 16 MB.");
     } else if (
