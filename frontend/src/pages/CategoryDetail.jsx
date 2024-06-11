@@ -27,6 +27,9 @@ import {
 } from "../features/courses/contentFileSlice";
 
 function CategoryDetail() {
+  // constants
+  const FILE_SIZE_IN_MB = 16.0;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { courseId, categoryId } = useParams();
@@ -119,9 +122,30 @@ function CategoryDetail() {
   };
 
   function handleChange(event) {
-    setErrorMessage("");
-    setSuccessMessage("");
-    setFile(event.target.files[0]);
+    const file_size = event.target.files[0].size / (1000 * 1000);
+    const file_type = event.target.files[0].type;
+    console.log("FILE SIZE:", file_size);
+    console.log("FILE TYPE:", file_type);
+    if (file_size > FILE_SIZE_IN_MB) {
+      setErrorMessage("File size must be below 16 MB.");
+    } else if (
+      ![
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-powerpoint",
+        "image/jpeg",
+        "image/png",
+      ].includes(file_type)
+    ) {
+      setErrorMessage(
+        "Only PDF, Word, PowerPoint, JPEG, and PNG files are accepted."
+      );
+    } else {
+      setErrorMessage("");
+      setSuccessMessage("");
+      setFile(event.target.files[0]);
+    }
   }
 
   function handleFileSubmit(event) {
@@ -168,51 +192,66 @@ function CategoryDetail() {
               </Stack>
               {course && <h2>{course.courseName}</h2>}
               <Grid container>
-                <Grid item md={8} xs={6}>
-                  <Typography variant="h6">
-                    {categoryFiles[0]?.activity.activityName}
-                  </Typography>
+                <Grid item md={12} xs={12} sx={{ fontWeight: "700" }}>
+                  <Typography variant="h5">{activityName} Files</Typography>
                 </Grid>
-                <Grid item md={4} xs={6}></Grid>
 
                 {user.role !== "student" && (
-                  <Grid item md={12}>
-                    <form onSubmit={handleFileSubmit} ref={fileUploadForm}>
-                      {errorMessage && (
-                        <Alert severity="error">{errorMessage}</Alert>
-                      )}
-                      {successMessage && (
-                        <Alert
-                          severity="success"
-                          onClose={() => setSuccessMessage("")}
+                  <Grid item md={12} sx={{ justifyContent: "center" }}>
+                    <Box
+                      component="section"
+                      sx={{
+                        p: 2,
+                        border: "1px dashed grey",
+                        marginTop: "4em",
+                        marginBottom: "1em",
+                      }}
+                    >
+                      <form onSubmit={handleFileSubmit} ref={fileUploadForm}>
+                        {errorMessage && (
+                          <Alert severity="error">{errorMessage}</Alert>
+                        )}
+                        {successMessage && (
+                          <Alert
+                            severity="success"
+                            onClose={() => setSuccessMessage("")}
+                          >
+                            {successMessage}
+                          </Alert>
+                        )}
+                        <input
+                          type="file"
+                          onChange={handleChange}
+                          className="choose_File"
+                        ></input>
+                        <Button
+                          variant="contained"
+                          startIcon={<CloudUploadIcon />}
+                          type="submit"
+                          style={{ margin: "10px" }}
+                          disabled={errorMessage}
                         >
-                          {successMessage}
-                        </Alert>
-                      )}
-                      <input type="file" onChange={handleChange} />
-                      <Button
-                        variant="contained"
-                        startIcon={<CloudUploadIcon />}
-                        type="submit"
-                        style={{ margin: "10px" }}
-                      >
-                        Upload
-                      </Button>
-                    </form>
+                          Upload
+                        </Button>
+                      </form>
+                    </Box>
                   </Grid>
                 )}
 
-                <Grid item md={5} xs={12}>
+                <Grid item md={7} xs={12}>
                   <h4>File Name</h4>
                 </Grid>
                 <Grid item md={3} xs={12}>
                   <h4>Uploaded Date</h4>
                 </Grid>
+                <Grid item md={2} xs={12}>
+                  &nbsp;
+                </Grid>
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
                   <Grid container>
-                    <Grid item md={5} xs={12}>
+                    <Grid item md={7} xs={12}>
                       <p>{file.filename}</p>
                     </Grid>
                     <Grid item md={3} xs={12}>
@@ -221,18 +260,20 @@ function CategoryDetail() {
                       </p>
                     </Grid>
 
-                    <Tooltip title={file.filename} arrow>
-                      <Button
-                        variant="contained"
-                        startIcon={<CloudDownloadIcon />}
-                        onClick={() =>
-                          contentDownload(file.file, file.filename)
-                        }
-                        style={{ margin: "10px" }}
-                      >
-                        Download
-                      </Button>
-                    </Tooltip>
+                    <Grid item md={2} xs={12}>
+                      <Tooltip title={file.filename} arrow>
+                        <Button
+                          variant="contained"
+                          startIcon={<CloudDownloadIcon />}
+                          onClick={() =>
+                            contentDownload(file.file, file.filename)
+                          }
+                          style={{ margin: "10px" }}
+                        >
+                          Download
+                        </Button>
+                      </Tooltip>
+                    </Grid>
                   </Grid>
                 ))
               ) : (

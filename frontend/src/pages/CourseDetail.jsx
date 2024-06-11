@@ -101,22 +101,25 @@ function CourseDetail() {
                   {breadcrumbs}
                 </Breadcrumbs>
               </Stack>
-              <h2> {course.courseName}</h2>
+              <h2> {course && course.courseName}</h2>
               <Grid container>
                 <Grid item md={3} xs={12}>
                   <p>
-                    Day(s): {course.days.map((day) => dayMap[day]).join(", ")}
+                    Day(s):{" "}
+                    {course && course.days.map((day) => dayMap[day]).join(", ")}
                   </p>
                 </Grid>
                 <Grid item md={3} xs={12}>
                   <p>
-                    Time: {course.startTime} - {course.endTime}
+                    Time: {course && course.startTime} -{" "}
+                    {course && course.endTime}
                   </p>
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <p>
                     Class(es):
-                    {course.class.map((cls) => cls.className).join(", ")}
+                    {course &&
+                      course.class.map((cls) => cls.className).join(", ")}
                   </p>
                 </Grid>
                 <Grid item md={3} xs={12}>
@@ -129,8 +132,8 @@ function CourseDetail() {
 
                 <Grid item md={6} xs={12}>
                   <p>
-                    Instructor: {course.instructor.firstname}{" "}
-                    {course.instructor.lastname}
+                    Instructor: {course && course.instructor.firstname}{" "}
+                    {course && course.instructor.lastname}
                   </p>
                 </Grid>
                 {activities.map((activity) => (
