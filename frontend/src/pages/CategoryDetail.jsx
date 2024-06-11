@@ -124,8 +124,7 @@ function CategoryDetail() {
   function handleChange(event) {
     const file_size = event.target.files[0].size / (1000 * 1000);
     const file_type = event.target.files[0].type;
-    //console.log("FILE SIZE:", file_size);
-    //console.log("FILE TYPE:", file_type);
+    //console.log(file_type);
     if (file_size > FILE_SIZE_IN_MB) {
       setErrorMessage("File size must be below 16 MB.");
     } else if (
@@ -133,6 +132,7 @@ function CategoryDetail() {
         "application/pdf",
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
         "application/vnd.ms-powerpoint",
         "image/jpeg",
         "image/png",
@@ -234,6 +234,10 @@ function CategoryDetail() {
                           Upload
                         </Button>
                       </form>
+                      <p style={{ color: "red" }}>
+                        *Accepted files: PDF, Word, PowerPoint, JPEG, and PNG.
+                        Files must not exceed 16MB.
+                      </p>
                     </Box>
                   </Grid>
                 )}
