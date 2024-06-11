@@ -41,9 +41,7 @@ function CategoryDetail() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const { courses, isLoading, isError, message } = useSelector(
-    (state) => state.course
-  );
+  const { courses, isLoading } = useSelector((state) => state.course);
 
   useEffect(() => {
     if (courses.length > 0 && !isLoading) {
@@ -235,22 +233,10 @@ function CategoryDetail() {
                         Download
                       </Button>
                     </Tooltip>
-
-                    {/* <Grid item md={6} xs={12}>
-                      <Button
-                        variant="contained"
-                        startIcon={<CloudDownloadIcon />}
-                        onClick={() =>
-                          contentDownload(file.file._id, file.file.filename)
-                        }
-                      >
-                        Download
-                      </Button>
-                    </Grid> */}
                   </Grid>
                 ))
               ) : (
-                <p>No files found for this category.</p>
+                <p>No {activityName} file available.</p>
               )}
             </Grid>
           </Grid>
