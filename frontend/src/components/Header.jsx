@@ -5,14 +5,25 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container, Grid, Divider, Box, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useEffect, useState } from "react";
 
 function Header({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
+  const pathname = window.location.pathname;
+  const [currentURL, setCurrentURL] = useState(pathname);
+
+  useEffect(() => {
+    setCurrentURL(pathname.split("/")[1]);
+  }, [pathname]);
+
+  useEffect(() => {
+    // console.log("CURRENT URL:", currentURL);
+  }, [currentURL]);
+
   const onLogout = () => {
-    console.log("logout click");
     dispatch(logout());
     dispatch(reset());
     navigate("/");
@@ -72,13 +83,20 @@ function Header({ children }) {
           >
             {user && (
               <>
-                <Button onClick={onMyCourses} className="buttoncolor menu_font">
+                <Button
+                  onClick={onMyCourses}
+                  className={`buttoncolor menu_font ${
+                    currentURL !== "createCourse" && "active"
+                  }`}
+                >
                   My Courses
                 </Button>
                 {user.role !== "student" && (
                   <Button
                     onClick={onCreateCourse}
-                    className="buttoncolor menu_font"
+                    className={`buttoncolor menu_font ${
+                      currentURL === "createCourse" && "active"
+                    }`}
                   >
                     Create Course
                   </Button>
