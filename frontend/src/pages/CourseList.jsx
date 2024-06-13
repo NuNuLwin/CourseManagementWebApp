@@ -150,63 +150,42 @@ function CourseList() {
               ) : null}
             </div>
 
-            {courses.map((course) => {
-              const formattedStartDate = moment(course.startDate).format(
-                "DD MMM YYYY"
-              );
-              const formattedEndDate = moment(course.endDate).format(
-                "DD MMM YYYY"
-              );
+            <Grid container>
+              {courses.map((course) => {
+                const formattedStartDate = moment(course.startDate).format(
+                  "DD MMM YYYY"
+                );
+                const formattedEndDate = moment(course.endDate).format(
+                  "DD MMM YYYY"
+                );
 
-              const formattedCreatedDate = moment(course.createdAt).format(
-                "DD MMM YYYY"
-              );
+                const formattedCreatedDate = moment(course.createdAt).format(
+                  "DD MMM YYYY"
+                );
 
-              return (
-                <div className="course-box" key={course._id}>
-                  <Grid container>
-                    <Grid item md={10} xs={12}>
-                      <Grid container>
-                        <Grid item md={12} xs={12}>
-                          <h4 className="course-title">{course.courseName}</h4>
-                        </Grid>
-                        <Grid item md={3} xs={12}>
-                          <p>
-                            Day(s):
-                            {course.days.map((day) => dayMap[day]).join(", ")}
-                          </p>
-                        </Grid>
-                        <Grid item md={3} xs={12}>
-                          <p>
-                            Time: {course.startTime} - {course.endTime}
-                          </p>
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                          <p>
-                            Class(es):
-                            {course.class
-                              .map((cls) => cls.className)
-                              .join(", ")}
-                          </p>
-                        </Grid>
-                        <Grid item md={3} xs={12}>
-                          <p>Start Date: {formattedStartDate}</p>
-                        </Grid>
-                        <Grid item md={3} xs={12}>
-                          <p>End Date: {formattedEndDate}</p>
-                        </Grid>
-                        <Grid item md={3} xs={12}>
-                          <p>
-                            Instructor: {course.instructor.firstname}{" "}
-                            {course.instructor.lastname}
-                          </p>
-                        </Grid>
-                        <Grid item md={3} xs={12}>
-                          <p>Created Date:{formattedCreatedDate}</p>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid item md={2} xs={12}>
+                return (
+                  <Grid item md={4} xs={12}>
+                    <Box className="course-box">
+                      <h4 className="course-title">{course.courseName}</h4>
+                      <p>
+                        {course.days.length === 1 ? "Day:" : "Days:"}{" "}
+                        {course.days.map((day) => dayMap[day]).join(", ")}
+                      </p>
+                      <p>
+                        Time: {course.startTime} - {course.endTime}
+                      </p>
+                      <p>
+                        {course.class.length === 1 ? "Class:" : "Classes:"}{" "}
+                        {course.class.map((cls) => cls.className).join(", ")}
+                      </p>
+                      <p>
+                        {formattedStartDate} to {formattedEndDate}{" "}
+                      </p>
+                      <p>
+                        Instructor: {course.instructor.firstname}{" "}
+                        {course.instructor.lastname}
+                      </p>
+
                       <div className="btn_container">
                         <Button
                           variant="contained"
@@ -216,6 +195,7 @@ function CourseList() {
                           View Detail
                         </Button>
                       </div>
+
                       {user.role !== "student" && (
                         <div className="btn_container">
                           <Button
@@ -230,11 +210,11 @@ function CourseList() {
                           </Button>
                         </div>
                       )}
-                    </Grid>
+                    </Box>
                   </Grid>
-                </div>
-              );
-            })}
+                );
+              })}
+            </Grid>
           </div>
         </Box>
       </Container>
