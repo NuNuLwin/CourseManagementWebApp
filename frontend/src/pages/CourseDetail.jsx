@@ -85,7 +85,7 @@ function CourseDetail() {
       Courses
     </Link>,
     <Typography key="3" color="text.primary">
-      Detail
+      {course && course.class.map((cls) => cls.className).join(", ")}
     </Typography>,
   ];
 
@@ -105,7 +105,7 @@ function CourseDetail() {
               <Grid container>
                 <Grid item md={3} xs={12}>
                   <p>
-                    Day(s):{" "}
+                    {course && course.days.length === 1 ? "Day:" : "Days:"}{" "}
                     {course && course.days.map((day) => dayMap[day]).join(", ")}
                   </p>
                 </Grid>
@@ -117,7 +117,9 @@ function CourseDetail() {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <p>
-                    Class(es):
+                    {course && course.class.length === 1
+                      ? "Class:"
+                      : "Classes:"}{" "}
                     {course &&
                       course.class.map((cls) => cls.className).join(", ")}
                   </p>

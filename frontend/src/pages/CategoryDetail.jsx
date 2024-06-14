@@ -96,7 +96,7 @@ function CategoryDetail() {
         cursor: "pointer",
       }}
     >
-      Detail
+      {courses && courses[0].class.map((cls) => cls.className).join(", ")}
     </Link>,
     <Typography key="3" color="text.primary">
       {/* {categoryFiles.length > 0 ? categoryFiles[0].activity.activityName : ""} */}

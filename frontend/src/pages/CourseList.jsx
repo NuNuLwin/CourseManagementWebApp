@@ -179,7 +179,7 @@ function CourseList() {
                         {course.class.map((cls) => cls.className).join(", ")}
                       </p>
                       <p>
-                        {formattedStartDate} to {formattedEndDate}{" "}
+                        Date: {formattedStartDate} to {formattedEndDate}{" "}
                       </p>
                       <p>
                         Instructor: {course.instructor.firstname}{" "}
