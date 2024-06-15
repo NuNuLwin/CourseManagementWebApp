@@ -78,11 +78,12 @@ function CourseDetail() {
   };
 
   const handleCloseCatClicked = () => {
+    setSelectedActivities(course.activities.map((x) => x._id));
     setOpen(false);
   };
 
   const getActivityIcon = (activityName) => {
-    const iconProps = { sx: { fontSize: 40, color: "primary.main" } };
+    const iconProps = { sx: { fontSize: 40, color: "#000" } };
     if (activityName.toLowerCase() === "general") {
       return <InfoIcon {...iconProps} />;
     } else if (activityName.toLowerCase() === "lecture") {
@@ -147,6 +148,7 @@ function CourseDetail() {
     dispatch(getCourseByCourseId(courseId)).then((res) => {
       setCourseActivities(res.payload.activities);
       setCourse(res.payload);
+      setSelectedActivities(res.payload.activities.map((x) => x._id));
     });
 
     // fetch category
@@ -289,56 +291,51 @@ function CourseDetail() {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    padding: 2,
+                    padding: 3,
                     border: "1px solid #ccc",
                     borderRadius: 2,
                     boxShadow: 1,
                     margin: 1,
                     position: "relative",
+                    position: "relative",
+                    cursor:
+                      course &&
+                      course.activities
+                        .map((act) => act._id)
+                        .includes(activity._id)
+                        ? "not-allowed"
+                        : "pointer", // Make cursor not-allowed for already selected activities
+                    backgroundColor:
+                      selectedActivities.includes(activity._id) ||
+                      (course &&
+                        course.activities
+                          .map((act) => act._id)
+                          .includes(activity._id))
+                        ? "#DCDCDC" // Background color if selected or already part of the course
+                        : selectedActivities.length > 0
+                        ? "#fff" // Background color if not selected but other activities are selected
+                        : "#fff", // Default background color
                   }}
+                  onClick={() => handleCategorySelect(activity._id)}
                 >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        defaultChecked={isActivityChecked(
-                          course ? course.activities : [],
-                          activity._id
-                        )}
-                        disabled={
-                          course
-                            ? course.activities
-                                .map((act) => act._id)
-                                .includes(activity._id)
-                            : false
-                        }
-                        onChange={() => handleCategorySelect(activity._id)}
-                      />
-                    }
-                    label=""
-                    sx={{ position: "absolute", top: 8, left: 8 }}
-                  />
                   <Box
                     sx={{
-                      // display: "flex",
+                      display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      marginTop: 4, // Adjust to ensure space for the checkbox
+                      color: "primary.main",
+                      marginRight: 1,
+                      fontSize: "2rem", // Adjust the icon size
                     }}
                   >
-                    <Box
-                      sx={{
-                        fontSize: 40,
-                        color: "primary.main",
-                        marginRight: 1,
-                      }}
-                    >
-                      {getActivityIcon(activity.activityName)}
-                      {/* Adjust this size as needed */}
-                    </Box>
-                    <Typography variant="body1">
-                      {activity.activityName}
-                    </Typography>
+                    {getActivityIcon(activity.activityName)}
                   </Box>
+                  <Typography
+                    variant="body1"
+                    style={{ fontSize: "13px", color: "#000" }}
+                  >
+                    {activity.activityName}
+                  </Typography>
                 </Box>
               </Grid>
             ))}
