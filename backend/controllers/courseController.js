@@ -125,8 +125,8 @@ const setCourse = asyncHandler(async (req, res) => {
     throw new Error(`${courseNameWithSemester} course already exists`);
   }
 
-  const activities = await Activity.find();
-  const activityIds = activities.map((activity) => activity._id);
+  //const activities = await Activity.find();
+  //const activityIds = activities.map((activity) => activity._id);
 
   //Create a course
   const course = await Course.create({
@@ -138,7 +138,7 @@ const setCourse = asyncHandler(async (req, res) => {
     startTime: startTime,
     endTime: endTime,
     days: newDays,
-    activities: activityIds,
+    //activities: activityIds,
   });
   res.status(200).json(course);
 });
@@ -181,8 +181,34 @@ function getSemester(startDate) {
   }
   return null;
 }
+
+// @desc    Update activities category in a course
+// @route   PUT /api/course/:id
+// @access  Private
+const updateActivities = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { activities } = req.body;
+  const course = await Course.findById(id);
+  if (!course) {
+    return res.status(404).json({ message: "Course not found" });
+  }
+  //course.activities = activities;
+
+  // Add new activities to existing ones
+  activities.forEach((activity) => {
+    if (!course.activities.includes(activity)) {
+      course.activities.push(activity);
+    }
+  });
+
+  await course.save();
+
+  res.status(200).json(course);
+});
+
 module.exports = {
   getCourses,
   setCourse,
   getCourseByCourseId,
+  updateActivities,
 };
