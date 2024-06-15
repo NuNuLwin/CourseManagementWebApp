@@ -109,3 +109,13 @@ h4.uni_title {
   font-weight: 300;
   margin: 0;
 }
+
+.category_card {
+  border-radius: 10px;
+  border: 1px solid #b6babf;
+  padding: 10px;
+  margin: 30px 10px 0 0;
+  color: rgb(24, 24, 24);
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
