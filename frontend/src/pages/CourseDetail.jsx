@@ -298,20 +298,22 @@ function CourseDetail() {
                     {course && course.instructor.lastname}
                   </p>
                 </Grid>
-                <Grid
-                  item
-                  md={12}
-                  xs={12}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleClickOpen}
+                {user.role !== "student" && (
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
                   >
-                    Select Category to the course
-                  </Button>
-                </Grid>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleClickOpen}
+                    >
+                      Select Category to the course
+                    </Button>
+                  </Grid>
+                )}
 
                 {course?.activities?.map((activity) => (
                   <Grid item md={3} xs={12} key={activity._id}>
@@ -343,28 +345,29 @@ function CourseDetail() {
 
                         <box>{activity.activityName}</box>
 
-                        {hoveredActivity === activity._id && (
-                          <IconButton
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              right: 0,
-                              color: "#000",
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation(); // Prevent the onClick event of the Link from firing
-                              const confirmDelete = window.confirm(
-                                "Are you sure you want to delete this activity?"
-                              );
-                              if (confirmDelete) {
-                                // Call backend to delete activity
-                                handleDeleteActivity(activity._id);
-                              }
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        )}
+                        {hoveredActivity === activity._id &&
+                          user.role !== "student" && (
+                            <IconButton
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                right: 0,
+                                color: "#000",
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent the onClick event of the Link from firing
+                                const confirmDelete = window.confirm(
+                                  "Are you sure you want to delete this activity?"
+                                );
+                                if (confirmDelete) {
+                                  // Call backend to delete activity
+                                  handleDeleteActivity(activity._id);
+                                }
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          )}
                       </Box>
                     </Link>
                   </Grid>
