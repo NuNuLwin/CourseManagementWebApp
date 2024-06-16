@@ -8,6 +8,23 @@ import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Tooltip from "@mui/material/Tooltip";
 
+// ** imports for add note, share note  
+import { addNote,getNotes,shareNote,reset } from "../features/studentnote/studentnoteslice";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import ShareIcon from '@mui/icons-material/Share';
+import { TextField } from "@mui/material";
+import NoteItem from '../components/NoteItem';
+import ShareNoteItem from '../components/ShareNoteItem';
+import studentNoteService from '../features/studentnote/studentnoteservice'
+import { toast } from "react-toastify";
+import SimpleDialog from '../components/SimpleDialog'
+// ** imports for add note, share note  
+
 // material components
 import {
   Alert,
@@ -45,6 +62,113 @@ function CategoryDetail() {
   const [successMessage, setSuccessMessage] = useState("");
 
   const { courses, isLoading } = useSelector((state) => state.course);
+
+// ** code for add note, share note start
+  const { studentnotes, isLoadingNote, isErrorNote, isSuccessNote, messageNote } = useSelector(
+    (state) => state.studentNotes
+  );
+  const [open,setOpen] = useState(false);
+  const [openShareNote,setOpenShareNote] = useState(false);
+  const [selectedFile,setSelectedFile] = useState("");
+  const [enterNote, setEnterNote] = useState("")
+  const [shareNotes, setShareNotes] = useState([])
+  const [studentlistByCourse, setStudentlistByCourse] = useState([])
+  const [openStudentListDialog, setOpenStudentListDialog] = useState(false);
+
+  // ** share Note Dialog 
+  const shareNoteOpen = () => {
+    setOpenShareNote(true);
+  };
+
+  const shareNoteClose = () => {
+    setOpenShareNote(false);
+  };
+
+  // ** add Note Dialog
+  const noteOpen = () => {
+    setOpen(true);
+  };
+
+  const noteClose = () => {
+    setOpen(false);
+    setEnterNote("")
+  };
+
+  // ** student list dialog
+  const handleStudentListDialogClose = (studentid) => {
+    setOpenStudentListDialog(false);
+    shareLectureNote(studentnotes[0]._id,studentid)
+  };
+
+  const shareLectureNote = async (note,user) => {
+    const noteDate = {
+      note,//this is note _id
+      user
+    }
+    try {
+      const studentnote =  await studentNoteService.shareNote(noteDate)
+      if(studentnote.members.length > 0){
+        toast.success('Note is successfully shared!')
+      }
+    } catch (error) {
+      console.error("Failed to fetch classes:", error);
+    }
+
+  };
+
+  const addLectureNote = (user,course,file,category,note) =>{
+         const noteData = {
+          user,
+          course,
+          file,
+          activity: category,
+          notes: note
+        }
+      dispatch(addNote(noteData))
+      setEnterNote("")
+  }
+
+  const getLectureNotes = (user,course,file,category) => {
+    dispatch(
+      getNotes({
+        user:user,
+        course:course,
+        file:file,
+        activity:category,
+      })
+    );
+
+  }
+
+  const getShareLectureNotes = async (user,file) => {
+    try {
+      const sharenotes =  await studentNoteService.getShareNotes(user,file)
+      if(sharenotes.length > 0){
+        setShareNotes(sharenotes)
+      }
+    } catch (error) {
+      console.log("getShareLectureNotes error "+error)
+    }
+
+  }
+
+  const getStudentListByCourse = async (course) => {
+    try {
+      const studentlistByCourse =  await studentNoteService.getStudentListByCourse(course)
+      setStudentlistByCourse(studentlistByCourse)
+    } catch (error) {
+      console.log("getStudentListByCourse error "+error)
+    }
+
+  }
+
+  // ** get student list for selected course
+  useEffect(() => {
+    getStudentListByCourse(courseId);
+  }, []);
+
+// ** code for add note, share note start
+
 
   useEffect(() => {
     if (courses.length > 0 && !isLoading) {
@@ -267,9 +391,11 @@ function CategoryDetail() {
                           startIcon={<CloudDownloadIcon />}
                           onClick={() =>
                             contentDownload(file.file, file.filename)
+                            
+                          
                           }
                           style={{ margin: "10px" }}
-                        >
+                          >
                           Download
                         </Button>
                       </Tooltip>
@@ -281,6 +407,144 @@ function CategoryDetail() {
               )}
             </Grid>
           </Grid>
+
+          {/* student list Dialog */}
+            <SimpleDialog
+              open={openStudentListDialog}
+              onClose={handleStudentListDialogClose}
+              studentList={studentlistByCourse}
+            />
+          {/* student list Dialog Code*/}
+
+
+          {/* add Note Dialog*/}
+          <React.Fragment >
+            <Dialog
+            hideBackdrop = {true}
+            onClose={noteClose}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+            PaperProps={{sx:{position:'fixed',right: 5,width:300,height:500}}}
+            >
+            <DialogTitle sx={{ m: 0, p: 1,fontSize:12 }} id="customized-dialog-title">
+              Notes
+            </DialogTitle>
+
+            <IconButton
+              aria-label="share"
+              onClick={()=>  setOpenStudentListDialog(true)}
+              disabled = {studentnotes.length > 0 && studentnotes[0].notes.length > 0 ? (false): (true)}
+              sx={{
+                position: 'absolute',
+                right: 50,
+                top: 5,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+                <ShareIcon/>
+            </IconButton>
+
+            <IconButton
+              aria-label="close"
+              onClick={noteClose}
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: 5,
+                color: (theme) => theme.palette.grey[500],
+              }}>
+              <CloseIcon />
+            </IconButton>
+
+            <DialogContent dividers>
+            {
+              studentnotes.length > 0 && studentnotes[0].notes.length > 0 ? (
+              <div >
+              {
+                studentnotes[0].notes.map(( note) => (
+                  <NoteItem key={note._id} note={note} />
+                ))}
+              </div>
+            ) :
+            (
+              <Typography variant="body2" gutterBottom>
+              There is no note here
+              </Typography>
+            )
+            }
+            </DialogContent>
+
+            <DialogActions >
+            <TextField
+                      fullWidth
+                      id="outlined-multiline-static"
+                      multiline
+                      placeholder="Please add your note here"
+                      value={enterNote}
+                      onChange={(e) => setEnterNote(e.target.value)}
+                      />
+          
+            </DialogActions>
+            <DialogActions >
+              <Button size="small"  onClick={noteClose}>
+                  Cancel
+                </Button>
+                <Button size="small"  onClick={()=> addLectureNote(user._id,courseId,selectedFile,categoryId,enterNote)}>
+                  Post
+                </Button>
+            </DialogActions>
+          </Dialog>
+          </React.Fragment>
+          {/* add note Dialog Code */}
+
+
+          {/* get share note Dialog  */}
+          <React.Fragment >
+            <Dialog
+            hideBackdrop = {true}
+            onClose={shareNoteClose}
+            aria-labelledby="customized-dialog-title"
+            open={openShareNote}
+            PaperProps={{sx:{position:'fixed',right: 5,width:300,height:500}}}
+            >
+            <DialogTitle sx={{ m: 0, p: 1,fontSize:12 }} id="customized-dialog-title">
+              Notes
+            </DialogTitle>
+
+            <IconButton
+              aria-label="close"
+              onClick={shareNoteClose}
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: 5,
+                color: (theme) => theme.palette.grey[500],
+              }}>
+              <CloseIcon />
+            </IconButton>
+
+            <DialogContent dividers>
+            {
+              shareNotes.length > 0 ? (
+              <div >
+              {
+                shareNotes.map((sharenote) => (
+                  <ShareNoteItem key={sharenote._id} sharenote={sharenote} />
+                ))}
+              </div>
+            ) :
+            (
+              <Typography variant="body2" gutterBottom>
+                There is no share note here
+              </Typography>
+              
+            )
+            }
+            </DialogContent>
+          </Dialog>
+          </React.Fragment>
+          {/* get share note Dialog */}
+
         </Box>
       </Container>
     </>
