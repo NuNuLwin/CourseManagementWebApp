@@ -23,6 +23,8 @@ import ShareNoteItem from '../components/ShareNoteItem';
 import studentNoteService from '../features/studentnote/studentnoteservice'
 import { toast } from "react-toastify";
 import SimpleDialog from '../components/SimpleDialog'
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import PeopleIcon from '@mui/icons-material/People';
 // ** imports for add note, share note  
 
 // material components
@@ -378,32 +380,67 @@ function CategoryDetail() {
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
-                  <Grid container>
-                    <Grid item md={7} xs={12}>
-                      <p>{file.filename}</p>
-                    </Grid>
-                    <Grid item md={3} xs={12}>
-                      <p>
-                        {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
-                      </p>
-                    </Grid>
+                  <Grid container sx={{bgcolor:'#D6E4F0',p:2,mb:1}}>
+                      <Grid item md={7} xs={12}>
+                        <p>{file.filename}</p>
+                      </Grid>
+                      <Grid item md={3} xs={12}>
+                        <p>
+                          {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
+                        </p>
+                      </Grid>
 
-                    <Grid item md={2} xs={12}>
-                      <Tooltip title={file.filename} arrow>
-                        <Button
-                          variant="contained"
-                          startIcon={<CloudDownloadIcon />}
-                          onClick={() =>
-                            contentDownload(file.file, file.filename)
-                            
-                          
-                          }
-                          style={{ margin: "10px" }}
-                          >
-                          Download
-                        </Button>
-                      </Tooltip>
-                    </Grid>
+                      <Grid item md={2} xs={12}>
+                        <Tooltip title={file.filename} arrow>
+                          <Button
+                            variant="contained"
+                            startIcon={<CloudDownloadIcon />}
+                            onClick={() =>
+                              contentDownload(file.file, file.filename)
+                            }
+                            style={{ margin: "10px" }}
+                            >
+                            Download
+                          </Button>
+                        </Tooltip>
+                      </Grid>
+
+                      {/* <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-end"
+                        alignItems="center"
+                      > */}
+                      <Grid item md={10.5} xs={12}>
+                      </Grid>
+                      <Grid item md={0.5} xs={12} >
+                        <Box display="flex" justifyContent="flex-start">
+                        <IconButton aria-label="Note" onClick={ () => {
+                              // ** open note dialog to add note
+                              console.log("open note dialog student id "+user._id+" course id "+courseId+" file id "+file.file +" activity id "+categoryId)
+                              getLectureNotes(user._id,courseId,file.file,categoryId)
+                              noteOpen()
+                              setSelectedFile(file.file)
+                           }
+                         }>
+                          <EditNoteIcon />
+                        </IconButton>
+                        </Box>
+                      </Grid>
+                      <Grid item md={1} xs={12}>
+                      <Box display="flex" justifyContent="flex-start">
+                        <IconButton aria-label="ViewNote" onClick={() => {
+                              // ** open note dialog to view note
+                              console.log("open note to view share note")
+                              getShareLectureNotes(user._id,file.file)
+                              shareNoteOpen()
+                        }}>
+                          <PeopleIcon />
+                        </IconButton>
+                        </Box>
+                      </Grid>
+                      {/* </Grid> */}
+
                   </Grid>
                 ))
               ) : (
@@ -512,7 +549,7 @@ function CategoryDetail() {
             PaperProps={{sx:{position:'fixed',right: 5,width:300,height:500}}}
             >
             <DialogTitle sx={{ m: 0, p: 1,fontSize:12 }} id="customized-dialog-title">
-              Notes
+              Notes shared by others
             </DialogTitle>
 
             <IconButton
