@@ -38,12 +38,19 @@ const updateCategoryByCourseId = async (courseId, selectedActivities) => {
   return response.data;
 };
 
+// Delete activity by course id
+const deleteCategoryByCourseId = async (courseId, activityId) => {
+  const response = await axios.delete(`${API_URL}/${courseId}/${activityId}`);
+  return response.data;
+};
+
 const courseService = {
   createCourse,
   getCoursesByInstructorId,
   getCoursesByStudentId,
   getCourseByCourseId,
   updateCategoryByCourseId,
+  deleteCategoryByCourseId,
 };
 
 export default courseService;

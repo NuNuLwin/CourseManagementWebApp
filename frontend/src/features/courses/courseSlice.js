@@ -80,6 +80,19 @@ export const updateCategoryByCourseId = createAsyncThunk(
   }
 );
 
+// Delete activity
+export const deleteCategoryByCourseId = createAsyncThunk(
+  "courses/deleteCategoryByCourseId",
+  async ({ courseId, activityId }, thunkAPI) => {
+    try {
+      return await courseService.deleteCategoryByCourseId(courseId, activityId);
+    } catch (error) {
+      const message = error?.response?.data?.message || "";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const courseSlice = createSlice({
   name: "course",
   initialState,
@@ -158,6 +171,21 @@ export const courseSlice = createSlice({
         // state.courses = [action.payload];
       })
       .addCase(updateCategoryByCourseId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+      .addCase(deleteCategoryByCourseId.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteCategoryByCourseId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        // state.courses = [action.payload];
+      })
+      .addCase(deleteCategoryByCourseId.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
