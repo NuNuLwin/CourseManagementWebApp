@@ -27,7 +27,6 @@ export const uploadContentFile = createAsyncThunk(
   "contents/uploadContentFile",
   async ({ formData, config }, thunkAPI) => {
     try {
-      console.log("inside uploade slice");
       return await contentFileService.uploadContentFile(formData, config);
     } catch (error) {
       const message = error?.response?.data?.message || "";

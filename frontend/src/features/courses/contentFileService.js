@@ -10,9 +10,7 @@ const viewContentFile = async (fileId) => {
 };
 
 const uploadContentFile = async (formData, config) => {
-  console.log("inside uploade service");
   const response = await axios.post(API_URL, formData, config);
-  console.log(response.data);
   return response.data;
 };
 

@@ -68,8 +68,8 @@ p {
 }
 
 .category_box:hover {
-  background-color: #d6e4f0;
-  color: #000;
+  background-color: #3b7dd3;
+  /* color: #000; */
 }
 
 /* 1876d2 */
@@ -96,4 +96,26 @@ button.active {
 button.active:hover {
   background-color: #1976d2;
   color: #fff !important; /* Example active color */
+}
+
+h2.uni_title {
+  color: #0d3675;
+  font-weight: 300;
+  margin: 0;
+}
+
+h4.uni_title {
+  color: #0d3675;
+  font-weight: 300;
+  margin: 0;
+}
+
+.category_card {
+  border-radius: 10px;
+  border: 1px solid #b6babf;
+  padding: 20px;
+  margin: 20px 0px 0 0;
+  color: rgb(24, 24, 24);
+  text-align: center;
+  transition: background-color 0.3s ease;
 }

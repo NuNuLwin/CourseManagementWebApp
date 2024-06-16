@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import { getCourseByCourseId } from "../features/courses/courseSlice";
+import {
+  deleteCategoryByCourseId,
+  getCourseByCourseId,
+  updateCategoryByCourseId,
+} from "../features/courses/courseSlice";
 import moment from "moment";
 
 // material components
@@ -16,7 +19,24 @@ import {
   Typography,
   Link,
   Stack,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
 } from "@mui/material";
+
+// mui icon
+import InfoIcon from "@mui/icons-material/Info";
+import SchoolIcon from "@mui/icons-material/School";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import DeleteIcon from "@mui/icons-material/Delete";
+import WorkIcon from "@mui/icons-material/Work";
+import BookIcon from "@mui/icons-material/Book";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import QuizIcon from "@mui/icons-material/Quiz";
+import ApprovalIcon from "@mui/icons-material/Approval";
+import GradeIcon from "@mui/icons-material/Grade";
 
 // activity api
 import activityService from "../features/courses/activityService";
@@ -42,8 +62,12 @@ function CourseDetail() {
     (state) => state.course
   );
 
-  const [activities, setActivities] = useState([]);
-  const course = courses[0];
+  const [allActivities, setAllActivities] = useState([]);
+  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [courseActivities, setCourseActivities] = useState([]);
+  const [hoveredActivity, setHoveredActivity] = useState(null);
+
+  const [course, setCourse] = useState(null);
   const formattedStartDate = course
     ? moment(course.startDate).format("DD MMM YYYY")
     : "";
@@ -51,28 +75,157 @@ function CourseDetail() {
     ? moment(course.endDate).format("DD MMM YYYY")
     : "";
 
+  // MUI Open Dialog
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleCloseCatClicked = () => {
+    setSelectedActivities(course.activities.map((x) => x._id));
+    setOpen(false);
+  };
+
+  const getActivityIcon = (activityName, fromDialog) => {
+    let iconProps;
+    if (fromDialog) {
+      iconProps = { sx: { fontSize: 30, color: "#000" } };
+    } else {
+      iconProps = { sx: { fontSize: 30, color: "#fff" } };
+    }
+
+    if (activityName.toLowerCase() === "general") {
+      return <InfoIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "lecture") {
+      return <SchoolIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "assignment") {
+      return <AssignmentIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "project") {
+      return <WorkIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "reading") {
+      return <BookIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "feedback") {
+      return <FeedbackIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "quiz") {
+      return <QuizIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "certificate") {
+      return <ApprovalIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "exam") {
+      return <GradeIcon {...iconProps} />;
+    } else {
+      return <InfoIcon {...iconProps} />;
+    }
+  };
+
+  const handleCategorySelect = (activityId) => {
+    setSelectedActivities((prevSelectedActivities) => {
+      const isSelected = prevSelectedActivities.includes(activityId);
+      if (isSelected) {
+        //console.log("Removing activity:", activityId);
+        return prevSelectedActivities.filter((id) => id !== activityId);
+      } else {
+        //console.log("Adding activity:", activityId);
+        return [...prevSelectedActivities, activityId];
+      }
+    });
+  };
+
+  const handleAddCatClicked = async () => {
+    dispatch(updateCategoryByCourseId({ courseId, selectedActivities })).then(
+      () => {
+        handleCloseCatClicked();
+
+        // setCourseActivities(tmpArr);
+        let copied = { ...course };
+        const tmpArr = [...course.activities];
+        const tmpArrIds = tmpArr.map((x) => x._id);
+        selectedActivities.forEach((id) => {
+          const c = allActivities.filter((x) => x._id === id)[0];
+          if (!tmpArrIds.includes(id)) {
+            tmpArr.push(c);
+          }
+        });
+        copied.activities = tmpArr;
+        let acts = [...copied.activities];
+        acts.sort((a, b) => {
+          const nameA = a.activityName.toUpperCase();
+          const nameB = b.activityName.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        });
+        copied.activities = acts;
+        setCourse(copied);
+      }
+    );
+  };
+
   useEffect(() => {
     if (isError) {
       console.log(message);
     }
 
-    dispatch(getCourseByCourseId(courseId));
+    dispatch(getCourseByCourseId(courseId)).then((res) => {
+      setCourseActivities(res.payload.activities);
+      let copied = { ...res.payload };
+      let acts = [...copied.activities];
+      acts.sort((a, b) => {
+        const nameA = a.activityName.toUpperCase();
+        const nameB = b.activityName.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+      copied.activities = acts;
+      setCourse(copied);
+      setSelectedActivities(copied.activities.map((x) => x._id));
+    });
 
     // fetch category
     const fetchActivity = async () => {
       try {
         const activityList = await activityService.getActivity();
-        setActivities(activityList);
+        setAllActivities(activityList);
       } catch (error) {
         console.error("Failed to fetch activity:", error);
       }
     };
     fetchActivity();
-  }, [dispatch, courseId, isError, message]);
+  }, []);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+  const handleMouseEnter = (activityId) => {
+    setHoveredActivity(activityId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredActivity(null);
+  };
+
+  const handleDeleteActivity = async (activityId) => {
+    dispatch(deleteCategoryByCourseId({ courseId, activityId })).then(() => {
+      const copied = { ...course };
+      let tmpArr = [...course.activities];
+
+      tmpArr = tmpArr.filter((activity) => activity._id !== activityId);
+      setSelectedActivities(tmpArr.map((x) => x._id));
+
+      copied.activities = tmpArr;
+      setCourse(copied);
+    });
+  };
+
+  // if (isLoading) {
+  //   return <Spinner />;
+  // }
 
   const breadcrumbs = [
     <Link
@@ -85,9 +238,16 @@ function CourseDetail() {
       Courses
     </Link>,
     <Typography key="3" color="text.primary">
-      Detail
+      {course && course.class.map((cls) => cls.className).join(", ")}
     </Typography>,
   ];
+
+  const isActivityChecked = (current_activities, activity_id) => {
+    if (current_activities.length === 0) return false;
+
+    const current_activities_ids = current_activities.map((x) => x._id);
+    return current_activities_ids.includes(activity_id);
+  };
 
   return (
     <>
@@ -95,7 +255,7 @@ function CourseDetail() {
       <Container maxWidth="lg">
         <Box sx={{ flexGrow: 1, mt: 4 }}>
           <Grid container>
-            <Grid item md={12} xs={12}>
+            <Grid item md={10} xs={12}>
               <Stack spacing={2}>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
                   {breadcrumbs}
@@ -105,7 +265,7 @@ function CourseDetail() {
               <Grid container>
                 <Grid item md={3} xs={12}>
                   <p>
-                    Day(s):{" "}
+                    {course && course.days.length === 1 ? "Day:" : "Days:"}{" "}
                     {course && course.days.map((day) => dayMap[day]).join(", ")}
                   </p>
                 </Grid>
@@ -117,7 +277,9 @@ function CourseDetail() {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <p>
-                    Class(es):
+                    {course && course.class.length === 1
+                      ? "Class:"
+                      : "Classes:"}{" "}
                     {course &&
                       course.class.map((cls) => cls.className).join(", ")}
                   </p>
@@ -136,10 +298,26 @@ function CourseDetail() {
                     {course && course.instructor.lastname}
                   </p>
                 </Grid>
-                {activities.map((activity) => (
-                  <Grid item md={3} xs={12} key={activity.id}>
+                {user.role !== "student" && (
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    sx={{ display: "flex", justifyContent: "flex-end" }}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleClickOpen}
+                    >
+                      Select Category to the course
+                    </Button>
+                  </Grid>
+                )}
+
+                {course?.activities?.map((activity) => (
+                  <Grid item md={3} xs={12} key={activity._id}>
                     <Link
-                      // to={`/courseId/${courseId}/categoryId/${activity._id}`}
                       underline="hover"
                       onClick={() =>
                         navigate(
@@ -150,8 +328,46 @@ function CourseDetail() {
                         cursor: "pointer",
                       }}
                     >
-                      <Box className="category_box">
-                        {activity.activityName}
+                      <Box
+                        className="category_box"
+                        onMouseEnter={() => handleMouseEnter(activity._id)}
+                        onMouseLeave={handleMouseLeave}
+                        style={{
+                          position: "relative",
+                          display: "flex",
+                          flexDirection: "column", // Display icon and text in a column
+                          alignItems: "center", // Center items horizontally
+                        }}
+                      >
+                        <box>
+                          {getActivityIcon(activity.activityName, false)}
+                        </box>
+
+                        <box>{activity.activityName}</box>
+
+                        {hoveredActivity === activity._id &&
+                          user.role !== "student" && (
+                            <IconButton
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                right: 0,
+                                color: "#000",
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent the onClick event of the Link from firing
+                                const confirmDelete = window.confirm(
+                                  "Are you sure you want to delete this activity?"
+                                );
+                                if (confirmDelete) {
+                                  // Call backend to delete activity
+                                  handleDeleteActivity(activity._id);
+                                }
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          )}
                       </Box>
                     </Link>
                   </Grid>
@@ -161,6 +377,80 @@ function CourseDetail() {
           </Grid>
         </Box>
       </Container>
+
+      <Dialog open={open} onClose={handleCloseCatClicked}>
+        <DialogTitle>Choose Category</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={1}>
+            {allActivities.map((activity) => (
+              <Grid item md={4} xs={12} key={activity._id}>
+                <Box
+                  className="category_card"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 3,
+                    border: "1px solid #ccc",
+                    borderRadius: 2,
+                    boxShadow: 1,
+                    margin: 1,
+                    position: "relative",
+                    position: "relative",
+                    cursor:
+                      course &&
+                      course.activities
+                        .map((act) => act._id)
+                        .includes(activity._id)
+                        ? "not-allowed"
+                        : "pointer", // Make cursor not-allowed for already selected activities
+                    backgroundColor:
+                      selectedActivities.includes(activity._id) ||
+                      (course &&
+                        course.activities
+                          .map((act) => act._id)
+                          .includes(activity._id))
+                        ? "#DCDCDC" // Background color if selected or already part of the course
+                        : selectedActivities.length > 0
+                        ? "#fff" // Background color if not selected but other activities are selected
+                        : "#fff", // Default background color
+                  }}
+                  onClick={() => handleCategorySelect(activity._id)}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "primary.main",
+                      marginRight: 1,
+                      marginBottom: 2,
+                      fontSize: "2rem", // Adjust the icon size
+                    }}
+                  >
+                    {getActivityIcon(activity.activityName, true)}
+                  </Box>
+                  <Typography
+                    variant="body1"
+                    style={{ fontSize: "13px", color: "#000" }}
+                  >
+                    {activity.activityName}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddCatClicked} color="primary">
+            Add
+          </Button>
+          <Button onClick={handleCloseCatClicked} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
