@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const mongoose = require("mongoose");
 
 const Course = require("../models/courseModel");
 const StudentRegistration = require("../models/studentRegistrationModel");
@@ -206,9 +207,60 @@ const updateActivities = asyncHandler(async (req, res) => {
   res.status(200).json(course);
 });
 
+// @desc    Delete activity category in a course
+// @route   PUT /api/course/:id/:activityId
+// @access  Private
+const deleteActivity = asyncHandler(async (req, res) => {
+  const courseId = req.params.id;
+  const activityId = req.params.activityId;
+
+  // Find the course by courseId
+  const course = await Course.findById(courseId);
+  if (!course) {
+    res.status(404).json({ message: "Course not found" });
+    return;
+  }
+
+  // Remove the activityId from the activities array
+  course.activities = course.activities.filter(
+    (activity) => activity.toString() !== activityId
+  );
+
+  // Collect file IDs related to the activity
+  const fileIds = course.files
+    .filter((file) => file.activity.toString() === activityId)
+    .map((file) => file.file.toString());
+  console.log("fileIds..", fileIds);
+
+  // Remove files associated with the activityId from the files array
+  course.files = course.files.filter(
+    (file) => file.activity.toString() !== activityId
+  );
+
+  // Delete files and their chunks from GridFS
+  let bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: "content",
+  });
+
+  console.log("after open bucket...");
+  fileIds.forEach((fileId) => {
+    bucket.delete(new mongoose.Types.ObjectId(fileId), (err) => {
+      if (err) {
+        console.error("Error deleting file from GridFS:", err);
+      }
+    });
+  });
+
+  // Save the updated course
+  await course.save();
+
+  res.status(200).json(course);
+});
+
 module.exports = {
   getCourses,
   setCourse,
   getCourseByCourseId,
   updateActivities,
+  deleteActivity,
 };
