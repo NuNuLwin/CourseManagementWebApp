@@ -23,11 +23,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  DialogContentText,
-  TextField,
-  Info,
-  FormControlLabel,
-  Checkbox,
   IconButton,
 } from "@mui/material";
 
@@ -36,6 +31,12 @@ import InfoIcon from "@mui/icons-material/Info";
 import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import DeleteIcon from "@mui/icons-material/Delete";
+import WorkIcon from "@mui/icons-material/Work";
+import BookIcon from "@mui/icons-material/Book";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import QuizIcon from "@mui/icons-material/Quiz";
+import ApprovalIcon from "@mui/icons-material/Approval";
+import GradeIcon from "@mui/icons-material/Grade";
 
 // activity api
 import activityService from "../features/courses/activityService";
@@ -86,14 +87,32 @@ function CourseDetail() {
     setOpen(false);
   };
 
-  const getActivityIcon = (activityName) => {
-    const iconProps = { sx: { fontSize: 30, color: "#000" } };
+  const getActivityIcon = (activityName, fromDialog) => {
+    let iconProps;
+    if (fromDialog) {
+      iconProps = { sx: { fontSize: 30, color: "#000" } };
+    } else {
+      iconProps = { sx: { fontSize: 30, color: "#fff" } };
+    }
+
     if (activityName.toLowerCase() === "general") {
       return <InfoIcon {...iconProps} />;
     } else if (activityName.toLowerCase() === "lecture") {
       return <SchoolIcon {...iconProps} />;
     } else if (activityName.toLowerCase() === "assignment") {
       return <AssignmentIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "project") {
+      return <WorkIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "reading") {
+      return <BookIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "feedback") {
+      return <FeedbackIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "quiz") {
+      return <QuizIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "certificate") {
+      return <ApprovalIcon {...iconProps} />;
+    } else if (activityName.toLowerCase() === "exam") {
+      return <GradeIcon {...iconProps} />;
     } else {
       return <InfoIcon {...iconProps} />;
     }
@@ -103,10 +122,10 @@ function CourseDetail() {
     setSelectedActivities((prevSelectedActivities) => {
       const isSelected = prevSelectedActivities.includes(activityId);
       if (isSelected) {
-        console.log("Removing activity:", activityId);
+        //console.log("Removing activity:", activityId);
         return prevSelectedActivities.filter((id) => id !== activityId);
       } else {
-        console.log("Adding activity:", activityId);
+        //console.log("Adding activity:", activityId);
         return [...prevSelectedActivities, activityId];
       }
     });
@@ -115,14 +134,10 @@ function CourseDetail() {
   const handleAddCatClicked = async () => {
     dispatch(updateCategoryByCourseId({ courseId, selectedActivities })).then(
       () => {
-        console.log(
-          "handleAddCatClicked selectedActivities..",
-          selectedActivities
-        );
         handleCloseCatClicked();
 
         // setCourseActivities(tmpArr);
-        const copied = { ...course };
+        let copied = { ...course };
         const tmpArr = [...course.activities];
         const tmpArrIds = tmpArr.map((x) => x._id);
         selectedActivities.forEach((id) => {
@@ -132,16 +147,22 @@ function CourseDetail() {
           }
         });
         copied.activities = tmpArr;
+        let acts = [...copied.activities];
+        acts.sort((a, b) => {
+          const nameA = a.activityName.toUpperCase();
+          const nameB = b.activityName.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        });
+        copied.activities = acts;
         setCourse(copied);
-        // dispatch(getCourseByCourseId(courseId));
-        // dispatch(getCourseByCourseId(courseId)).then((res) => {
-        //   setCourseActivities(res.payload.activities);
-        // });
       }
     );
-    // console.log("check course id..", courseId);
-    // console.log("check selectedActivities...", selectedActivities);
-    // dispatch(updateCategoryByCourseId({ courseId, selectedActivities }));
   };
 
   useEffect(() => {
@@ -151,8 +172,22 @@ function CourseDetail() {
 
     dispatch(getCourseByCourseId(courseId)).then((res) => {
       setCourseActivities(res.payload.activities);
-      setCourse(res.payload);
-      setSelectedActivities(res.payload.activities.map((x) => x._id));
+      let copied = { ...res.payload };
+      let acts = [...copied.activities];
+      acts.sort((a, b) => {
+        const nameA = a.activityName.toUpperCase();
+        const nameB = b.activityName.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+      copied.activities = acts;
+      setCourse(copied);
+      setSelectedActivities(copied.activities.map((x) => x._id));
     });
 
     // fetch category
@@ -180,11 +215,8 @@ function CourseDetail() {
       const copied = { ...course };
       let tmpArr = [...course.activities];
 
-      console.log("selectedActivities", selectedActivities);
-
       tmpArr = tmpArr.filter((activity) => activity._id !== activityId);
       setSelectedActivities(tmpArr.map((x) => x._id));
-      console.log("tmpArr", tmpArr);
 
       copied.activities = tmpArr;
       setCourse(copied);
@@ -273,7 +305,7 @@ function CourseDetail() {
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     onClick={handleClickOpen}
                   >
@@ -300,15 +332,24 @@ function CourseDetail() {
                         onMouseLeave={handleMouseLeave}
                         style={{
                           position: "relative",
+                          display: "flex",
+                          flexDirection: "column", // Display icon and text in a column
+                          alignItems: "center", // Center items horizontally
                         }}
                       >
-                        {activity.activityName}
+                        <box>
+                          {getActivityIcon(activity.activityName, false)}
+                        </box>
+
+                        <box>{activity.activityName}</box>
+
                         {hoveredActivity === activity._id && (
                           <IconButton
                             style={{
                               position: "absolute",
                               top: 0,
                               right: 0,
+                              color: "#000",
                             }}
                             onClick={(e) => {
                               e.stopPropagation(); // Prevent the onClick event of the Link from firing
@@ -385,7 +426,7 @@ function CourseDetail() {
                       fontSize: "2rem", // Adjust the icon size
                     }}
                   >
-                    {getActivityIcon(activity.activityName)}
+                    {getActivityIcon(activity.activityName, true)}
                   </Box>
                   <Typography
                     variant="body1"
