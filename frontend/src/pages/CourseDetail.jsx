@@ -10,6 +10,7 @@ import {
 import moment from "moment";
 // components
 import CategoryChoiceItem from "../components/CategoryChoiceItem";
+import BreadCrumbs from "../components/BreadCrumbs";
 // material components
 import {
   Box,
@@ -28,17 +29,9 @@ import {
   IconButton,
 } from "@mui/material";
 
-// mui icon
-import InfoIcon from "@mui/icons-material/Info";
-import SchoolIcon from "@mui/icons-material/School";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import DeleteIcon from "@mui/icons-material/Delete";
-import WorkIcon from "@mui/icons-material/Work";
-import BookIcon from "@mui/icons-material/Book";
-import FeedbackIcon from "@mui/icons-material/Feedback";
-import QuizIcon from "@mui/icons-material/Quiz";
-import ApprovalIcon from "@mui/icons-material/Approval";
-import GradeIcon from "@mui/icons-material/Grade";
+
+import { getActivityIcon } from "../components/CategoryIcon";
 
 // activity api
 import activityService from "../features/courses/activityService";
@@ -87,37 +80,6 @@ function CourseDetail() {
   const handleCloseCatClicked = () => {
     setSelectedActivities(course.activities.map((x) => x._id));
     setOpen(false);
-  };
-
-  const getActivityIcon = (activityName, fromDialog) => {
-    let iconProps;
-    if (fromDialog) {
-      iconProps = { sx: { fontSize: 30, color: "#000" } };
-    } else {
-      iconProps = { sx: { fontSize: 30, color: "#fff" } };
-    }
-
-    if (activityName.toLowerCase() === "general") {
-      return <InfoIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "lecture") {
-      return <SchoolIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "assignment") {
-      return <AssignmentIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "project") {
-      return <WorkIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "reading") {
-      return <BookIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "feedback") {
-      return <FeedbackIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "quiz") {
-      return <QuizIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "certificate") {
-      return <ApprovalIcon {...iconProps} />;
-    } else if (activityName.toLowerCase() === "exam") {
-      return <GradeIcon {...iconProps} />;
-    } else {
-      return <InfoIcon {...iconProps} />;
-    }
   };
 
   const handleCategorySelect = (activityId) => {
@@ -258,11 +220,10 @@ function CourseDetail() {
         <Box sx={{ flexGrow: 1, mt: 4 }}>
           <Grid container>
             <Grid item md={10} xs={12}>
-              <Stack spacing={2}>
-                <Breadcrumbs separator="›" aria-label="breadcrumb">
-                  {breadcrumbs}
-                </Breadcrumbs>
-              </Stack>
+              <BreadCrumbs
+                name={course ? course.courseName.split(" - ")[0] : ""}
+                url={"/courseList"}
+              />
               <h2> {course && course.courseName}</h2>
               <Grid container>
                 <Grid item md={3} xs={12}>
