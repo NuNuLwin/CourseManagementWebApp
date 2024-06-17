@@ -31,6 +31,8 @@ import { toast } from "react-toastify";
 import SimpleDialog from "../components/SimpleDialog";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import PeopleIcon from "@mui/icons-material/People";
+import DownloadIcon from "@mui/icons-material/Download";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 // ** imports for add note, share note
 
 // material components
@@ -397,13 +399,13 @@ function CategoryDetail() {
                   </Grid>
                 )}
 
-                <Grid item md={7} xs={12}>
+                <Grid item md={6} xs={12}>
                   <h4>File Name</h4>
                 </Grid>
                 <Grid item md={3} xs={12}>
                   <h4>Uploaded Date</h4>
                 </Grid>
-                <Grid item md={2} xs={12}>
+                <Grid item md={3} xs={12}>
                   &nbsp;
                 </Grid>
               </Grid>
@@ -422,97 +424,92 @@ function CategoryDetail() {
                         "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
                     }}
                   >
-                    <Grid item md={7} xs={12}>
-                      <Typography variant="body1" gutterBottom>
-                        <Link
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            viewContent(file.file, file.filename);
-                          }}
-                          underline="hover"
-                        >
-                          {file.filename}
-                        </Link>
-                      </Typography>{" "}
-                      {/* <p>{file.filename}</p> */}
+                    <Grid
+                      item
+                      md={6}
+                      xs={12}
+                      sx={{
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Link
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          viewContent(file.file, file.filename);
+                        }}
+                        underline="hover"
+                      >
+                        {file.filename}
+                      </Link>
                     </Grid>
                     <Grid item md={3} xs={12}>
-                      <Typography variant="body1" gutterBottom>
-                        {/* <p> */}
+                      <p>
                         {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
-                      </Typography>
-                      {/* </p> */}
+                      </p>
                     </Grid>
 
-                    <Grid item md={2} xs={12}>
-                      <Tooltip title={file.filename} arrow>
-                        <Button
-                          variant="contained"
-                          startIcon={<CloudDownloadIcon />}
-                          onClick={() =>
-                            contentDownload(file.file, file.filename)
-                          }
-                          style={{ margin: "10px" }}
-                        >
-                          Download
-                        </Button>
-                      </Tooltip>
-                    </Grid>
-
-                    {/* <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                      > */}
-                    <Grid item md={10.5} xs={12}></Grid>
-                    <Grid item md={0.5} xs={12}>
-                      <Box display="flex" justifyContent="flex-start">
-                        <IconButton
-                          aria-label="Note"
-                          onClick={() => {
-                            // ** open note dialog to add note
-                            console.log(
-                              "open note dialog student id " +
-                                user._id +
-                                " course id " +
-                                courseId +
-                                " file id " +
-                                file.file +
-                                " activity id " +
+                    <Grid item md={3} xs={12}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Tooltip title={"Download File"} arrow>
+                          <IconButton
+                            aria-label="download-content-file"
+                            onClick={() =>
+                              contentDownload(file.file, file.filename)
+                            }
+                          >
+                            <DownloadIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"Add Note"} arrow>
+                          <IconButton
+                            aria-label="Note"
+                            onClick={() => {
+                              // ** open note dialog to add note
+                              console.log(
+                                "open note dialog student id " +
+                                  user._id +
+                                  " course id " +
+                                  courseId +
+                                  " file id " +
+                                  file.file +
+                                  " activity id " +
+                                  categoryId
+                              );
+                              getLectureNotes(
+                                user._id,
+                                courseId,
+                                file.file,
                                 categoryId
-                            );
-                            getLectureNotes(
-                              user._id,
-                              courseId,
-                              file.file,
-                              categoryId
-                            );
-                            noteOpen();
-                            setSelectedFile(file.file);
-                          }}
-                        >
-                          <StickyNote2Icon />
-                        </IconButton>
-                      </Box>
+                              );
+                              noteOpen();
+                              setSelectedFile(file.file);
+                            }}
+                          >
+                            <StickyNote2Icon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"Shared Note"} arrow>
+                          <IconButton
+                            aria-label="ViewNote"
+                            onClick={() => {
+                              // ** open note dialog to view note
+                              console.log("open note to view share note");
+                              getShareLectureNotes(user._id, file.file);
+                              shareNoteOpen();
+                            }}
+                          >
+                            <PeopleIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
                     </Grid>
-                    <Grid item md={1} xs={12}>
-                      <Box display="flex" justifyContent="flex-start">
-                        <IconButton
-                          aria-label="ViewNote"
-                          onClick={() => {
-                            // ** open note dialog to view note
-                            console.log("open note to view share note");
-                            getShareLectureNotes(user._id, file.file);
-                            shareNoteOpen();
-                          }}
-                        >
-                          <PeopleIcon />
-                        </IconButton>
-                      </Box>
-                    </Grid>
-                    {/* </Grid> */}
                   </Grid>
                 ))
               ) : (
