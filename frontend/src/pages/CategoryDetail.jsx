@@ -51,6 +51,8 @@ import {
   viewContentFile,
 } from "../features/courses/contentFileSlice";
 
+import BreadCrumbs from "../components/BreadCrumbs";
+
 function CategoryDetail() {
   // constants
   const FILE_SIZE_IN_MB = 16.0;
@@ -189,6 +191,25 @@ function CategoryDetail() {
     }
   };
 
+  const viewContent = async (fileId, fileName) => {
+    setLoading(true);
+    try {
+      const res = await dispatch(viewContentFile(fileId));
+      setLoading(false);
+      const url = window.URL.createObjectURL(res.payload);
+      const anchorElement = document.createElement("a");
+      anchorElement.href = url;
+      anchorElement.target = "_blank";
+      document.body.appendChild(anchorElement);
+      anchorElement.click();
+      anchorElement?.parentNode?.removeChild(anchorElement);
+    } catch (error) {
+      //console.error("Error fetching file:", error);
+      setLoading(false);
+      // Handle the error appropriately, e.g., display an error message
+    }
+  };
+
   // ** get student list for selected course
   useEffect(() => {
     getStudentListByCourse(courseId);
@@ -224,35 +245,6 @@ function CategoryDetail() {
   useEffect(() => {
     dispatch(getCourseByCourseId(courseId));
   }, []);
-
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      onClick={() => navigate("/courseList")}
-      sx={{
-        cursor: "pointer",
-      }}
-    >
-      Courses
-    </Link>,
-    <Link
-      underline="hover"
-      key="2"
-      color="inherit"
-      onClick={() => navigate(`/course/${course._id}`)}
-      sx={{
-        cursor: "pointer",
-      }}
-    >
-      {courses && courses[0].class.map((cls) => cls.className).join(", ")}
-    </Link>,
-    <Typography key="3" color="text.primary">
-      {/* {categoryFiles.length > 0 ? categoryFiles[0].activity.activityName : ""} */}
-      {activityName}
-    </Typography>,
-  ];
 
   const contentDownload = async (fileId, fileName) => {
     setLoading(true);
@@ -335,11 +327,24 @@ function CategoryDetail() {
         <Box sx={{ flexGrow: 1, mt: 4 }}>
           <Grid container>
             <Grid item md={12} xs={12}>
-              <Stack spacing={2}>
-                <Breadcrumbs separator="›" aria-label="breadcrumb">
-                  {breadcrumbs}
-                </Breadcrumbs>
-              </Stack>
+              <BreadCrumbs
+                links={[
+                  {
+                    name: "Courses",
+                    url: "/courseList",
+                  },
+                  {
+                    name:
+                      course && course.courseName
+                        ? course.courseName.split(" - ")[0]
+                        : "",
+                    url: `/course/${course._id}`,
+                  },
+                  {
+                    name: activityName,
+                  },
+                ]}
+              />
               {course && <h2>{course.courseName}</h2>}
               <Grid container>
                 <Grid item md={12} xs={12} sx={{ fontWeight: "700" }}>
@@ -404,14 +409,40 @@ function CategoryDetail() {
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
-                  <Grid container sx={{ bgcolor: "#D6E4F0", p: 2, mb: 2,borderRadius:0 }}>
+                  <Grid
+                    container
+                    sx={{
+                      bgcolor: "#D6E4F0",
+                      p: 2,
+                      mb: 1.5,
+                      boxShadow:
+                        "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)",
+                      borderRadius: "4px",
+                      transition:
+                        "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+                    }}
+                  >
                     <Grid item md={7} xs={12}>
-                    <Typography variant="body1" gutterBottom>{file.filename}</Typography> {/* <p>{file.filename}</p> */}
+                      <Typography variant="body1" gutterBottom>
+                        <Link
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            viewContent(file.file, file.filename);
+                          }}
+                          underline="hover"
+                        >
+                          {file.filename}
+                        </Link>
+                      </Typography>{" "}
+                      {/* <p>{file.filename}</p> */}
                     </Grid>
                     <Grid item md={3} xs={12}>
-                    <Typography variant="body1" gutterBottom>{/* <p> */}
+                      <Typography variant="body1" gutterBottom>
+                        {/* <p> */}
                         {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
-                    </Typography>{/* </p> */}
+                      </Typography>
+                      {/* </p> */}
                     </Grid>
 
                     <Grid item md={2} xs={12}>
