@@ -9,7 +9,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Tooltip from "@mui/material/Tooltip";
 
 // ** imports for add note, share note  
-import { addNote,getNotes,shareNote,reset } from "../features/studentnote/studentnoteslice";
+import { addNote,getNotes,shareNote,reset,updateNote } from "../features/studentnote/studentnoteslice";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -129,6 +129,18 @@ function CategoryDetail() {
       dispatch(addNote(noteData))
       setEnterNote("")
   }
+
+  const updateLectureNote = (noteid,subnoteid,notetext) => {
+    console.log("Category Details updateLectureNote noteid "+noteid+" subnoteid "+subnoteid + " notetext " +notetext)
+    dispatch(
+      updateNote({
+        noteid,
+        subnoteid,
+        notetext,
+      })
+    );
+  };
+
 
   const getLectureNotes = (user,course,file,category) => {
     dispatch(
@@ -503,7 +515,7 @@ function CategoryDetail() {
               <div >
               {
                 studentnotes[0].notes.map(( note) => (
-                  <NoteItem key={note._id} note={note} />
+                  <NoteItem key={note._id} noteid={studentnotes[0]._id} note={note} updateLectureNote={updateLectureNote}/>
                 ))}
               </div>
             ) :
