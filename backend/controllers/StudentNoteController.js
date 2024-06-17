@@ -55,6 +55,47 @@ const addNote = asyncHandler(async (req, res) => {
   
   });
 
+  const updateNote = asyncHandler(async (req, res) => {
+    const noteid = req.query.noteid;
+    const subnoteid = req.query.subnoteid
+    const notetext = req.query.notetext;
+
+   // const { noteid, subnoteid, notetext } = req.body;
+    if (!noteid || !subnoteid || !notetext) {
+      res.status(400);
+      throw new Error("Please add all fields");
+    }
+
+    //const studentnote = await studentNote.findById(noteid)
+    let result = []
+    const studentnote = await studentNote.findOneAndUpdate(
+      {_id:noteid, 'notes._id': subnoteid },
+      {
+        $set: {
+          'notes.$.text': notetext, 
+        }
+      },
+      {
+        new: true,
+    }
+    )
+    console.log("update note result "+studentnote)
+    // const notes = studentnote.notes
+    // for (let i =0;i<notes.length;i++){
+    //   if(notes[i]._id === subnoteid){
+
+    //   }
+    // }
+
+    if(studentnote){
+      result.push(studentnote)
+      res.status(200).json(result);
+    }else{
+      res.status(400);
+      throw new Error("Update note fail");
+    }
+  });
+
   const shareNote = asyncHandler(async (req, res) => {
     const { note, user } = req.body;
     if (!note || !user) {
@@ -206,5 +247,6 @@ const addNote = asyncHandler(async (req, res) => {
     getAllNotes,
     shareNote,
     getSharedNotes,
-    getStudentListByCourse
+    getStudentListByCourse,
+    updateNote,
   }

@@ -7,6 +7,12 @@ const addNote = async (noteData)=>{
     return response.data
 }
 
+const updateNote = async (noteid,subnoteid,notetext)=>{
+    const response = await axios.put(`${API_URL}updatenote?noteid=${noteid}&subnoteid=${subnoteid}&notetext=${notetext}`)
+    return response.data
+}
+
+
 const shareNote = async (noteData)=>{
     const response = await axios.post(API_URL+'sharenote',noteData)
     return response.data
@@ -33,6 +39,7 @@ const studentNoteService = {
     shareNote,
     getShareNotes,
     getStudentListByCourse,
+    updateNote
 }
 
 export default studentNoteService

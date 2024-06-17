@@ -21,6 +21,15 @@ export const addNote = createAsyncThunk('studentnote/addNote',async (noteData,th
     }
 })
 
+export const updateNote = createAsyncThunk('studentnote/updateNote',async ({noteid,subnoteid,notetext},thunkAPI) =>{
+    try {
+        return await studentNoteService.updateNote(noteid,subnoteid,notetext)
+    } catch (error) {
+        const message = error?.response?.data?.message || "";
+     return thunkAPI.rejectWithValue(message)
+    }
+})
+
 // export const shareNote = createAsyncThunk('studentnote/shareNote',async (noteData,thunkAPI) =>{
 //     try {
 //         return await studentNoteService.shareNote(noteData)
@@ -73,19 +82,19 @@ export const studentNoteSlice = createSlice({
             state.isError = true
             state.message = action.payload
         })
-        // .addCase(shareNote.pending, (state) =>{
-        //     state.isLoading = true
-        // })
-        // .addCase(shareNote.fulfilled,(state,action) => {
-        //     state.isLoading = false
-        //     state.isSuccess = true
-        //     state.studentnotes = action.payload
-        // })
-        // .addCase(shareNote.rejected,(state,action) => {
-        //     state.isLoading = false
-        //     state.isError = true
-        //     state.message = action.payload
-        // })
+        .addCase(updateNote.pending, (state) =>{
+            state.isLoading = true
+        })
+        .addCase(updateNote.fulfilled,(state,action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.studentnotes = action.payload
+        })
+        .addCase(updateNote.rejected,(state,action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
     }
 })
 
