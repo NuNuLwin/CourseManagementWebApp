@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+// components
+import CourseListItem from "../components/CourseListItem";
 import Spinner from "../components/Spinner";
-import moment from "moment";
 
 // material components
 import {
   Alert,
   Box,
-  Button,
   Container,
   CssBaseline,
   Grid,
@@ -20,22 +20,9 @@ import {
 import {
   getCoursesByInstructorId,
   getCoursesByStudentId,
-  reset,
 } from "../features/courses/courseSlice";
 
-// change day name to short form
-const dayMap = {
-  Monday: "Mon",
-  Tuesday: "Tue",
-  Wednesday: "Wed",
-  Thursday: "Thu",
-  Friday: "Fri",
-  Saturday: "Sat",
-  Sunday: "Sun",
-};
-
 function CourseList() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
@@ -151,69 +138,9 @@ function CourseList() {
             </div>
 
             <Grid container>
-              {courses.map((course) => {
-                const formattedStartDate = moment(course.startDate).format(
-                  "DD MMM YYYY"
-                );
-                const formattedEndDate = moment(course.endDate).format(
-                  "DD MMM YYYY"
-                );
-
-                const formattedCreatedDate = moment(course.createdAt).format(
-                  "DD MMM YYYY"
-                );
-
-                return (
-                  <Grid item md={4} xs={12}>
-                    <Box className="course-box">
-                      <h4 className="course-title">{course.courseName}</h4>
-                      <p>
-                        {course.days.length === 1 ? "Day:" : "Days:"}{" "}
-                        {course.days.map((day) => dayMap[day]).join(", ")}
-                      </p>
-                      <p>
-                        Time: {course.startTime} - {course.endTime}
-                      </p>
-                      <p>
-                        {course.class.length === 1 ? "Class:" : "Classes:"}{" "}
-                        {course.class.map((cls) => cls.className).join(", ")}
-                      </p>
-                      <p>
-                        Date: {formattedStartDate} to {formattedEndDate}{" "}
-                      </p>
-                      <p>
-                        Instructor: {course.instructor.firstname}{" "}
-                        {course.instructor.lastname}
-                      </p>
-
-                      <div className="btn_container">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => navigate(`/course/${course._id}`)}
-                        >
-                          View Detail
-                        </Button>
-                      </div>
-
-                      {user.role !== "student" && (
-                        <div className="btn_container">
-                          <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            onClick={() =>
-                              navigate(`/studentList/${course._id}`)
-                            }
-                          >
-                            Registration
-                          </Button>
-                        </div>
-                      )}
-                    </Box>
-                  </Grid>
-                );
-              })}
+              {courses.map((course) => (
+                <CourseListItem {...course} user={user} />
+              ))}
             </Grid>
           </div>
         </Box>

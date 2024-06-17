@@ -6,8 +6,10 @@ import {
   getCourseByCourseId,
   updateCategoryByCourseId,
 } from "../features/courses/courseSlice";
+// libraries
 import moment from "moment";
-
+// components
+import CategoryChoiceItem from "../components/CategoryChoiceItem";
 // material components
 import {
   Box,
@@ -238,7 +240,7 @@ function CourseDetail() {
       Courses
     </Link>,
     <Typography key="3" color="text.primary">
-      {course && course.class.map((cls) => cls.className).join(", ")}
+      {course && course.courseName.split(" - ")[0]}
     </Typography>,
   ];
 
@@ -383,62 +385,13 @@ function CourseDetail() {
         <DialogContent>
           <Grid container spacing={1}>
             {allActivities.map((activity) => (
-              <Grid item md={4} xs={12} key={activity._id}>
-                <Box
-                  className="category_card"
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: 3,
-                    border: "1px solid #ccc",
-                    borderRadius: 2,
-                    boxShadow: 1,
-                    margin: 1,
-                    position: "relative",
-                    position: "relative",
-                    cursor:
-                      course &&
-                      course.activities
-                        .map((act) => act._id)
-                        .includes(activity._id)
-                        ? "not-allowed"
-                        : "pointer", // Make cursor not-allowed for already selected activities
-                    backgroundColor:
-                      selectedActivities.includes(activity._id) ||
-                      (course &&
-                        course.activities
-                          .map((act) => act._id)
-                          .includes(activity._id))
-                        ? "#DCDCDC" // Background color if selected or already part of the course
-                        : selectedActivities.length > 0
-                        ? "#fff" // Background color if not selected but other activities are selected
-                        : "#fff", // Default background color
-                  }}
-                  onClick={() => handleCategorySelect(activity._id)}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "primary.main",
-                      marginRight: 1,
-                      marginBottom: 2,
-                      fontSize: "2rem", // Adjust the icon size
-                    }}
-                  >
-                    {getActivityIcon(activity.activityName, true)}
-                  </Box>
-                  <Typography
-                    variant="body1"
-                    style={{ fontSize: "13px", color: "#000" }}
-                  >
-                    {activity.activityName}
-                  </Typography>
-                </Box>
-              </Grid>
+              <CategoryChoiceItem
+                {...activity}
+                course={course}
+                selectedActivities={selectedActivities}
+                handleCategorySelect={handleCategorySelect}
+                getActivityIcon={getActivityIcon}
+              />
             ))}
           </Grid>
         </DialogContent>

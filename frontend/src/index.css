@@ -10,7 +10,7 @@ body {
   /* border-radius: 8px; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #b6babf;
-  background: #bbdefb;
+  background: #d6e4f0;
   /* background: #e0e0e0; */
 }
 
@@ -43,11 +43,11 @@ p {
   line-height: normal;
 }
 
-.btn_container {
+/* .btn_container {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
-}
+} */
 
 .menu_font {
   color: #000 !important;
@@ -118,4 +118,11 @@ h4.uni_title {
   color: rgb(24, 24, 24);
   text-align: center;
   transition: background-color 0.3s ease;
+}
+
+.course_card_title {
+  white-space: nowrap;
+  text-overflow: ellipsis !important;
+  width: 280px;
+  overflow: hidden;
 }
