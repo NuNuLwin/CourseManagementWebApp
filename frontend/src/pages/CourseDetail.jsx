@@ -240,7 +240,7 @@ function CourseDetail() {
       Courses
     </Link>,
     <Typography key="3" color="text.primary">
-      {course && course.class.map((cls) => cls.className).join(", ")}
+      {course && course.courseName.split(" - ")[0]}
     </Typography>,
   ];
 
