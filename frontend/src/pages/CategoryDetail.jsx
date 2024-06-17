@@ -404,14 +404,14 @@ function CategoryDetail() {
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
-                  <Grid container sx={{ bgcolor: "#D6E4F0", p: 2, mb: 1 }}>
+                  <Grid container sx={{ bgcolor: "#D6E4F0", p: 2, mb: 2,borderRadius:0 }}>
                     <Grid item md={7} xs={12}>
-                      <p>{file.filename}</p>
+                    <Typography variant="body1" gutterBottom>{file.filename}</Typography> {/* <p>{file.filename}</p> */}
                     </Grid>
                     <Grid item md={3} xs={12}>
-                      <p>
+                    <Typography variant="body1" gutterBottom>{/* <p> */}
                         {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
-                      </p>
+                    </Typography>{/* </p> */}
                     </Grid>
 
                     <Grid item md={2} xs={12}>
