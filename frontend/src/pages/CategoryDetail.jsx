@@ -29,7 +29,7 @@ import ShareNoteItem from "../components/ShareNoteItem";
 import studentNoteService from "../features/studentnote/studentnoteservice";
 import { toast } from "react-toastify";
 import SimpleDialog from "../components/SimpleDialog";
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import PeopleIcon from "@mui/icons-material/People";
 // ** imports for add note, share note
 
@@ -404,14 +404,14 @@ function CategoryDetail() {
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
-                  <Grid container sx={{ bgcolor: "#D6E4F0", p: 2, mb: 1 }}>
+                  <Grid container sx={{ bgcolor: "#D6E4F0", p: 2, mb: 2,borderRadius:0 }}>
                     <Grid item md={7} xs={12}>
-                      <p>{file.filename}</p>
+                    <Typography variant="body1" gutterBottom>{file.filename}</Typography> {/* <p>{file.filename}</p> */}
                     </Grid>
                     <Grid item md={3} xs={12}>
-                      <p>
+                    <Typography variant="body1" gutterBottom>{/* <p> */}
                         {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
-                      </p>
+                    </Typography>{/* </p> */}
                     </Grid>
 
                     <Grid item md={2} xs={12}>
@@ -462,7 +462,7 @@ function CategoryDetail() {
                             setSelectedFile(file.file);
                           }}
                         >
-                          <EditNoteIcon />
+                          <StickyNote2Icon />
                         </IconButton>
                       </Box>
                     </Grid>
