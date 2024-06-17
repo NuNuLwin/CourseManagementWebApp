@@ -42,7 +42,7 @@ const handleUpdateNote= (subnoteid,notetext) => {
             fullWidth
             sx={{
                 "& fieldset": { border: 'none' },
-                bgcolor:"#D6E4F0",
+            
              }}
             id="outlined-multiline-static"
             multiline
