@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import moment from "moment";
 import { TextField,Button,IconButton } from "@mui/material";
 import SaveIcon from '@mui/icons-material/Save';
+import EditNoteIcon from "@mui/icons-material/EditNote";
 
 function NoteItem({noteid,note,updateLectureNote}) {
 console.log("Note Item noteid "+ noteid + " note.text "+note.text)
@@ -15,12 +16,11 @@ useEffect(() => {
     setText(note.text)
   }, [note.text]);
 
-
-const onNoteClick = () => {
-    setText(note.text)
-     console.log("box is clicked viewonly "+viewOnly)
-    // setViewOnly(true)
-}
+const inputProps = {
+    step: 300,
+    margin: 'none',
+    style: {fontSize: 10} 
+  };
 
 const handleUpdateNote= (subnoteid,notetext) => {
     console.log("handleUpdateNote noteid "+noteid+" notetext " +notetext)
@@ -29,20 +29,20 @@ const handleUpdateNote= (subnoteid,notetext) => {
 
 
   return (
-    <Box onClick={onNoteClick} >
+    <Box  > {/*onClick={onNoteClick}*/}
         {console.log(" NoteItem note "+note.date + " text "+note.text+" viewonly "+viewOnly)}
         <Typography variant="subtitle2" gutterBottom>
             {moment(note.date).format("DD MMM YYYY HH:MM")}
         </Typography>
-        {/* <Typography variant="body2" gutterBottom>
-        {note.text}
-        </Typography> */}
+
 
         <TextField
             fullWidth
+            inputProps={inputProps}
             sx={{
-                "& fieldset": { border: 'none' },
-                bgcolor:"#D6E4F0",
+                // "& fieldset": { border: 'none' },
+                // bgcolor:"#D6E4F0",
+                
              }}
             id="outlined-multiline-static"
             multiline
@@ -54,7 +54,7 @@ const handleUpdateNote= (subnoteid,notetext) => {
               handleUpdateNote(note._id,text) 
              }
             }>
-            <SaveIcon />
+            <EditNoteIcon />
          </IconButton>
         </Box>
         {/* <Button size="small"  >Cancel</Button>
