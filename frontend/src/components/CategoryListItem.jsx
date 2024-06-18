@@ -55,7 +55,7 @@ const CategoryListItem = (props) => {
               onClick={(e) => {
                 e.stopPropagation();
                 const confirmDelete = window.confirm(
-                  "Are you sure you want to delete this activity?"
+                  "Are you sure you want to delete this category? Deleting this category will also delete all associated files!"
                 );
                 if (confirmDelete) {
                   // Call backend to delete activity
