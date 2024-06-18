@@ -230,7 +230,6 @@ const deleteActivity = asyncHandler(async (req, res) => {
   const fileIds = course.files
     .filter((file) => file.activity.toString() === activityId)
     .map((file) => file.file.toString());
-  console.log("fileIds..", fileIds);
 
   // Remove files associated with the activityId from the files array
   course.files = course.files.filter(
@@ -242,7 +241,6 @@ const deleteActivity = asyncHandler(async (req, res) => {
     bucketName: "content",
   });
 
-  console.log("after open bucket...");
   fileIds.forEach((fileId) => {
     bucket.delete(new mongoose.Types.ObjectId(fileId), (err) => {
       if (err) {

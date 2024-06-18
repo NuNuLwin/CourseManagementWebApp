@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   deleteCategoryByCourseId,
   getCourseByCourseId,
@@ -16,6 +16,7 @@ import moment from "moment";
 import BreadCrumbs from "../components/BreadCrumbs";
 import CategoryChoiceItem from "../components/CategoryChoiceItem";
 import CategoryListItem from "../components/CategoryListItem";
+import { getActivityIcon } from "../components/CategoryIcon";
 
 // material components
 import {
@@ -29,8 +30,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-
-import { getActivityIcon } from "../components/CategoryIcon";
 
 // activity api
 import activityService from "../features/courses/activityService";
@@ -162,10 +161,6 @@ function CourseDetail() {
       setCourse(copied);
     });
   };
-
-  // if (isLoading) {
-  //   return <Spinner />;
-  // }
 
   const isActivityChecked = (current_activities, activity_id) => {
     if (current_activities.length === 0) return false;
