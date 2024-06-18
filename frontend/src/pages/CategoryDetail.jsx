@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import { getCourseByCourseId } from "../features/courses/courseSlice";
+import { toast } from "react-toastify";
 import moment from "moment";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Tooltip from "@mui/material/Tooltip";
 
-// ** imports for add note, share note
+// redux
+import {
+  uploadContentFile,
+  viewContentFile,
+} from "../features/courses/contentFileSlice";
+import { getCourseByCourseId } from "../features/courses/courseSlice";
+import studentNoteService from "../features/studentnote/studentnoteservice";
 import {
   addNote,
   getNotes,
@@ -16,24 +18,21 @@ import {
   reset,
   updateNote,
 } from "../features/studentnote/studentnoteslice";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import ShareIcon from "@mui/icons-material/Share";
-import { TextField } from "@mui/material";
+
+// components
+import BreadCrumbs from "../components/BreadCrumbs";
 import NoteItem from "../components/NoteItem";
 import ShareNoteItem from "../components/ShareNoteItem";
-import studentNoteService from "../features/studentnote/studentnoteservice";
-import { toast } from "react-toastify";
 import SimpleDialog from "../components/SimpleDialog";
+import Spinner from "../components/Spinner";
+
+// material icons
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from "@mui/icons-material/Close";
+import ShareIcon from "@mui/icons-material/Share";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import PeopleIcon from "@mui/icons-material/People";
 import DownloadIcon from "@mui/icons-material/Download";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-// ** imports for add note, share note
 
 // material components
 import {
@@ -42,18 +41,17 @@ import {
   Button,
   Container,
   CssBaseline,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
   Grid,
-  Breadcrumbs,
-  Typography,
+  IconButton,
   Link,
-  Stack,
+  TextField,
+  Typography,
+  Tooltip,
 } from "@mui/material";
-import {
-  uploadContentFile,
-  viewContentFile,
-} from "../features/courses/contentFileSlice";
-
-import BreadCrumbs from "../components/BreadCrumbs";
 
 function CategoryDetail() {
   // constants
