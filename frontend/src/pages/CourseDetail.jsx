@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   deleteCategoryByCourseId,
   getCourseByCourseId,
   updateCategoryByCourseId,
 } from "../features/courses/courseSlice";
+
+import { DayToShortFormMap } from "../config/config";
+
 // libraries
 import moment from "moment";
+
 // components
-import CategoryChoiceItem from "../components/CategoryChoiceItem";
 import BreadCrumbs from "../components/BreadCrumbs";
+import CategoryChoiceItem from "../components/CategoryChoiceItem";
+import CategoryListItem from "../components/CategoryListItem";
+import { getActivityIcon } from "../components/CategoryIcon";
+
 // material components
 import {
   Box,
@@ -18,49 +25,25 @@ import {
   Container,
   CssBaseline,
   Grid,
-  Breadcrumbs,
-  Typography,
-  Link,
-  Stack,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
 } from "@mui/material";
-
-import DeleteIcon from "@mui/icons-material/Delete";
-
-import { getActivityIcon } from "../components/CategoryIcon";
 
 // activity api
 import activityService from "../features/courses/activityService";
 
-// change day name to short form
-const dayMap = {
-  Monday: "Mon",
-  Tuesday: "Tue",
-  Wednesday: "Wed",
-  Thursday: "Thu",
-  Friday: "Fri",
-  Saturday: "Sat",
-  Sunday: "Sun",
-};
-
 function CourseDetail() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { courseId } = useParams();
 
   const { user } = useSelector((state) => state.auth);
-  const { courses, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.course
-  );
+  const { isError, message } = useSelector((state) => state.course);
 
   const [allActivities, setAllActivities] = useState([]);
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [courseActivities, setCourseActivities] = useState([]);
-  const [hoveredActivity, setHoveredActivity] = useState(null);
 
   const [course, setCourse] = useState(null);
   const formattedStartDate = course
@@ -166,14 +149,6 @@ function CourseDetail() {
     fetchActivity();
   }, []);
 
-  const handleMouseEnter = (activityId) => {
-    setHoveredActivity(activityId);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredActivity(null);
-  };
-
   const handleDeleteActivity = async (activityId) => {
     dispatch(deleteCategoryByCourseId({ courseId, activityId })).then(() => {
       const copied = { ...course };
@@ -186,25 +161,6 @@ function CourseDetail() {
       setCourse(copied);
     });
   };
-
-  // if (isLoading) {
-  //   return <Spinner />;
-  // }
-
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      href="/"
-      onClick={() => navigate("/courseList")}
-    >
-      Courses
-    </Link>,
-    <Typography key="3" color="text.primary">
-      {course && course.courseName.split(" - ")[0]}
-    </Typography>,
-  ];
 
   const isActivityChecked = (current_activities, activity_id) => {
     if (current_activities.length === 0) return false;
@@ -221,15 +177,28 @@ function CourseDetail() {
           <Grid container>
             <Grid item md={10} xs={12}>
               <BreadCrumbs
-                name={course ? course.courseName.split(" - ")[0] : ""}
-                url={"/courseList"}
+                links={[
+                  {
+                    name: "Courses",
+                    url: "/courseList",
+                  },
+                  {
+                    name:
+                      course && course.courseName
+                        ? course.courseName.split(" - ")[0]
+                        : "",
+                  },
+                ]}
               />
               <h2> {course && course.courseName}</h2>
               <Grid container>
                 <Grid item md={3} xs={12}>
                   <p>
                     {course && course.days.length === 1 ? "Day:" : "Days:"}{" "}
-                    {course && course.days.map((day) => dayMap[day]).join(", ")}
+                    {course &&
+                      course.days
+                        .map((day) => DayToShortFormMap[day])
+                        .join(", ")}
                   </p>
                 </Grid>
                 <Grid item md={3} xs={12}>
@@ -280,59 +249,13 @@ function CourseDetail() {
 
                 {course?.activities?.map((activity) => (
                   <Grid item md={3} xs={12} key={activity._id}>
-                    <Link
-                      underline="hover"
-                      onClick={() =>
-                        navigate(
-                          `/courseId/${courseId}/categoryId/${activity._id}`
-                        )
-                      }
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Box
-                        className="category_box"
-                        onMouseEnter={() => handleMouseEnter(activity._id)}
-                        onMouseLeave={handleMouseLeave}
-                        style={{
-                          position: "relative",
-                          display: "flex",
-                          flexDirection: "column", // Display icon and text in a column
-                          alignItems: "center", // Center items horizontally
-                        }}
-                      >
-                        <box>
-                          {getActivityIcon(activity.activityName, false)}
-                        </box>
-
-                        <box>{activity.activityName}</box>
-
-                        {hoveredActivity === activity._id &&
-                          user.role !== "student" && (
-                            <IconButton
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                right: 0,
-                                color: "#000",
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation(); // Prevent the onClick event of the Link from firing
-                                const confirmDelete = window.confirm(
-                                  "Are you sure you want to delete this activity?"
-                                );
-                                if (confirmDelete) {
-                                  // Call backend to delete activity
-                                  handleDeleteActivity(activity._id);
-                                }
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          )}
-                      </Box>
-                    </Link>
+                    <CategoryListItem
+                      courseId={courseId}
+                      activity={activity}
+                      user={user}
+                      getActivityIcon={getActivityIcon}
+                      handleDeleteActivity={handleDeleteActivity}
+                    />
                   </Grid>
                 ))}
               </Grid>

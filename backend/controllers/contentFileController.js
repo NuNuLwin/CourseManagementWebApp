@@ -76,14 +76,7 @@ const uploadContentFile = asyncHandler(async (req, res) => {
   );
 
   const course = await Course.findById(course_id);
-  // .populate([
-  //   "class",
-  //   "activity",
-  //   "files.file",
-  //   "files.activity",
-  // ]);
   res.status(200).json(course);
-  //return resp.send({ results: course });
 });
 
 // @desc    View Course File

@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "../components/Spinner";
-import { getCourseByCourseId } from "../features/courses/courseSlice";
+import { toast } from "react-toastify";
 import moment from "moment";
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Tooltip from "@mui/material/Tooltip";
 
-// ** imports for add note, share note
+// redux
+import {
+  uploadContentFile,
+  viewContentFile,
+} from "../features/courses/contentFileSlice";
+import { getCourseByCourseId } from "../features/courses/courseSlice";
+import studentNoteService from "../features/studentnote/studentnoteservice";
 import {
   addNote,
   getNotes,
@@ -16,22 +18,21 @@ import {
   reset,
   updateNote,
 } from "../features/studentnote/studentnoteslice";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import ShareIcon from "@mui/icons-material/Share";
-import { TextField } from "@mui/material";
+
+// components
+import BreadCrumbs from "../components/BreadCrumbs";
 import NoteItem from "../components/NoteItem";
 import ShareNoteItem from "../components/ShareNoteItem";
-import studentNoteService from "../features/studentnote/studentnoteservice";
-import { toast } from "react-toastify";
 import SimpleDialog from "../components/SimpleDialog";
+import Spinner from "../components/Spinner";
+
+// material icons
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from "@mui/icons-material/Close";
+import ShareIcon from "@mui/icons-material/Share";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import PeopleIcon from "@mui/icons-material/People";
-// ** imports for add note, share note
+import DownloadIcon from "@mui/icons-material/Download";
 
 // material components
 import {
@@ -40,16 +41,17 @@ import {
   Button,
   Container,
   CssBaseline,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
   Grid,
-  Breadcrumbs,
-  Typography,
+  IconButton,
   Link,
-  Stack,
+  TextField,
+  Typography,
+  Tooltip,
 } from "@mui/material";
-import {
-  uploadContentFile,
-  viewContentFile,
-} from "../features/courses/contentFileSlice";
 
 function CategoryDetail() {
   // constants
@@ -189,6 +191,25 @@ function CategoryDetail() {
     }
   };
 
+  const viewContent = async (fileId, fileName) => {
+    setLoading(true);
+    try {
+      const res = await dispatch(viewContentFile(fileId));
+      setLoading(false);
+      const url = window.URL.createObjectURL(res.payload);
+      const anchorElement = document.createElement("a");
+      anchorElement.href = url;
+      anchorElement.target = "_blank";
+      document.body.appendChild(anchorElement);
+      anchorElement.click();
+      anchorElement?.parentNode?.removeChild(anchorElement);
+    } catch (error) {
+      //console.error("Error fetching file:", error);
+      setLoading(false);
+      // Handle the error appropriately, e.g., display an error message
+    }
+  };
+
   // ** get student list for selected course
   useEffect(() => {
     getStudentListByCourse(courseId);
@@ -224,35 +245,6 @@ function CategoryDetail() {
   useEffect(() => {
     dispatch(getCourseByCourseId(courseId));
   }, []);
-
-  const breadcrumbs = [
-    <Link
-      underline="hover"
-      key="1"
-      color="inherit"
-      onClick={() => navigate("/courseList")}
-      sx={{
-        cursor: "pointer",
-      }}
-    >
-      Courses
-    </Link>,
-    <Link
-      underline="hover"
-      key="2"
-      color="inherit"
-      onClick={() => navigate(`/course/${course._id}`)}
-      sx={{
-        cursor: "pointer",
-      }}
-    >
-      {courses && courses[0].class.map((cls) => cls.className).join(", ")}
-    </Link>,
-    <Typography key="3" color="text.primary">
-      {/* {categoryFiles.length > 0 ? categoryFiles[0].activity.activityName : ""} */}
-      {activityName}
-    </Typography>,
-  ];
 
   const contentDownload = async (fileId, fileName) => {
     setLoading(true);
@@ -335,11 +327,24 @@ function CategoryDetail() {
         <Box sx={{ flexGrow: 1, mt: 4 }}>
           <Grid container>
             <Grid item md={12} xs={12}>
-              <Stack spacing={2}>
-                <Breadcrumbs separator="›" aria-label="breadcrumb">
-                  {breadcrumbs}
-                </Breadcrumbs>
-              </Stack>
+              <BreadCrumbs
+                links={[
+                  {
+                    name: "Courses",
+                    url: "/courseList",
+                  },
+                  {
+                    name:
+                      course && course.courseName
+                        ? course.courseName.split(" - ")[0]
+                        : "",
+                    url: `/course/${course._id}`,
+                  },
+                  {
+                    name: activityName,
+                  },
+                ]}
+              />
               {course && <h2>{course.courseName}</h2>}
               <Grid container>
                 <Grid item md={12} xs={12} sx={{ fontWeight: "700" }}>
@@ -392,96 +397,117 @@ function CategoryDetail() {
                   </Grid>
                 )}
 
-                <Grid item md={7} xs={12}>
+                <Grid item md={6} xs={12}>
                   <h4>File Name</h4>
                 </Grid>
                 <Grid item md={3} xs={12}>
                   <h4>Uploaded Date</h4>
                 </Grid>
-                <Grid item md={2} xs={12}>
+                <Grid item md={3} xs={12}>
                   &nbsp;
                 </Grid>
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
-                  <Grid container sx={{ bgcolor: "#D6E4F0", p: 2, mb: 2,borderRadius:0 }}>
-                    <Grid item md={7} xs={12}>
-                    <Typography variant="body1" gutterBottom>{file.filename}</Typography> {/* <p>{file.filename}</p> */}
+                  <Grid
+                    container
+                    sx={{
+                      bgcolor: "#D6E4F0",
+                      p: 2,
+                      mb: 1.5,
+                      boxShadow:
+                        "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)",
+                      borderRadius: "4px",
+                      transition:
+                        "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+                    }}
+                  >
+                    <Grid
+                      item
+                      md={6}
+                      xs={12}
+                      sx={{
+                        alignSelf: "center",
+                      }}
+                    >
+                      <Link
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          viewContent(file.file, file.filename);
+                        }}
+                        underline="hover"
+                      >
+                        {file.filename}
+                      </Link>
                     </Grid>
                     <Grid item md={3} xs={12}>
-                    <Typography variant="body1" gutterBottom>{/* <p> */}
+                      <p>
                         {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
-                    </Typography>{/* </p> */}
+                      </p>
                     </Grid>
 
-                    <Grid item md={2} xs={12}>
-                      <Tooltip title={file.filename} arrow>
-                        <Button
-                          variant="contained"
-                          startIcon={<CloudDownloadIcon />}
-                          onClick={() =>
-                            contentDownload(file.file, file.filename)
-                          }
-                          style={{ margin: "10px" }}
-                        >
-                          Download
-                        </Button>
-                      </Tooltip>
-                    </Grid>
-
-                    {/* <Grid
-                        container
-                        direction="row"
-                        justifyContent="flex-end"
-                        alignItems="center"
-                      > */}
-                    <Grid item md={10.5} xs={12}></Grid>
-                    <Grid item md={0.5} xs={12}>
-                      <Box display="flex" justifyContent="flex-start">
-                        <IconButton
-                          aria-label="Note"
-                          onClick={() => {
-                            // ** open note dialog to add note
-                            console.log(
-                              "open note dialog student id " +
-                                user._id +
-                                " course id " +
-                                courseId +
-                                " file id " +
-                                file.file +
-                                " activity id " +
+                    <Grid item md={3} xs={12}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Tooltip title={"Download File"} arrow>
+                          <IconButton
+                            aria-label="download-content-file"
+                            onClick={() =>
+                              contentDownload(file.file, file.filename)
+                            }
+                          >
+                            <DownloadIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"Add Note"} arrow>
+                          <IconButton
+                            aria-label="Note"
+                            onClick={() => {
+                              // ** open note dialog to add note
+                              console.log(
+                                "open note dialog student id " +
+                                  user._id +
+                                  " course id " +
+                                  courseId +
+                                  " file id " +
+                                  file.file +
+                                  " activity id " +
+                                  categoryId
+                              );
+                              getLectureNotes(
+                                user._id,
+                                courseId,
+                                file.file,
                                 categoryId
-                            );
-                            getLectureNotes(
-                              user._id,
-                              courseId,
-                              file.file,
-                              categoryId
-                            );
-                            noteOpen();
-                            setSelectedFile(file.file);
-                          }}
-                        >
-                          <StickyNote2Icon />
-                        </IconButton>
-                      </Box>
+                              );
+                              noteOpen();
+                              setSelectedFile(file.file);
+                            }}
+                          >
+                            <StickyNote2Icon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"Shared Note"} arrow>
+                          <IconButton
+                            aria-label="ViewNote"
+                            onClick={() => {
+                              // ** open note dialog to view note
+                              console.log("open note to view share note");
+                              getShareLectureNotes(user._id, file.file);
+                              shareNoteOpen();
+                            }}
+                          >
+                            <PeopleIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
                     </Grid>
-                    <Grid item md={1} xs={12}>
-                      <Box display="flex" justifyContent="flex-start">
-                        <IconButton
-                          aria-label="ViewNote"
-                          onClick={() => {
-                            // ** open note dialog to view note
-                            console.log("open note to view share note");
-                            getShareLectureNotes(user._id, file.file);
-                            shareNoteOpen();
-                          }}
-                        >
-                          <PeopleIcon />
-                        </IconButton>
-                      </Box>
-                    </Grid>
-                    {/* </Grid> */}
                   </Grid>
                 ))
               ) : (
