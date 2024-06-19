@@ -25,6 +25,7 @@ import NoteItem from "../components/NoteItem";
 import ShareNoteItem from "../components/ShareNoteItem";
 import SimpleDialog from "../components/SimpleDialog";
 import BreadCrumbs from "../components/BreadCrumbs";
+import FileUpload from "../components/FileUpload";
 
 // material icons
 import CloseIcon from "@mui/icons-material/Close";
@@ -351,51 +352,11 @@ function CategoryDetail() {
                   <Typography variant="h5">{activityName} Files</Typography>
                 </Grid>
 
-                {user.role !== "student" && (
-                  <Grid item md={12} sx={{ justifyContent: "center" }}>
-                    <Box
-                      component="section"
-                      sx={{
-                        p: 2,
-                        border: "1px dashed grey",
-                        marginTop: "4em",
-                        marginBottom: "1em",
-                      }}
-                    >
-                      <form onSubmit={handleFileSubmit} ref={fileUploadForm}>
-                        {errorMessage && (
-                          <Alert severity="error">{errorMessage}</Alert>
-                        )}
-                        {successMessage && (
-                          <Alert
-                            severity="success"
-                            onClose={() => setSuccessMessage("")}
-                          >
-                            {successMessage}
-                          </Alert>
-                        )}
-                        <input
-                          type="file"
-                          onChange={handleChange}
-                          className="choose_File"
-                        ></input>
-                        <Button
-                          variant="contained"
-                          startIcon={<CloudUploadIcon />}
-                          type="submit"
-                          style={{ margin: "10px" }}
-                          disabled={errorMessage}
-                        >
-                          Upload
-                        </Button>
-                      </form>
-                      <p style={{ color: "red" }}>
-                        *Accepted files: PDF, Word, PowerPoint, JPEG, and PNG.
-                        Files must not exceed 16MB.
-                      </p>
-                    </Box>
-                  </Grid>
-                )}
+                <FileUpload
+                  courseId={courseId}
+                  user={user}
+                  categoryId={categoryId}
+                />
 
                 <Grid item md={6} xs={12}>
                   <h4>File Name</h4>
