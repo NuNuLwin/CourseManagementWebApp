@@ -170,9 +170,9 @@ function CategoryDetail() {
 
   const getShareLectureNotes = async (user, file) => {
     try {
-      const sharenotes = await studentNoteService.getShareNotes(user, file);
-      if (sharenotes.length > 0) {
-        setShareNotes(sharenotes);
+      const notes = await studentNoteService.getShareNotes(user, file);
+      if (notes.length > 0) {
+        setShareNotes(notes);
       }
     } catch (error) {
       console.log("getShareLectureNotes error " + error);
