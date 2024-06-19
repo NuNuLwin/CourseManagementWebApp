@@ -101,7 +101,7 @@ const FileUpload = (props) => {
                 startIcon={<CloudUploadIcon />}
                 type="submit"
                 style={{ margin: "10px" }}
-                disabled={errorMessage}
+                disabled={!!errorMessage}
               >
                 Upload
               </Button>

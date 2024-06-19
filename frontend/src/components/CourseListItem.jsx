@@ -105,9 +105,8 @@ const CourseListItem = (props) => {
         >
           <Box sx={{ display: "flex", flexDirection: "row", gap: 1 }}>
             {props.days.map((day, index) => (
-              <Tooltip title={day}>
+              <Tooltip title={day} key={index}>
                 <Avatar
-                  key={index}
                   sx={{ bgcolor: getColorForDay(day), width: 32, height: 32 }}
                   aria-label={day}
                 >

@@ -268,9 +268,10 @@ function CourseDetail() {
         <DialogTitle>Choose Category</DialogTitle>
         <DialogContent>
           <Grid container spacing={1}>
-            {allActivities.map((activity) => (
+            {allActivities.map((activity, i) => (
               <CategoryChoiceItem
                 {...activity}
+                key={i}
                 course={course}
                 selectedActivities={selectedActivities}
                 handleCategorySelect={handleCategorySelect}

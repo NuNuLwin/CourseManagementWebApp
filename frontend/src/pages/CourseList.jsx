@@ -138,8 +138,8 @@ function CourseList() {
             </div>
 
             <Grid container>
-              {courses.map((course) => (
-                <CourseListItem {...course} user={user} />
+              {courses.map((course, i) => (
+                <CourseListItem {...course} user={user} key={i} />
               ))}
             </Grid>
           </div>
