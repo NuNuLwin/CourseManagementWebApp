@@ -16,7 +16,6 @@ const CategoryChoiceItem = (props) => {
           boxShadow: 1,
           margin: 1,
           position: "relative",
-          position: "relative",
           cursor:
             props.course &&
             props.course.activities.map((act) => act._id).includes(props._id)
@@ -46,7 +45,7 @@ const CategoryChoiceItem = (props) => {
         >
           {props.getActivityIcon(props.activityName, true)}
         </Box>
-        <Typography variant="body1" style={{ fontSize: "13px", color: "#000" }}>
+        <Typography variant="body1" sx={{ fontSize: "13px", color: "#000" }}>
           {props.activityName}
         </Typography>
       </Box>

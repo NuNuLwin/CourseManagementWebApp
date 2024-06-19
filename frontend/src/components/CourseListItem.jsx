@@ -1,9 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React from "react";
 
-// libraries
-import moment from "moment";
-
 // material components
 import {
   Avatar,

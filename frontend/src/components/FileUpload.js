@@ -4,8 +4,7 @@ import { Alert, Box, Button, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { uploadContentFile } from "../features/courses/contentFileSlice";
 import { getCourseByCourseId } from "../features/courses/courseSlice";
-
-const FILE_SIZE_IN_MB = 16.0;
+import { FILE_SIZE_IN_MB } from "../config/config";
 
 const FileUpload = (props) => {
   const dispatch = useDispatch();

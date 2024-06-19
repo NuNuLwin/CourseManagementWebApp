@@ -7,3 +7,6 @@ export const DayToShortFormMap = {
   Saturday: "Sat",
   Sunday: "Sun",
 };
+
+const FILE_SIZE_IN_MB = 16.0;
+export { FILE_SIZE_IN_MB };
