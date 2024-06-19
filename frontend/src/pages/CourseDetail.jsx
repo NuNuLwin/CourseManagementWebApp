@@ -151,11 +151,19 @@ function CourseDetail() {
 
   const handleDeleteActivity = async (activityId) => {
     dispatch(deleteCategoryByCourseId({ courseId, activityId })).then(() => {
+      dispatch(getCourseByCourseId(courseId));
+
       const copied = { ...course };
       let tmpArr = [...course.activities];
 
       tmpArr = tmpArr.filter((activity) => activity._id !== activityId);
       setSelectedActivities(tmpArr.map((x) => x._id));
+
+      let copiedFiles = [...course.files];
+      copiedFiles = copiedFiles.filter(
+        (file) => file.activity._id !== activityId
+      );
+      copied.files = copiedFiles;
 
       copied.activities = tmpArr;
       setCourse(copied);
@@ -253,6 +261,7 @@ function CourseDetail() {
                       courseId={courseId}
                       activity={activity}
                       user={user}
+                      course={course}
                       getActivityIcon={getActivityIcon}
                       handleDeleteActivity={handleDeleteActivity}
                     />

@@ -6,7 +6,9 @@ const BreadCrumbs = ({ links }) => {
   const navigate = useNavigate();
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ width: "100%" }}>
+      {" "}
+      {/* Ensure the Stack takes the full width */}
       <Breadcrumbs separator="›" aria-label="breadcrumb">
         {links.map((link, index) => {
           if (link.url) {
@@ -32,7 +34,7 @@ const BreadCrumbs = ({ links }) => {
                 sx={{
                   whiteSpace: "nowrap",
                   overflow: "hidden",
-                  width: "300px",
+                  width: "230px",
                   textOverflow: "ellipsis",
                 }}
               >

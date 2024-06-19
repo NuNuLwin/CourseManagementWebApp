@@ -18,6 +18,20 @@ const CategoryListItem = (props) => {
     setHoveredActivity(null);
   };
 
+  const categoryFilesCount = {};
+
+  props.course.files.forEach((file) => {
+    if (file.activity && file.activity._id) {
+      if (!categoryFilesCount[file.activity._id]) {
+        categoryFilesCount[file.activity._id] = 0;
+      }
+      categoryFilesCount[file.activity._id]++;
+    }
+  });
+
+  console.log("Category Files Count:", categoryFilesCount);
+  const fileCount = categoryFilesCount[props.activity._id] || 0;
+
   return (
     <Link
       underline="hover"
@@ -27,6 +41,7 @@ const CategoryListItem = (props) => {
       style={{
         cursor: "pointer",
       }}
+      key={props.activity._id}
     >
       <Box
         className="category_box"
@@ -41,7 +56,8 @@ const CategoryListItem = (props) => {
       >
         <box>{props.getActivityIcon(props.activity.activityName, false)}</box>
 
-        <box>{props.activity.activityName}</box>
+        <Box>{props.activity.activityName}</Box>
+        <Box>({fileCount})</Box>
 
         {hoveredActivity === props.activity._id &&
           props.user.role !== "student" && (
