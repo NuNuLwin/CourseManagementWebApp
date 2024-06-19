@@ -28,16 +28,7 @@ const BreadCrumbs = ({ links }) => {
             );
           } else {
             return (
-              <Typography
-                key="3"
-                color="text.primary"
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  width: "230px",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <Typography key="3" color="text.primary">
                 {link.name}
               </Typography>
             );
