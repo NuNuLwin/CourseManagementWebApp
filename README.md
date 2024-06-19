@@ -10,6 +10,14 @@ It allows a course instructor to create a course, register students in the cours
 
 ## 1) Adding and Sharing Notes Features in Course Interaction
 
+### Test account
+
+email : john@gmail.com
+password :12345
+
+email : john@gmail.com
+password :12345
+
 ## 2) Adding and deleting course content categories
 
 ### Test account
