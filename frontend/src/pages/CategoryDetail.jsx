@@ -26,6 +26,7 @@ import ShareNoteItem from "../components/ShareNoteItem";
 import SimpleDialog from "../components/SimpleDialog";
 import BreadCrumbs from "../components/BreadCrumbs";
 import FileUpload from "../components/FileUpload";
+import ContentFileItem from "../components/ContentFileItem";
 
 // material icons
 import CloseIcon from "@mui/icons-material/Close";
@@ -53,7 +54,6 @@ import {
   Typography,
   Tooltip,
 } from "@mui/material";
-
 
 function CategoryDetail() {
   // constants
@@ -165,27 +165,30 @@ function CategoryDetail() {
   // and display note count **//
   const getNotesByCourse = async (courseid) => {
     console.log("getNotesByCourse is called ");
-      try {
-        const allNotes =  await studentNoteService.getNotesByCourse(courseid)
-        setAllNotesByCourse(allNotes)
-        console.log("getNotesByCourse total note count "+allNotes.length);
+    try {
+      const allNotes = await studentNoteService.getNotesByCourse(courseid);
+      setAllNotesByCourse(allNotes);
+      console.log("getNotesByCourse total note count " + allNotes.length);
     } catch (error) {
-        const message = error?.response?.data?.message || "";
-        console.log("getNotesByCourse error " + message);
+      const message = error?.response?.data?.message || "";
+      console.log("getNotesByCourse error " + message);
     }
   };
 
   // *** retrive all shared Notes by course and filter it by user id and file id(course material id) when course materials are displayed **//
   // ** and display share note count //
-  const getSharedNotesByCourse = async (course,user) => {
+  const getSharedNotesByCourse = async (course, user) => {
     console.log("getSharedNotesByCourse is called ");
-      try {
-        const allNotes =  await studentNoteService.getSharedNotesByCourse(course,user)
-        setAllSharedNotesByCourse(allNotes)
-        console.log("getSharedNotesByCourse total note count "+allNotes.length);
+    try {
+      const allNotes = await studentNoteService.getSharedNotesByCourse(
+        course,
+        user
+      );
+      setAllSharedNotesByCourse(allNotes);
+      console.log("getSharedNotesByCourse total note count " + allNotes.length);
     } catch (error) {
-        const message = error?.response?.data?.message || "";
-        console.log("getSharedNotesByCourse error " + message);
+      const message = error?.response?.data?.message || "";
+      console.log("getSharedNotesByCourse error " + message);
     }
   };
 
@@ -225,14 +228,14 @@ function CategoryDetail() {
   useEffect(() => {
     getStudentListByCourse(courseId);
     // getNotesByCourse for total notes count
-    getNotesByCourse(courseId)
+    getNotesByCourse(courseId);
     // getSharedNotesByCourse for total shared notes count
-    getSharedNotesByCourse(courseId,user._id)
+    getSharedNotesByCourse(courseId, user._id);
   }, []);
 
   useEffect(() => {
-    getNotesByCourse(courseId)
-  }, [studentnotes]); 
+    getNotesByCourse(courseId);
+  }, [studentnotes]);
   // ** code for add note, share note end
 
   useEffect(() => {
@@ -406,118 +409,22 @@ function CategoryDetail() {
               </Grid>
               {categoryFiles?.length ? (
                 categoryFiles.map((file, index) => (
-                  <Grid
-                    container
-                    sx={{ bgcolor: "#D6E4F0", p: 2, mb: 2, borderRadius: 0 }}
-                  >
-                          <div></div>
-                    <Grid item md={6} xs={12}>
-                      <Link
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          viewContent(file.file, file.filename);
-                        }}
-                        underline="hover"
-                      >
-                        {file.filename}
-                      </Link>
-                    </Grid>
-                    <Grid item md={3} xs={12}>
-                      <Typography variant="body1" gutterBottom>
-                        {moment(file.uploadDate).format("DD MMM YYYY HH:MM")}
-                      </Typography>
-                    </Grid>
-
-                    <Grid item md={3} xs={12}>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "10px",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <Tooltip title={"Download File"} arrow>
-                          <IconButton
-                            aria-label="download-content-file"
-                            onClick={() =>
-                              contentDownload(file.file, file.filename)
-                            }
-                          >
-                            <DownloadIcon />
-                          </IconButton>
-                        </Tooltip>
-
-                        <Tooltip title={"Add Note"} arrow>
-                          <IconButton
-                            aria-label="Note"
-                            onClick={() => {
-                              // ** open note dialog to add note
-                              console.log(
-                                "open note dialog student id " +
-                                  user._id +
-                                  " course id " +
-                                  courseId +
-                                  " file id " +
-                                  file.file +
-                                  " activity id " +
-                                  categoryId
-                              );
-                              getLectureNotes(
-                                user._id,
-                                courseId,
-                                file.file,
-                                categoryId
-                              );
-                              noteOpen();
-                              setSelectedFile(file.file);
-                            }}
-                          >
-                            <StickyNote2Icon />
-                            <div>{geAllNotesByCourse.filter( note => note.user === user._id && note.file === file.file && note.activity == categoryId)
-                              .map((specificnote)=> {
-                                {console.log("specific note "+specificnote.notes.length+" file id "+ file.file)}
-                                return<p style={{ color: "#0d3675", fontWeight: "bold",fontSize: 15 }}>
-                                  { specificnote.notes.length }</p>
-                              }
-                              )
-                              // .length > 0 ? (
-                              //       console.log("nth")
-                                
-                              // ) : (
-                              //   <p>0</p>
-                              // )
-                              }
-                            </div>
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={"View Shared Notes"} arrow>
-                          <IconButton
-                        
-                            aria-label="ViewNote"
-                            onClick={() => {
-                              // ** open note dialog to view note
-                              console.log("open note to view share note");
-                              getShareLectureNotes(user._id, file.file);
-                              shareNoteOpen();
-                            }}
-                             >
-                            <PeopleIcon />
-                            <div>{getAllSharedNotesByCourse.filter( note => note.user === user._id && note.file === file.file)
-                              .map((membernotes)=> {
-                                return <p style={{ color: "#0d3675", fontWeight: "bold",fontSize: 15  }}>
-                                  { membernotes.notes.length }
-                                  </p>
-                              }
-                            )
-                              }
-                            </div>
-
-                          </IconButton>
-                        </Tooltip>
-                      </div>
-                    </Grid>
-                  </Grid>
+                  <ContentFileItem
+                    key={file.file}
+                    file={file}
+                    viewContent={viewContent}
+                    contentDownload={contentDownload}
+                    getLectureNotes={getLectureNotes}
+                    noteOpen={noteOpen}
+                    setSelectedFile={setSelectedFile}
+                    getShareLectureNotes={getShareLectureNotes}
+                    shareNoteOpen={shareNoteOpen}
+                    user={user}
+                    courseId={courseId}
+                    categoryId={categoryId}
+                    geAllNotesByCourse={geAllNotesByCourse}
+                    getAllSharedNotesByCourse={getAllSharedNotesByCourse}
+                  />
                 ))
               ) : (
                 <p>No {activityName} file available.</p>
