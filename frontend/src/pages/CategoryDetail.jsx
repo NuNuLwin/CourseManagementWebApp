@@ -474,7 +474,7 @@ function CategoryDetail() {
                             }}
                           >
                             <StickyNote2Icon />
-                            <div>{geAllNotesByCourse.filter( note => note.user === user._id && note.file === file.file && note.activity && categoryId)
+                            <div>{geAllNotesByCourse.filter( note => note.user === user._id && note.file === file.file && note.activity == categoryId)
                               .map((specificnote)=> {
                                 {console.log("specific note "+specificnote.notes.length+" file id "+ file.file)}
                                 return<p style={{ color: "#0d3675", fontWeight: "bold",fontSize: 15 }}>
