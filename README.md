@@ -24,7 +24,7 @@ Below are the accounts to test for this features.
 email: emma@gmail.com
 Password: 12345
 
-Emma is added notes to the “01 - user interfaces.pdf” lecture file of “Human-Centred Interface Design - Spring/Summer 2024” Course. And she share her notes with John.
+Emma added notes to the “01 - user interfaces.pdf” lecture file of “Human-Centred Interface Design - Spring/Summer 2024” Course. And she share her notes with John.
 
 ### John 
 email: john@gmail.com
