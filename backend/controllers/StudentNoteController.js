@@ -156,7 +156,7 @@ const addNote = asyncHandler(async (req, res) => {
     let isfindNotes = false;
     for(let i = 0;i<allNotes.length;i++){
       console.log('getSharedNotes allNotes[i].file '+allNotes[i].file+' file '+ file)
-      if(allNotes[i].file == file ){
+      if(allNotes[i].file.equals(file)){
         console.log("file is same")
         let members = allNotes[i].members;
         if(members.length !== 0){
@@ -186,6 +186,7 @@ const addNote = asyncHandler(async (req, res) => {
               _id: findNotes[k]._id
             })
           }
+           isfindNotes = false;
         }
       }else{
         console.log("there is no share file")
@@ -241,6 +242,70 @@ const addNote = asyncHandler(async (req, res) => {
     res.status(200).json(resultStudent);
   });
 
+  const getNotesByCourse = asyncHandler(async (req, res) => {
+   // let resultNotes = [];
+    const courseid = req.params.id;
+    const resultNotes = await studentNote.where("course").equals(courseid)
+    console.log("getNotesByCourse notes "+resultNotes)
+      res.status(200).json(resultNotes);
+  });
+
+  const getAllSharedNotesByCourse = asyncHandler(async (req, res) => {
+    const result = []
+
+     const courseid = req.query.course;
+     const user = req.query.user;
+     const notes = await studentNote.where("course").equals(courseid)
+     //console.log("getAllSharedNotesByCourse notes "+notes)
+
+     const allfiles = await course.findById(courseid)//.select("files");
+     console.log("getAllSharedNotesByCourse files "+allfiles)
+
+     const files = allfiles.files
+  
+    
+    for (let i=0;i<files.length;i++){// file for course
+      console.log("files ByCourse "+files[i].file)
+      let membernotes = []
+      let isMember = false
+     
+       for(let j=0;j<notes.length;j++){ // note
+        console.log("notes[j].file "+notes[j].file)
+        if(files[i].file.equals(notes[j].file) ){
+          console.log("files[i] and notes[j] equal "+files[i].file+" "+notes[j].file)
+          // loop in notes
+          if(notes[j].members.length > 0){
+              for(let k=0;k<notes[j].members.length;k++){
+                if(notes[j].members[k]._id==user){
+                  isMember = true
+                  console.log("loop break")
+                  break;
+                }
+              }
+          }
+          console.log("loop break get here")
+          if(isMember){
+            for(let e=0;e<notes[j].notes.length;e++){
+               membernotes.push(notes[j].notes[e])//membernotes.push(notes[j].notes)
+            }
+            isMember = false
+          }
+        }
+       }
+       if(membernotes.length>0){
+          result.push(
+            {
+              user:user,
+              file:files[i].file,
+              notes:membernotes
+            }
+          )
+       }
+    }
+
+    res.status(200).json(result);
+   });
+
   module.exports = {
     addNote,
     getNotes,
@@ -249,4 +314,6 @@ const addNote = asyncHandler(async (req, res) => {
     getSharedNotes,
     getStudentListByCourse,
     updateNote,
+    getNotesByCourse,
+    getAllSharedNotesByCourse,
   }
