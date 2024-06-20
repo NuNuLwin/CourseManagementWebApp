@@ -45,22 +45,15 @@ import {
 
 function CategoryDetail() {
   // constants
-  const FILE_SIZE_IN_MB = 16.0;
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { courseId, categoryId } = useParams();
-
   const { user } = useSelector((state) => state.auth);
   const [file, setFile] = useState("");
   const [course, setCourse] = useState({});
   const [categoryFiles, setCategoryFiles] = useState([]);
   const [activityName, setActivityName] = useState("");
-  const fileUploadForm = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-
   const { courses, isLoading } = useSelector((state) => state.course);
 
   // ** code for add note, share note start

@@ -20,20 +20,24 @@ With this feature, students can easily add notes to specific course content, suc
 Below are the accounts to test for this features.
 
 ### Test account
-### Emma 
+
+### Emma
+
 email: emma@gmail.com
 Password: 12345
 
 Emma added notes to the “01 - user interfaces.pdf” lecture file of “Human-Centred Interface Design - Spring/Summer 2024” Course. And she share her notes with John.
 
-### John 
+### John
+
 email: john@gmail.com
 password: 12345
 
 John can see the notes that emma shared for “01 - user interfaces.pdf” lecture file.
 
-
 ## 2) Adding and deleting course content categories
+
+With these features, instructors are allowed to upload files into the relevant category.
 
 ### Test account
 
