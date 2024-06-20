@@ -8,15 +8,30 @@ It allows a course instructor to create a course, register students in the cours
 
 # New Features for Phase 2
 
-## 1) Adding and Sharing Notes Features in Course Interaction
+## 1) Notes Features
+
+With this feature, students can easily add notes to specific course content, such as lecture files and assignments, at any time. They can edit their notes, share them with other students, and view notes shared by others in the Course Management Platform. The functions available to students with the notes feature include:
+
+1. Adding Notes
+2. Editing Notes
+3. Sharing Notes with Others
+4. Viewing Notes Shared by Others
+
+Below are the accounts to test for this features.
 
 ### Test account
+### Emma 
+email: emma@gmail.com
+Password: 12345
 
-email : john@gmail.com
-password :12345
+Emma is added notes to the “01 - user interfaces.pdf” lecture file of “Human-Centred Interface Design - Spring/Summer 2024” Course. And she share her notes with John.
 
-email : john@gmail.com
-password :12345
+### John 
+email: john@gmail.com
+password: 12345
+
+John can see the notes that emma shared for “01 - user interfaces.pdf” lecture file.
+
 
 ## 2) Adding and deleting course content categories
 
