@@ -7,15 +7,12 @@ import SaveIcon from "@mui/icons-material/Save";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 
 function NoteItem({ noteid, note, updateLectureNote }) {
-  console.log("Note Item noteid " + noteid + " note.text " + note.text);
+  // console.log("Note Item noteid " + noteid + " note.text " + note.text);
   const [text, setText] = React.useState("");
   const [viewOnly, setViewOnly] = React.useState(false);
   const [isFocused, setIsFocused] = React.useState(false);
 
   useEffect(() => {
-    console.log(
-      "Note Item use effect text " + text + " note.text " + note.text
-    );
     setText(note.text);
   }, [note.text]);
 
@@ -26,7 +23,7 @@ function NoteItem({ noteid, note, updateLectureNote }) {
   };
 
   const handleUpdateNote = (subnoteid, notetext) => {
-    console.log("handleUpdateNote noteid " + noteid + " notetext " + notetext);
+    // console.log("handleUpdateNote noteid " + noteid + " notetext " + notetext);
     updateLectureNote(noteid, subnoteid, notetext);
   };
 
@@ -40,28 +37,20 @@ function NoteItem({ noteid, note, updateLectureNote }) {
 
   return (
     <Box>
-      {" "}
-      {/*onClick={onNoteClick}*/}
-      {console.log(
+      {/* {console.log(
         " NoteItem note " +
           note.date +
           " text " +
           note.text +
           " viewonly " +
           viewOnly
-      )}
+      )} */}
       <Typography variant="subtitle2" gutterBottom>
         {moment(note.date).format("DD MMM YYYY HH:MM")}
       </Typography>
       <TextField
         fullWidth
         inputProps={inputProps}
-        sx={
-          {
-            // "& fieldset": { border: 'none' },
-            // bgcolor:"#D6E4F0",
-          }
-        }
         id="outlined-multiline-static"
         multiline
         value={text} //value={!viewOnly ? (note.text) : (text)}
@@ -84,8 +73,6 @@ function NoteItem({ noteid, note, updateLectureNote }) {
           </IconButton>
         </Tooltip>
       </Box>
-      {/* <Button size="small"  >Cancel</Button>
-        <Button size="small" >Post</Button> */}
     </Box>
   );
 }
