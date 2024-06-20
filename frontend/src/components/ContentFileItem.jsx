@@ -65,16 +65,6 @@ const ContentFileItem = ({
               aria-label="Note"
               onClick={() => {
                 // ** open note dialog to add note
-                console.log(
-                  "open note dialog student id " +
-                    user._id +
-                    " course id " +
-                    courseId +
-                    " file id " +
-                    file.file +
-                    " activity id " +
-                    categoryId
-                );
                 getLectureNotes(user._id, courseId, file.file, categoryId);
                 noteOpen();
                 setSelectedFile(file.file);
@@ -82,42 +72,29 @@ const ContentFileItem = ({
             >
               <StickyNote2Icon />
               <div>
-                {
-                  geAllNotesByCourse
-                    .filter(
-                      (note) =>
-                        note.user === user._id &&
-                        note.file === file.file &&
-                        note.activity == categoryId
-                    )
-                    .map((specificnote) => {
-                      {
-                        console.log(
-                          "specific note " +
-                            specificnote.notes.length +
-                            " file id " +
-                            file.file
-                        );
-                      }
-                      return (
-                        <p
-                          style={{
-                            color: "#0d3675",
-                            fontWeight: "bold",
-                            fontSize: 15,
-                          }}
-                        >
-                          {specificnote.notes.length}
-                        </p>
-                      );
-                    })
-                  // .length > 0 ? (
-                  //       console.log("nth")
-
-                  // ) : (
-                  //   <p>0</p>
-                  // )
-                }
+                {geAllNotesByCourse
+                  .filter(
+                    (note) =>
+                      note.user === user._id &&
+                      note.file === file.file &&
+                      note.activity == categoryId
+                  )
+                  .map((specificnote) => {
+                    return (
+                      <Typography
+                        key={specificnote._id}
+                        style={{
+                          color: "#0d3675",
+                          fontWeight: "bold",
+                          fontSize: 12,
+                          padding: 0,
+                          textAlign: "center",
+                        }}
+                      >
+                        {specificnote.notes.length}
+                      </Typography>
+                    );
+                  })}
               </div>
             </IconButton>
           </Tooltip>
@@ -126,7 +103,6 @@ const ContentFileItem = ({
               aria-label="ViewNote"
               onClick={() => {
                 // ** open note dialog to view note
-                console.log("open note to view share note");
                 getShareLectureNotes(user._id, file.file);
                 shareNoteOpen();
               }}
@@ -139,15 +115,18 @@ const ContentFileItem = ({
                   )
                   .map((membernotes) => {
                     return (
-                      <p
+                      <Typography
+                        key={membernotes._id}
                         style={{
                           color: "#0d3675",
                           fontWeight: "bold",
-                          fontSize: 15,
+                          fontSize: 12,
+                          padding: 0,
+                          textAlign: "center",
                         }}
                       >
                         {membernotes.notes.length}
-                      </p>
+                      </Typography>
                     );
                   })}
               </div>
