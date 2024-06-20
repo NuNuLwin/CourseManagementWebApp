@@ -29,7 +29,6 @@ const CategoryListItem = (props) => {
     }
   });
 
-  console.log("Category Files Count:", categoryFilesCount);
   const fileCount = categoryFilesCount[props.activity._id] || 0;
 
   return (
@@ -54,7 +53,7 @@ const CategoryListItem = (props) => {
           alignItems: "center", // Center items horizontally
         }}
       >
-        <box>{props.getActivityIcon(props.activity.activityName, false)}</box>
+        <Box>{props.getActivityIcon(props.activity.activityName, false)}</Box>
 
         <Box>{props.activity.activityName}</Box>
         <Box>({fileCount})</Box>

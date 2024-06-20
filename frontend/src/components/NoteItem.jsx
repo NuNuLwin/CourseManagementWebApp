@@ -1,67 +1,93 @@
-import React,{ useEffect }from 'react'
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import React, { useEffect } from "react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import moment from "moment";
-import { TextField,Button,IconButton } from "@mui/material";
-import SaveIcon from '@mui/icons-material/Save';
+import { TextField, Tooltip, IconButton } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 
-function NoteItem({noteid,note,updateLectureNote}) {
-console.log("Note Item noteid "+ noteid + " note.text "+note.text)
-const [text, setText] = React.useState('')
-const [viewOnly, setViewOnly] = React.useState(false)
+function NoteItem({ noteid, note, updateLectureNote }) {
+  console.log("Note Item noteid " + noteid + " note.text " + note.text);
+  const [text, setText] = React.useState("");
+  const [viewOnly, setViewOnly] = React.useState(false);
+  const [isFocused, setIsFocused] = React.useState(false);
 
-useEffect(() => {
-    console.log("Note Item use effect text "+ text + " note.text "+note.text)
-    setText(note.text)
+  useEffect(() => {
+    console.log(
+      "Note Item use effect text " + text + " note.text " + note.text
+    );
+    setText(note.text);
   }, [note.text]);
 
-const inputProps = {
+  const inputProps = {
     step: 300,
-    margin: 'none',
-    style: {fontSize: 10} 
+    margin: "none",
+    style: { fontSize: 10 },
   };
 
-const handleUpdateNote= (subnoteid,notetext) => {
-    console.log("handleUpdateNote noteid "+noteid+" notetext " +notetext)
-    updateLectureNote(noteid,subnoteid,notetext);
-};
+  const handleUpdateNote = (subnoteid, notetext) => {
+    console.log("handleUpdateNote noteid " + noteid + " notetext " + notetext);
+    updateLectureNote(noteid, subnoteid, notetext);
+  };
 
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
 
   return (
-    <Box  > {/*onClick={onNoteClick}*/}
-        {console.log(" NoteItem note "+note.date + " text "+note.text+" viewonly "+viewOnly)}
-        <Typography variant="subtitle2" gutterBottom>
-            {moment(note.date).format("DD MMM YYYY HH:MM")}
-        </Typography>
-
-
-        <TextField
-            fullWidth
-            inputProps={inputProps}
+    <Box>
+      {" "}
+      {/*onClick={onNoteClick}*/}
+      {console.log(
+        " NoteItem note " +
+          note.date +
+          " text " +
+          note.text +
+          " viewonly " +
+          viewOnly
+      )}
+      <Typography variant="subtitle2" gutterBottom>
+        {moment(note.date).format("DD MMM YYYY HH:MM")}
+      </Typography>
+      <TextField
+        fullWidth
+        inputProps={inputProps}
+        sx={
+          {
+            // "& fieldset": { border: 'none' },
+            // bgcolor:"#D6E4F0",
+          }
+        }
+        id="outlined-multiline-static"
+        multiline
+        value={text} //value={!viewOnly ? (note.text) : (text)}
+        onChange={(e) => setText(e.target.value)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
+      <Box display="flex" justifyContent="flex-end">
+        <Tooltip title={"Save Note"} arrow>
+          <IconButton
+            aria-label="SaveNote"
+            onClick={() => {
+              handleUpdateNote(note._id, text);
+            }}
             sx={{
-                // "& fieldset": { border: 'none' },
-                // bgcolor:"#D6E4F0",
-                
-             }}
-            id="outlined-multiline-static"
-            multiline
-            value={text}//value={!viewOnly ? (note.text) : (text)}
-            onChange={(e) => setText(e.target.value)}
-        />
-        <Box display="flex" justifyContent="flex-end">
-          <IconButton aria-label="SaveNote" onClick={() => {
-              handleUpdateNote(note._id,text) 
-             }
-            }>
+              color: isFocused ? "primary.main" : "grey.500",
+            }}
+          >
             <EditNoteIcon />
-         </IconButton>
-        </Box>
-        {/* <Button size="small"  >Cancel</Button>
+          </IconButton>
+        </Tooltip>
+      </Box>
+      {/* <Button size="small"  >Cancel</Button>
         <Button size="small" >Post</Button> */}
-
     </Box>
-  )
+  );
 }
 
-export default NoteItem
+export default NoteItem;

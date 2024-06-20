@@ -82,8 +82,6 @@ function CourseDetail() {
     dispatch(updateCategoryByCourseId({ courseId, selectedActivities })).then(
       () => {
         handleCloseCatClicked();
-
-        // setCourseActivities(tmpArr);
         let copied = { ...course };
         const tmpArr = [...course.activities];
         const tmpArrIds = tmpArr.map((x) => x._id);
@@ -168,13 +166,6 @@ function CourseDetail() {
       copied.activities = tmpArr;
       setCourse(copied);
     });
-  };
-
-  const isActivityChecked = (current_activities, activity_id) => {
-    if (current_activities.length === 0) return false;
-
-    const current_activities_ids = current_activities.map((x) => x._id);
-    return current_activities_ids.includes(activity_id);
   };
 
   return (
@@ -277,9 +268,10 @@ function CourseDetail() {
         <DialogTitle>Choose Category</DialogTitle>
         <DialogContent>
           <Grid container spacing={1}>
-            {allActivities.map((activity) => (
+            {allActivities.map((activity, i) => (
               <CategoryChoiceItem
                 {...activity}
+                key={i}
                 course={course}
                 selectedActivities={selectedActivities}
                 handleCategorySelect={handleCategorySelect}

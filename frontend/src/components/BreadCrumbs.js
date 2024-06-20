@@ -7,15 +7,13 @@ const BreadCrumbs = ({ links }) => {
 
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
-      {" "}
-      {/* Ensure the Stack takes the full width */}
       <Breadcrumbs separator="›" aria-label="breadcrumb">
         {links.map((link, index) => {
           if (link.url) {
             return (
               <Link
                 underline="hover"
-                key={index} // Use the index as the key to ensure uniqueness
+                key={index}
                 color="inherit"
                 href="/"
                 onClick={(e) => {
@@ -28,16 +26,7 @@ const BreadCrumbs = ({ links }) => {
             );
           } else {
             return (
-              <Typography
-                key="3"
-                color="text.primary"
-                sx={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  width: "230px",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <Typography key="3" color="text.primary">
                 {link.name}
               </Typography>
             );
