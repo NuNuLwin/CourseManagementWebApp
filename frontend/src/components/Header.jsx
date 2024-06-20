@@ -45,7 +45,7 @@ function Header({ children }) {
           container
           justify="space-between"
           columnGap={0}
-          sx={{ margin: "20px 0 0 0" }}
+          sx={{ margin: "20px 0 5px 0", marginTop: "1em", marginBottom: "1em" }}
         >
           <Grid
             item

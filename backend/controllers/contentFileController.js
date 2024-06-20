@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
+const mime = require("mime-types");
 const { Readable } = require("stream");
 
 //model
@@ -75,14 +76,7 @@ const uploadContentFile = asyncHandler(async (req, res) => {
   );
 
   const course = await Course.findById(course_id);
-  // .populate([
-  //   "class",
-  //   "activity",
-  //   "files.file",
-  //   "files.activity",
-  // ]);
   res.status(200).json(course);
-  //return resp.send({ results: course });
 });
 
 // @desc    View Course File
@@ -100,6 +94,7 @@ const viewContentFile = asyncHandler(async (req, res) => {
   let bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
     bucketName: "content",
   });
+  res.set("Content-Type", mime.lookup(findContentFile.filename));
   bucket.openDownloadStream(findContentFile._id).pipe(res);
 });
 

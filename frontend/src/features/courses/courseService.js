@@ -30,11 +30,27 @@ const getCourseByCourseId = async (courseId) => {
   return response.data;
 };
 
+// Update activities by course id
+const updateCategoryByCourseId = async (courseId, selectedActivities) => {
+  const response = await axios.put(`${API_URL}${courseId}/activities`, {
+    activities: selectedActivities,
+  });
+  return response.data;
+};
+
+// Delete activity by course id
+const deleteCategoryByCourseId = async (courseId, activityId) => {
+  const response = await axios.delete(`${API_URL}/${courseId}/${activityId}`);
+  return response.data;
+};
+
 const courseService = {
   createCourse,
   getCoursesByInstructorId,
   getCoursesByStudentId,
   getCourseByCourseId,
+  updateCategoryByCourseId,
+  deleteCategoryByCourseId,
 };
 
 export default courseService;

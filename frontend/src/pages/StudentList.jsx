@@ -42,14 +42,13 @@ function StudentList() {
   } = useSelector((state) => state.course);
 
   const course = courses[0];
-  const [isRegistered,setRegistrationStatus] = useState(true);
+  const [isRegistered, setRegistrationStatus] = useState(true);
 
   useEffect(() => {
-    console.log('use effects student list '+students.length)
+    console.log("use effects student list " + students.length);
     if (isError) {
       console.log(message);
     }
-
 
     dispatch(getCourseByCourseId(courseId));
 
@@ -60,22 +59,24 @@ function StudentList() {
   }, [isError, message, dispatch]);
 
   useEffect(() => {
-    console.log('use effects after dispatch student list '+students.length)
+    console.log("use effects after dispatch student list " + students.length);
     if (students.length > 0 && isSuccess && !isLoading) {
-        students?.filter((student) => {
-          console.log('each student student.registrationstatus  '+ student.registrationstatus );
-          if (student.registrationstatus === "unregistered") {
-            setRegistrationStatus(false);
-          }
-      })
+      students?.filter((student) => {
+        console.log(
+          "each student student.registrationstatus  " +
+            student.registrationstatus
+        );
+        if (student.registrationstatus === "unregistered") {
+          setRegistrationStatus(false);
+        }
+      });
     }
-
   }, [students, isSuccess, isLoading]);
 
   const onRegisterStudent = () => {
-    setRegistrationStatus(true)
-    dispatch(registerStudents(courseId))
-  }
+    setRegistrationStatus(true);
+    dispatch(registerStudents(courseId));
+  };
 
   if (isLoading) {
     return <Spinner />;
@@ -90,6 +91,17 @@ function StudentList() {
       onClick={() => navigate("/courseList")}
     >
       Courses
+    </Link>,
+    <Link
+      underline="hover"
+      key="2"
+      color="inherit"
+      onClick={() => navigate(`/course/${course._id}`)}
+      sx={{
+        cursor: "pointer",
+      }}
+    >
+      {courses && courses[0].class.map((cls) => cls.className).join(", ")}
     </Link>,
     <Typography key="3" color="text.primary">
       Registration
@@ -178,12 +190,14 @@ function StudentList() {
                   </Paper>
                 ) : (
                   <Grid item md={12} xs={12}>
-                  <h3 style={{textAlign: "center"}}>There is no students registered in this course.</h3>
+                    <h3 style={{ textAlign: "center" }}>
+                      There is no students registered in this course.
+                    </h3>
                   </Grid>
                 )}
 
                 {students.length > 0 ? (
-                    !isRegistered ? ( //students[0].registrationstatus === "unregistered" ? (
+                  !isRegistered ? ( //students[0].registrationstatus === "unregistered" ? (
                     <Grid container spacing={2} justifyContent="flex-end">
                       <Grid item>
                         <Button
@@ -206,13 +220,9 @@ function StudentList() {
                         </Button>
                       </Grid>
                     </Grid>
-                  ) 
-                  : (
-                    console.log(
-                      "hide buttons if all students are registered"
-                    )
+                  ) : (
+                    console.log("hide buttons if all students are registered")
                   )
-                  
                 ) : (
                   console.log("hide buttons if there are no students")
                 )}
