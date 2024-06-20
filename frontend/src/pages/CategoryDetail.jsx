@@ -13,8 +13,6 @@ import { getCourseByCourseId } from "../features/courses/courseSlice";
 import {
   addNote,
   getNotes,
-  shareNote,
-  reset,
   updateNote,
 } from "../features/studentnote/studentnoteslice";
 import studentNoteService from "../features/studentnote/studentnoteservice";
@@ -31,14 +29,9 @@ import ContentFileItem from "../components/ContentFileItem";
 // material icons
 import CloseIcon from "@mui/icons-material/Close";
 import ShareIcon from "@mui/icons-material/Share";
-import StickyNote2Icon from "@mui/icons-material/StickyNote2";
-import PeopleIcon from "@mui/icons-material/People";
-import DownloadIcon from "@mui/icons-material/Download";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 // material components
 import {
-  Alert,
   Box,
   Button,
   Container,
@@ -49,10 +42,8 @@ import {
   DialogContent,
   Grid,
   IconButton,
-  Link,
   TextField,
   Typography,
-  Tooltip,
 } from "@mui/material";
 
 function CategoryDetail() {
@@ -145,14 +136,14 @@ function CategoryDetail() {
   };
 
   const updateLectureNote = (noteid, subnoteid, notetext) => {
-    console.log(
-      "Category Details updateLectureNote noteid " +
-        noteid +
-        " subnoteid " +
-        subnoteid +
-        " notetext " +
-        notetext
-    );
+    // console.log(
+    //   "Category Details updateLectureNote noteid " +
+    //     noteid +
+    //     " subnoteid " +
+    //     subnoteid +
+    //     " notetext " +
+    //     notetext
+    // );
     dispatch(
       updateNote({
         noteid,
@@ -164,31 +155,29 @@ function CategoryDetail() {
   // *** retrive all Notes by course first and filter it by file id(course material id) when course materials are launch
   // and display note count **//
   const getNotesByCourse = async (courseid) => {
-    console.log("getNotesByCourse is called ");
     try {
       const allNotes = await studentNoteService.getNotesByCourse(courseid);
       setAllNotesByCourse(allNotes);
-      console.log("getNotesByCourse total note count " + allNotes.length);
+      // console.log("getNotesByCourse total note count " + allNotes.length);
     } catch (error) {
       const message = error?.response?.data?.message || "";
-      console.log("getNotesByCourse error " + message);
+      // console.log("getNotesByCourse error " + message);
     }
   };
 
   // *** retrive all shared Notes by course and filter it by user id and file id(course material id) when course materials are displayed **//
   // ** and display share note count //
   const getSharedNotesByCourse = async (course, user) => {
-    console.log("getSharedNotesByCourse is called ");
     try {
       const allNotes = await studentNoteService.getSharedNotesByCourse(
         course,
         user
       );
       setAllSharedNotesByCourse(allNotes);
-      console.log("getSharedNotesByCourse total note count " + allNotes.length);
+      // console.log("getSharedNotesByCourse total note count " + allNotes.length);
     } catch (error) {
       const message = error?.response?.data?.message || "";
-      console.log("getSharedNotesByCourse error " + message);
+      // console.log("getSharedNotesByCourse error " + message);
     }
   };
 
@@ -248,12 +237,10 @@ function CategoryDetail() {
           return false;
         }) || [];
       files.sort((a, b) => moment(b.uploadDate) - moment(a.uploadDate));
-      //console.log("FILES:", files);
       setCourse(courses[0]);
       setCategoryFiles(files);
 
       const activities = courses[0]?.activities?.filter((activity) => {
-        //console.log("activity", activity);
         if (activity && activity._id) {
           if (activity._id === categoryId) {
             setActivityName(activity.activityName);
@@ -302,62 +289,6 @@ function CategoryDetail() {
       // Handle the error appropriately, e.g., display an error message
     }
   };
-
-  function handleChange(event) {
-    const file_size = event.target.files[0].size / (1000 * 1000);
-    const file_type = event.target.files[0].type;
-    //console.log(file_type);
-    if (file_size > FILE_SIZE_IN_MB) {
-      setErrorMessage("File size must be below 16 MB.");
-    } else if (
-      ![
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        "application/vnd.ms-powerpoint",
-        "image/jpeg",
-        "image/png",
-      ].includes(file_type)
-    ) {
-      setErrorMessage(
-        "Only PDF, Word, PowerPoint, JPEG, and PNG files are accepted."
-      );
-    } else {
-      setErrorMessage("");
-      setSuccessMessage("");
-      setFile(event.target.files[0]);
-    }
-  }
-
-  function handleFileSubmit(event) {
-    setSuccessMessage("");
-    event.preventDefault();
-    if (!file) {
-      setErrorMessage("Please select a file to upload.");
-      return;
-    }
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("course_id", courseId);
-    formData.append("activity_id", categoryId);
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    dispatch(uploadContentFile({ formData, config })).then(() => {
-      dispatch(getCourseByCourseId(courseId)).then(() => {
-        setLoading(false);
-        fileUploadForm.current.reset();
-        setFile("");
-        setErrorMessage("");
-        setSuccessMessage("File uploaded successfully!");
-      });
-    });
-  }
 
   return (
     <>
