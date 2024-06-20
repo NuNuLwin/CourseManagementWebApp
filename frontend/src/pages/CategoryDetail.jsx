@@ -5,10 +5,7 @@ import { toast } from "react-toastify";
 import moment from "moment";
 
 // redux
-import {
-  uploadContentFile,
-  viewContentFile,
-} from "../features/courses/contentFileSlice";
+import { viewContentFile } from "../features/courses/contentFileSlice";
 import { getCourseByCourseId } from "../features/courses/courseSlice";
 import {
   addNote,
