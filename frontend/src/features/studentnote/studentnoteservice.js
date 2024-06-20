@@ -33,13 +33,25 @@ const getStudentListByCourse = async (courseid)=>{
     return response.data
 }
 
+const getNotesByCourse = async (courseid)=>{
+    const response = await axios.get(API_URL+'getNotesByCourse/'+courseid);
+    return response.data
+}
+
+const getSharedNotesByCourse = async (course,user)=>{
+    const response = await axios.get(`${API_URL}getAllSharedNotesByCourse?course=${course}&user=${user}`);
+    return response.data
+}
+
 const studentNoteService = {
     addNote,
     getNotes,
     shareNote,
     getShareNotes,
     getStudentListByCourse,
-    updateNote
+    updateNote,
+    getNotesByCourse,
+    getSharedNotesByCourse
 }
 
 export default studentNoteService

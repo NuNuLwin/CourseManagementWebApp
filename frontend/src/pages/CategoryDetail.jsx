@@ -53,6 +53,7 @@ import {
   Tooltip,
 } from "@mui/material";
 
+
 function CategoryDetail() {
   // constants
   const FILE_SIZE_IN_MB = 16.0;
@@ -88,7 +89,8 @@ function CategoryDetail() {
   const [shareNotes, setShareNotes] = useState([]);
   const [studentlistByCourse, setStudentlistByCourse] = useState([]);
   const [openStudentListDialog, setOpenStudentListDialog] = useState(false);
-
+  const [geAllNotesByCourse, setAllNotesByCourse] = useState([]);
+  const [getAllSharedNotesByCourse, setAllSharedNotesByCourse] = useState([]);
   // ** share Note Dialog
   const shareNoteOpen = () => {
     setOpenShareNote(true);
@@ -158,6 +160,33 @@ function CategoryDetail() {
       })
     );
   };
+  // *** retrive all Notes by course first and filter it by file id(course material id) when course materials are launch
+  // and display note count **//
+  const getNotesByCourse = async (courseid) => {
+    console.log("getNotesByCourse is called ");
+      try {
+        const allNotes =  await studentNoteService.getNotesByCourse(courseid)
+        setAllNotesByCourse(allNotes)
+        console.log("getNotesByCourse total note count "+allNotes.length);
+    } catch (error) {
+        const message = error?.response?.data?.message || "";
+        console.log("getNotesByCourse error " + message);
+    }
+  };
+
+  // *** retrive all shared Notes by course and filter it by user id and file id(course material id) when course materials are displayed **//
+  // ** and display share note count //
+  const getSharedNotesByCourse = async (course,user) => {
+    console.log("getSharedNotesByCourse is called ");
+      try {
+        const allNotes =  await studentNoteService.getSharedNotesByCourse(course,user)
+        setAllSharedNotesByCourse(allNotes)
+        console.log("getSharedNotesByCourse total note count "+allNotes.length);
+    } catch (error) {
+        const message = error?.response?.data?.message || "";
+        console.log("getSharedNotesByCourse error " + message);
+    }
+  };
 
   const getLectureNotes = (user, course, file, category) => {
     dispatch(
@@ -194,8 +223,15 @@ function CategoryDetail() {
   // ** get student list for selected course
   useEffect(() => {
     getStudentListByCourse(courseId);
+    // getNotesByCourse for total notes count
+    getNotesByCourse(courseId)
+    // getSharedNotesByCourse for total shared notes count
+    getSharedNotesByCourse(courseId,user._id)
   }, []);
 
+  useEffect(() => {
+    getNotesByCourse(courseId)
+  }, [studentnotes]); 
   // ** code for add note, share note end
 
   useEffect(() => {
@@ -413,6 +449,7 @@ function CategoryDetail() {
                     container
                     sx={{ bgcolor: "#D6E4F0", p: 2, mb: 2, borderRadius: 0 }}
                   >
+                          <div></div>
                     <Grid item md={6} xs={12}>
                       <Link
                         href="#"
@@ -476,10 +513,26 @@ function CategoryDetail() {
                             }}
                           >
                             <StickyNote2Icon />
+                            <div>{geAllNotesByCourse.filter( note => note.user === user._id && note.file === file.file && note.activity && categoryId)
+                              .map((specificnote)=> {
+                                {console.log("specific note "+specificnote.notes.length+" file id "+ file.file)}
+                                return<p style={{ color: "#0d3675", fontWeight: "bold",fontSize: 15 }}>
+                                  { specificnote.notes.length }</p>
+                              }
+                              )
+                              // .length > 0 ? (
+                              //       console.log("nth")
+                                
+                              // ) : (
+                              //   <p>0</p>
+                              // )
+                              }
+                            </div>
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={"Shared Note"} arrow>
+                        <Tooltip title={"View Shared Notes"} arrow>
                           <IconButton
+                        
                             aria-label="ViewNote"
                             onClick={() => {
                               // ** open note dialog to view note
@@ -487,8 +540,18 @@ function CategoryDetail() {
                               getShareLectureNotes(user._id, file.file);
                               shareNoteOpen();
                             }}
-                          >
+                             >
                             <PeopleIcon />
+                            <div>{getAllSharedNotesByCourse.filter( note => note.user === user._id && note.file === file.file)
+                              .map((membernotes)=> {
+                                return <p style={{ color: "#0d3675", fontWeight: "bold",fontSize: 15  }}>
+                                  { membernotes.notes.length }
+                                  </p>
+                              }
+                            )
+                              }
+                            </div>
+
                           </IconButton>
                         </Tooltip>
                       </div>
